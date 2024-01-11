@@ -62,7 +62,7 @@ class _AccountsState extends State<Accounts>{
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: CustomAppBar(
-            module_name: 'Account',
+            module_name: 'Accounts',
             emp_name: emp.emp_name,
             actions: [
               Icon(Icons.person_add_outlined, color: MyColors.actionsButtonColor,size: 18,),
