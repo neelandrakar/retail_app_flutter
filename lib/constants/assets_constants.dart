@@ -30,4 +30,8 @@ class AssetsConstants{
   static const String petty_con_menu_icon = '$_pngPath/petty_con_menu_icon.png';
   static const String ihb_owner_menu_icon = '$_pngPath/ihb_owner_menu_icon.png';
   static const String branches_menu_icon = '$_pngPath/branches_menu_icon.png';
+  static const String account_summary_purple_box = '$_pngPath/account_summary_purple_box.png';
+  static const String calender_icon = '$_pngPath/calender_icon.png';
+  static const String account_status_icon = '$_pngPath/account_status_icon.png';
+  static const String call_icon = '$_pngPath/call_icon.png';
 }

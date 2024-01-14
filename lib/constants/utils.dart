@@ -118,3 +118,30 @@ String fetchBasicDateFormat(DateTime date){
 //
 //   return images;
 // }
+
+String convertToINR(int money){
+
+  var _formattedNumber = NumberFormat.compactCurrency(
+    decimalDigits: 0,
+    locale: 'en_IN',
+    symbol: '₹',
+  ).format(money);
+
+  return _formattedNumber;
+}
+
+String getFinantialYear(int yearKey){
+
+  String lastFY = '22-23';
+  String currentFY = '23-24';
+
+  return yearKey==1 ? currentFY : lastFY;
+}
+
+//Get date in 20 Jul, 2023 format
+String getDateUniversalFormat(DateTime date){
+
+  String formattedDate = DateFormat('d, MMM, yyy').format(date);
+
+  return formattedDate;
+}

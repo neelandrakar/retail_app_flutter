@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/constants/custom_app_bar.dart';
+import 'package:retail_app_flutter/constants/custom_search_field.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/odometer_text_field.dart';
 import 'package:retail_app_flutter/home/screens/liftings_screen.dart';
@@ -68,7 +69,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       SizedBox(height: 20,),
-                      OdometerTextField(controller: _wildCardSearch, hintText: 'Search anything'),
+                      Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: CustomSearchField(
+                          height: 50,
+                          width: double.infinity,
+                          searchFieldColor: MyColors.black12,
+                          controller: _wildCardSearch,
+                          hintText: 'Search anything',
+                          textColor: MyColors.appBarColor,
+                          hintTextColor: MyColors.appBarColor,
+                          hintTextSize: 16,
+                          hintTextWeight: FontWeight.w500,
+                          maxLength: 3,
+                          textInputType: TextInputType.number,
+                        ),
+                      ),
                       SizedBox(height: 20,),
 
                       Container(

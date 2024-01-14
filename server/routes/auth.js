@@ -3,7 +3,10 @@ const Employee = require('../models/employee');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const authRouter = express.Router();
-
+const State = require('../models/state_tbl');
+const Cluster = require('../models/clusters');
+const District = require('../models/districts');
+const Block = require('../models/blocks');
 
 //Sign up
 authRouter.post('/v1/api/signup', async (req,res) => {
@@ -75,7 +78,64 @@ authRouter.post('/v1/api/signin', async (req,res) => {
                 console.log(jwt_token);
                 employee.jwt_token = jwt_token;
                 employee = await employee.save();
-                res.status(200).json(employee);
+
+                async function getDistrictNames(district_array){
+
+                    let ditricts_names = [];
+        
+                    let district = await District.find({
+                        district_id: { $in: district_array }
+                    });
+                    
+                    for(let i=0; i<district.length; i++){
+                        ditricts_names.push(district[i].district_title);
+                    }
+        
+                    return district ? ditricts_names : [];
+                }
+        
+                //Fetch state name 
+                async function getStateNames(state_array){
+        
+                    let state_names = [];
+        
+                    let state = await State.find({
+                        state_id: { $in: state_array }
+                    });
+                    
+                    for(let i=0; i<state.length; i++){
+                        state_names.push(state[i].state_name);
+                    }
+        
+                    return state ? state_names : [];
+                }
+        
+                async function getBlockName(get_block_id){
+        
+                    let block = await Block.find({
+                        block_id: get_block_id
+                    });
+        
+                    return block ? block[0].block_name : 'NA';
+                }
+        
+                async function getClusterName(get_cluster_id){
+        
+                    let cluster = await Cluster.find({
+                        cluster_id: get_cluster_id,
+                        d_status: 0
+                    });
+        
+                    return cluster ? cluster[0].cluster_name : 'NA';
+                }
+                
+                const updatedEmp = {
+                    ...employee.toObject(),
+                    'state_names': await getStateNames(employee.state_id),
+                    'district_names': await getDistrictNames(employee.district_id)
+                }
+
+                res.status(200).json(updatedEmp);
 
             } else{
                 res.status(400).json({ msg: 'Please enter correct password'});

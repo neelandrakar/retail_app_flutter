@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:retail_app_flutter/accounts/screens/account_list.dart';
 import 'package:retail_app_flutter/accounts/screens/accounts_screen.dart';
 import 'package:retail_app_flutter/attendance/screens/attendance_screen.dart';
 import 'package:retail_app_flutter/attendance/screens/submit_odometer_screen.dart';
@@ -30,6 +31,15 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       return MaterialPageRoute(
           settings: routeSettings,
           builder: (_) => const Accounts()
+      );
+
+    case AccountList.routeName:
+      AccountList accountList = routeSettings.arguments as AccountList;
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) => AccountList(
+            account_type_id: accountList.account_type_id,
+            account_type: accountList.account_type)
       );
 
     default:

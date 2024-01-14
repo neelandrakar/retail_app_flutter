@@ -5,6 +5,7 @@ import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/providers/attendance_model_provider.dart';
 import 'package:retail_app_flutter/providers/dashboard_menu_provider.dart';
+import 'package:retail_app_flutter/providers/dealer_master_provider.dart';
 import 'package:retail_app_flutter/providers/user_provider.dart';
 import 'package:retail_app_flutter/router.dart';
 import 'package:retail_app_flutter/sign_in/screens/sign_in_screen.dart';
@@ -17,6 +18,7 @@ void main() {
           ChangeNotifierProvider(create: (context)=> EmployeeProvider()),
           ChangeNotifierProvider(create: (context)=> AttendanceModelProvider()),
           ChangeNotifierProvider(create: (context)=> DashboardMenuProvider()),
+          ChangeNotifierProvider(create: (context)=> DealerMasterProvider()),
         ],
         child: const MyApp(),
       ));

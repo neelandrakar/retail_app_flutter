@@ -42,12 +42,13 @@ class CustomAppBar extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 fontFamily: 'Poppins',
-                color: MyColors.offWhiteColor,
-                fontSize: 12,
+                color: MyColors.actionsButtonColor,
+                fontSize: 11,
                 fontWeight: FontWeight.w400
 
             ),
-          ),          ],
+          ),
+        ],
       ),
       bottom: bottom,
     );

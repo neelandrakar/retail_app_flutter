@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 
 const accountMasterSchema = mongoose.Schema({
 
+    account_id: {
+
+        type: Number,
+        required: true
+    },
+
     account_name: {
         type: String,
         required: true
@@ -136,26 +142,26 @@ const accountMasterSchema = mongoose.Schema({
 
     latitude: {
 
-        type: Number,
-        default: 0.0
+        type: String,
+        default: '0.0'
     },
 
     longitude: {
 
-        type: Number,
-        default: 0.0
+        type: String,
+        default: '0.0'
     },
 
     office_longitude: {
 
-        type: Number,
-        default: 0.0
+        type: String,
+        default: '0.0'
     },
 
     office_latitude: {
 
-        type: Number,
-        default: 0.0
+        type: String,
+        default: '0.0'
     },
 
     referred_by: {
@@ -214,6 +220,7 @@ const accountMasterSchema = mongoose.Schema({
     updated_on: {
 
         type: Date,
+        default: null
     },
 
     created_on: {

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_app_flutter/accounts/screens/account_list.dart';
 import 'package:retail_app_flutter/accounts/widgets/primary_account_box.dart';
 import 'package:retail_app_flutter/accounts/widgets/secondary_account_box.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
@@ -49,6 +50,14 @@ class _AccountsState extends State<Accounts>{
       "acc_image": AssetsConstants.distributor_menu_icon,
     },
   ];
+
+
+  void navigateToAccountList(int account_type_id, String account_type){
+
+    final arguments = AccountList(account_type_id: account_type_id, account_type: account_type,);
+
+    Navigator.pushNamed(context, AccountList.routeName, arguments: arguments);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +107,10 @@ class _AccountsState extends State<Accounts>{
                         index: 0,
                         box_name: 'Dealer',
                         box_subtitle: 'Look at all the dealers tagged with you',
-                        onClick: (){},
+                        onClick: (){
+                          print('dealer');
+                          navigateToAccountList(1, 'Dealer');
+                        },
                     ),
                     // SizedBox(width: 5,),
                     PrimaryAccountBox(

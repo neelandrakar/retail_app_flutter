@@ -62,24 +62,24 @@ attendanceRouter.get('/v1/api/get-attendance',  auth ,async (req,res) => {
         let endOdometer = '';
 
         function convertToIST(date) {
-    // Difference between UTC and IST in minutes
-    const differenceInMinutes = 330;
+        // Difference between UTC and IST in minutes
+        const differenceInMinutes = 330;
 
-    // Convert the difference to milliseconds
-    const differenceInMilliseconds = differenceInMinutes * 60 * 1000;
+        // Convert the difference to milliseconds
+        const differenceInMilliseconds = differenceInMinutes * 60 * 1000;
 
-    // Get the current date
-    const currentDate = new Date(date);
+        // Get the current date
+        const currentDate = new Date(date);
 
-    // Get the local time
-    const localTime = currentDate.getTime();
+        // Get the local time
+        const localTime = currentDate.getTime();
 
-    // Calculate the IST date
-    const istDate = new Date(localTime + differenceInMilliseconds);
+        // Calculate the IST date
+        const istDate = new Date(localTime + differenceInMilliseconds);
 
-    // Return the IST date
-    return istDate;
-}
+        // Return the IST date
+        return istDate;
+      }
 
         function convertToPlainDate(dateStr) {
           // Convert the date string to a Date object

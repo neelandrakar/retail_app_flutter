@@ -8,7 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/constants/http_error_handeling.dart';
 import 'package:retail_app_flutter/models/attendance_screen_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:retail_app_flutter/models/dealer_master.dart';
 import 'package:retail_app_flutter/providers/attendance_model_provider.dart';
+import 'package:retail_app_flutter/providers/dealer_master_provider.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/utils.dart';
 import '../../models/employee.dart';
@@ -178,6 +180,46 @@ class AttendanceServices{
       print("Error $e");
       showSnackBar(context, e.toString());
     }
+  }
 
+  Future<void> fetchAccountData({
+    required BuildContext context,
+    required VoidCallback onSuccess,
+  })async{
+
+    try {
+
+      final Employee emp = Provider
+          .of<EmployeeProvider>(context, listen: false)
+          .employee;
+      var dealer_master_provider = Provider.of<DealerMasterProvider>(context, listen: false);
+
+
+      http.Response res = await http.get(
+          Uri.parse('$uri/v1/api/fetch-tagged-accounts'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': emp.jwt_token
+          });
+
+      HttpErroHandeling(
+          response: res,
+          context: context,
+          onSuccess: () {
+            print('#debug===> '+jsonDecode(res.body)[1]['account_name']);
+
+            dealer_master_provider.dealer_master = [];
+
+            for (int i = 0; i < jsonDecode(res.body).length; i++) {
+
+              dealer_master_provider.fetchFullList(DealerMaster.fromJson(jsonEncode(jsonDecode(res.body)[i])));
+            }
+            onSuccess.call();
+          }
+      );
+    }catch(e){
+      print("Error $e");
+      showSnackBar(context, e.toString());
+    }
   }
 }

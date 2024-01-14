@@ -65,7 +65,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     var getAttendance = attendanceprovider.get_attendance;
 
     DateTime joiningDate = emp.joining_date;
-    String formattedJoiningDate = DateFormat('d, MMM, yyy').format(joiningDate);
+    String formattedJoiningDate = utils.getDateUniversalFormat(joiningDate);
 
     void openHRMS() {
       print(emp.emp_name);
@@ -119,10 +119,12 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       } else if(attendanceprovider.hasLoggedInToday && getAttendance[getAttendance.length-1].vehicle==0){
 
         Navigator.pushNamed(context, SubmitOdometerScreen.routeName);
-        print('Please enter odometer data');
       } else if(attendanceprovider.hasLoggedInToday && getAttendance[getAttendance.length-1].vehicle>0){
 
-        Navigator.pushNamed(context, HomeScreen.routeName);
+        await attendanceServices.fetchAccountData(context: context, onSuccess: (){
+          print('account data fetched');
+          Navigator.pushNamed(context, HomeScreen.routeName);
+        });
       }
     }
 

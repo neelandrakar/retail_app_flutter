@@ -14,6 +14,8 @@ class EmployeeProvider extends ChangeNotifier{
       responsible_for: 0,
       state_id: [],
       district_id: [],
+      state_names: [],
+      district_names: [],
       active: 0,
       division: 0,
       work_on: 0,

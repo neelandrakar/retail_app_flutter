@@ -9,9 +9,17 @@ class MyColors{
   static const Color black12 = Colors.black12;
   static const Color greyColor = Colors.grey;
   static Color darkBlueColor =  Colors.blueGrey.shade900;
+  static const Color outstandingBoxBlue = Color(0xff4e68b6);
   static const Color appBarColor2 = Color(0xff0D4B81);
   static const Color appBarColor = Color(0xff12344d);
   static const Color fadedBlack = Colors.black54;
+  static const Color greenColor = Colors.green;
+  static const Color redColor = Colors.red;
+  static const Color blueColor = Colors.blue;
+  static const Color orangeColor = Colors.orange;
+  static Color blueGreyColor = Colors.blueGrey;
+  static Color deepBlueColor = Colors.blue.shade800;
+  static  Color ashColor = Color(0xffdde2ed);
   static const Color attInitialBox = Color(0xffa1d4f3);
   static  Color graceBoxColor = Color(0xffD7CEF1);
   static  Color purpleColor = Color(0xff5652e5);

@@ -32,38 +32,41 @@ class _PrimaryAccountBoxState extends State<PrimaryAccountBox> {
       boxIcon = AssetsConstants.subdealer_menu_icon;
     }
 
-    return Container(
-      height: 130,
-      width: 105,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage(boxImage), fit: BoxFit.fill),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(boxIcon, fit: BoxFit.fill,height: 40, width: 50,),
-                  SizedBox(height: 5,),
-                  Text(widget.box_name,
-                    style: TextStyle(
-                      color: MyColors.boneWhite,
-                      fontFamily: MyFonts.poppins,
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                  Text(widget.box_subtitle,
-                    style: TextStyle(
-                        color: MyColors.ivoryWhite,
+    return GestureDetector(
+      onTap: widget.onClick,
+      child: Container(
+        height: 130,
+        width: 105,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage(boxImage), fit: BoxFit.fill),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(boxIcon, fit: BoxFit.fill,height: 40, width: 50,),
+                    SizedBox(height: 5,),
+                    Text(widget.box_name,
+                      style: TextStyle(
+                        color: MyColors.boneWhite,
                         fontFamily: MyFonts.poppins,
-                        fontWeight: FontWeight.w100,
-                        fontSize: 10,
+                        fontWeight: FontWeight.w500
+                      ),
                     ),
-                  )
-                ],
-              )
-          
+                    Text(widget.box_subtitle,
+                      style: TextStyle(
+                          color: MyColors.ivoryWhite,
+                          fontFamily: MyFonts.poppins,
+                          fontWeight: FontWeight.w100,
+                          fontSize: 10,
+                      ),
+                    )
+                  ],
+                )
 
+
+      ),
     );
   }
 }

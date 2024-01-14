@@ -20,6 +20,10 @@ accountRouter.post('/v1/api/create-dealer', auth, async(req,res) => {
         let ASM = '';
         let SO = '';
         let ME = '';
+
+        let fullAccountMaster = await AccountMaster.find();
+        let account_id = fullAccountMaster.length+1;
+
         
         all_districts.push(district_id);
 
@@ -39,6 +43,7 @@ accountRouter.post('/v1/api/create-dealer', auth, async(req,res) => {
 
 
         let account = AccountMaster({
+            account_id,
             account_name,
             p_account_id,
             password,
