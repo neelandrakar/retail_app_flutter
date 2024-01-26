@@ -11,6 +11,8 @@ class Employee {
   final String reporting_to;
   final int profile_id;
   final int responsible_for;
+  final int zone_id;
+  final String zone_name;
   final List<String> state_names;
   final List<int> state_id;
   final List<String> district_names;
@@ -31,6 +33,8 @@ class Employee {
     required this.reporting_to,
     required this.profile_id,
     required this.responsible_for,
+    required this.zone_id,
+    required this.zone_name,
     required this.state_id,
     required this.state_names,
     required this.district_id,
@@ -54,6 +58,8 @@ class Employee {
       'reporting_to': reporting_to,
       'profile_id': profile_id,
       'responsible_for': responsible_for,
+      'zone_id': zone_id,
+      'zone_name': zone_name,
       'state_id': state_id,
       'state_names': state_names,
       'district_names': district_names,
@@ -76,6 +82,8 @@ class Employee {
       password: map['password'] as String,
       email: map['email'] != null ? map['email'] as String : null,
       reporting_to: map['reporting_to'] as String,
+      zone_id: map['zone_id'] as int,
+      zone_name: map['zone_name'] as String,
       profile_id: map['profile_id'] as int,
       responsible_for: map['responsible_for'] as int,
       state_id : map["state_id"].cast<int>(),

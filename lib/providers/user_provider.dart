@@ -12,6 +12,8 @@ class EmployeeProvider extends ChangeNotifier{
       reporting_to: '',
       profile_id: 0,
       responsible_for: 0,
+      zone_id: 0,
+      zone_name: '',
       state_id: [],
       district_id: [],
       state_names: [],

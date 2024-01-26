@@ -7,11 +7,21 @@ import 'my_fonts.dart';
 class AccountListButton extends StatelessWidget {
   final Color buttonColor;
   final String buttonText;
+  final Color? buttonTextColor;
   final IconData buttonIcon;
   final Color iconColor;
   final double iconSize;
   final VoidCallback onClick;
-  const AccountListButton({super.key, required this.buttonColor, required this.buttonText, required this.buttonIcon, required this.iconColor, required this.iconSize, required this.onClick});
+  const AccountListButton({
+    super.key,
+    required this.buttonColor,
+    required this.buttonText,
+    required this.buttonIcon,
+    required this.iconColor,
+    required this.iconSize,
+    required this.onClick,
+    this.buttonTextColor = MyColors.blackColor
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +50,7 @@ class AccountListButton extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
-                      color: MyColors.blackColor,
+                      color: buttonTextColor,
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                       fontFamily: MyFonts.poppins,

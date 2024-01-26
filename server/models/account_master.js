@@ -14,8 +14,8 @@ const accountMasterSchema = mongoose.Schema({
     },
 
     p_account_id: {
-        type: String,
-        default: ''
+        type: Number,
+        default: 0
     },
 
     password: {
@@ -48,6 +48,14 @@ const accountMasterSchema = mongoose.Schema({
 
         type: String,
         default: ''
+    },
+
+    card_no:{
+        type: Number,
+    },
+
+    engineer_type:{
+        type: Number
     },
 
     zone_id: {
@@ -134,6 +142,11 @@ const accountMasterSchema = mongoose.Schema({
         required: true
     },
 
+    working_as_dealer: {
+
+        type: Number
+    },
+
     d_status: {
 
         type: Number,
@@ -214,7 +227,7 @@ const accountMasterSchema = mongoose.Schema({
     nod: {
 
         type: Number,
-        required: true
+        // required: true
     },
 
     updated_on: {

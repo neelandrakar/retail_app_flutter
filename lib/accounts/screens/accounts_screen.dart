@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/accounts/screens/account_list.dart';
+import 'package:retail_app_flutter/accounts/widgets/account_creation_list_dialogue.dart';
 import 'package:retail_app_flutter/accounts/widgets/primary_account_box.dart';
 import 'package:retail_app_flutter/accounts/widgets/secondary_account_box.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
@@ -74,7 +75,16 @@ class _AccountsState extends State<Accounts>{
             module_name: 'Accounts',
             emp_name: emp.emp_name,
             actions: [
-              Icon(Icons.person_add_outlined, color: MyColors.actionsButtonColor,size: 18,),
+              IconButton(onPressed: () async{
+
+                showDialog(
+                    context: context,
+                    builder: (_)=> AccountCreationListDialogue()
+                );
+
+
+
+              }, icon: Icon(Icons.person_add_outlined)),
               SizedBox(width: 10,)
             ],
           )),
@@ -117,7 +127,9 @@ class _AccountsState extends State<Accounts>{
                         index: 1,
                         box_name: 'Distributor',
                         box_subtitle: 'Look at all the distributor tagged with you',
-                        onClick: (){},
+                        onClick: (){
+                          navigateToAccountList(7, 'Distributor');
+                        },
                     ),
                     // SizedBox(width: 5,),
                     PrimaryAccountBox(
@@ -152,10 +164,19 @@ class _AccountsState extends State<Accounts>{
                   itemCount: secondaryAccounts.length,
                   itemBuilder: (context, index) {
 
+                    void navigateToAccList(int i) {
+                      if (i == 0) {
+                        navigateToAccountList(6, 'Engineer');
+                      }
+                    }
+
                     return SecondaryAccountBox(
                       box_image: secondaryAccounts[index]['acc_image'],
                       box_title: secondaryAccounts[index]['acc_title'],
                       box_subtitle: secondaryAccounts[index]['acc_subtitle'],
+                      onClick: (){
+                        navigateToAccList(index);
+                      },
                     );
                   },
                 separatorBuilder: (BuildContext context, int index) {

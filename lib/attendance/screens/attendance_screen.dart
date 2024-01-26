@@ -121,10 +121,9 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         Navigator.pushNamed(context, SubmitOdometerScreen.routeName);
       } else if(attendanceprovider.hasLoggedInToday && getAttendance[getAttendance.length-1].vehicle>0){
 
-        await attendanceServices.fetchAccountData(context: context, onSuccess: (){
-          print('account data fetched');
-          Navigator.pushNamed(context, HomeScreen.routeName);
-        });
+        await attendanceServices.updateEmployeeData(context: context, onSuccess: () async {
+            Navigator.pushNamed(context, HomeScreen.routeName);
+          });
       }
     }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/constants/my_fonts.dart';
 
 class CustomSearchField extends StatelessWidget {
   final TextEditingController controller;
@@ -72,7 +73,7 @@ class CustomSearchField extends StatelessWidget {
           ),
           hintStyle: TextStyle(
               color: hintTextColor,
-              fontFamily: 'Poppins',
+              fontFamily: MyFonts.poppins,
               fontSize: hintTextSize,
               fontWeight: hintTextWeight
           ),

@@ -9,6 +9,8 @@ const Block = require('../models/blocks');
 const auth = require('../middleware/auth');
 const MenuAccess = require('../models/menu_access');
 const AccountMaster = require('../models/account_master');
+const EngineerType = require('../models/engineer_type');
+const Zone = require('../models/zone');
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
@@ -29,6 +31,28 @@ employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
         newMenu = await newMenu.save();
         
         res.json(newMenu);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+employeeRouter.post('/v1/api/add-engineer-type', auth, async(req,res) => {
+
+    try{
+
+        const {engineer_title} = req.body;
+
+        let newType = EngineerType({
+            engineer_title,
+            engineer_type_id: 1,
+            is_active: 1
+        });
+
+        newType = await newType.save();
+        
+        res.json(newType);
 
     }catch (e) {
         res.status(500).json({ error: e.message });
@@ -95,6 +119,32 @@ employeeRouter.post('/v1/api/add-state', auth, async(req,res) => {
         newState = await newState.save();
         
         res.json(newState);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+employeeRouter.post('/v1/api/add-zone', auth, async(req,res) => {
+
+    try{
+
+        const {zone_name} = req.body;
+
+        let fullZone = await Zone.find();
+
+        let zone_id = fullZone.length+1;
+
+
+        let newZone = Zone({
+            zone_id,
+            zone_name
+        });
+
+        newZone = await newZone.save();
+        
+        res.json(newZone);
 
     }catch (e) {
         res.status(500).json({ error: e.message });
@@ -180,9 +230,11 @@ employeeRouter.post('/v1/api/add-block', auth, async(req,res) => {
 
 });
 
-employeeRouter.get('/v1/api/fetch-tagged-accounts', auth, async(req,res) => {
+employeeRouter.post('/v1/api/fetch-tagged-accounts', auth, async(req,res) => {
 
     try{
+
+        const { account_type_id } = req.body;
 
         const emp_id = req.user;
         let employee = await Employee.findById(emp_id);
@@ -192,6 +244,7 @@ employeeRouter.get('/v1/api/fetch-tagged-accounts', auth, async(req,res) => {
         let taggedAccounts = await AccountMaster.find({
             ASM: emp_id,
             all_districts : { $in: emp_districts },
+            account_type_id: account_type_id,
             d_status: 0,
             account_status: { $nin: ['Rejected']}
         });
@@ -230,7 +283,22 @@ employeeRouter.get('/v1/api/fetch-tagged-accounts', auth, async(req,res) => {
             return district ? ditricts_names : [];
         }
 
-        //Fetch state name 
+        //Get single district's name
+        async function getSingleDistrictName(get_district_id){
+
+            console.log('hello');
+
+            let district = await District.find({
+                district_id: get_district_id
+            });
+
+            console.log(district);
+
+
+            return district.length>0 ? district[0].district_title : 'NA';
+        }
+
+        //Fetch state name
         async function getStateName(get_state_id){
 
             let state = await State.find({
@@ -262,17 +330,52 @@ employeeRouter.get('/v1/api/fetch-tagged-accounts', auth, async(req,res) => {
         async function getCreationDate(creation_date){
             var today = new Date();
 
-            console.log('c :'+creation_date.getDate() + '    today: '+ today.getDate());
+            // console.log('c :'+creation_date.getDate() + '    today: '+ today.getDate());
             var diffDays = today.getDate() - creation_date.getDate(); 
 
             return diffDays ? diffDays : 0
         }
 
-        const resWithData = await Promise.all(taggedAccounts.map(async oneAccount => ({
+        async function getDistributorName(get_p_dealer_id){
+
+            let account = await AccountMaster.find({
+                account_id: get_p_dealer_id
+            });
+
+            return account.length>0 ? account[0].account_name : 'NA';
+        }
+
+        async function getEngineerType(get_engineer_type_id){
+
+            let engineer_type = await EngineerType.find({
+                engineer_type_id: get_engineer_type_id
+            });
+
+            return engineer_type.length>0 ? engineer_type[0].engineer_title : 'NA';
+        }
+
+        async function getInfluencerParentDealer(get_parent_dealer_id){
+
+            if(get_parent_dealer_id>0){
+            let parent_dealer = await AccountMaster.find({
+                account_id: get_parent_dealer_id
+            });
+
+            return parent_dealer.length>0 ? parent_dealer[0].account_name : 'NA';
+        } else{
+            return 'NA';
+        }
+        }
+
+        if(account_type_id==1 || account_type_id==7){
+
+        const dealerWithData = await Promise.all(taggedAccounts.map(async oneAccount => ({
             ...oneAccount.toObject(),
+            'distributor_name': await getDistributorName(oneAccount.p_account_id),
             'state_name': await getStateName(oneAccount.state_id),
             'cluster_name': await getClusterName(oneAccount.cluster_id),
             'district_names': await getDistrictNames(oneAccount.all_districts),
+            'main_district_name': await getSingleDistrictName(oneAccount.main_district),
             'block_name': await getBlockName(oneAccount.block_id),
             'last_billing_quantity': 0,
             'last_billing_date': null,
@@ -296,7 +399,32 @@ employeeRouter.get('/v1/api/fetch-tagged-accounts', auth, async(req,res) => {
         })));
         
         
-        res.json(resWithData);
+        res.json(dealerWithData);
+
+    } else if(account_type_id==6){
+
+            const engineerWithData = await Promise.all(taggedAccounts.map(async oneAccount => ({
+                ...oneAccount.toObject(),
+                'parent_dealer': await getInfluencerParentDealer(oneAccount.p_account_id),
+                'engineer_type_name': await getEngineerType(oneAccount.engineer_type),
+                'state_name': await getStateName(oneAccount.state_id),
+                'cluster_name': await getClusterName(oneAccount.cluster_id),
+                'district_names': await getDistrictNames(oneAccount.all_districts),
+                'block_name': await getBlockName(oneAccount.block_id),
+                'kyc_approval': 0,
+                'created_before': await getCreationDate(oneAccount.created_on),
+                'tagged_rsm': await getTaggedEmp(oneAccount.AGM_RSM),
+                'tagged_asm': await getTaggedEmp(oneAccount.ASM),
+                'tagged_so': await getTaggedEmp(oneAccount.SO),
+                'tagged_me': await getTaggedEmp(oneAccount.ME),
+                'created_by_name': await getTaggedEmp(oneAccount.created_by)
+    
+            })));
+            
+            
+            res.json(engineerWithData);    
+        
+    }
 
     }catch (e) {
         res.status(500).json({ error: e.message });
@@ -362,10 +490,33 @@ employeeRouter.get('/v1/api/update-emp-data', auth, async(req,res) => {
             return cluster ? cluster[0].cluster_name : 'NA';
         }
 
+        async function getZoneData(get_state_id, zoneKey){
+
+            let state = await State.find({
+                state_id: { $in: get_state_id }
+            });
+
+            let get_zone_id = state[0].zone_id;
+
+            let zone = await Zone.find({
+                zone_id: get_zone_id
+            });
+
+            if(zoneKey==1){
+                return zone.length>0 ? zone[0].zone_name : 'NA';
+            } else if(zoneKey==2){
+                return zone.length>0 ? zone[0].zone_id : 0;
+
+            }
+        }
+
         const updatedRes = {
             ...emp.toObject(),
             'state_names': await getStateNames(emp.state_id),
-            'district_names': await getDistrictNames(emp.district_id)
+            'district_names': await getDistrictNames(emp.district_id),
+            'zone_name': await getZoneData(emp.state_id, 1),
+            'zone_id': await getZoneData(emp.state_id, 2)
+
         }
 
         
@@ -377,6 +528,45 @@ employeeRouter.get('/v1/api/update-emp-data', auth, async(req,res) => {
 
 });
 
+employeeRouter.post('/v1/api/fetch-blocks', auth, async(req,res) => {
+
+    try{
+
+        const {district_id} = req.body;
+
+        console.log(req.body);
+
+        let blockList = await Block.find({
+            district_id: district_id
+        });
+        
+        res.json(blockList);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+employeeRouter.post('/v1/api/fetch-districts', auth, async(req,res) => {
+
+    try{
+
+        const {district_id} = req.body;
+
+        console.log(req.body);
+
+        let blockList = await Block.find({
+            district_id: district_id
+        });
+        
+        res.json(blockList);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
 
 
 

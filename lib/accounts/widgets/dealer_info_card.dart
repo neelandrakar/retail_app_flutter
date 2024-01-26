@@ -40,7 +40,8 @@ class _DealerInfoCardState extends State<DealerInfoCard> {
         decoration: BoxDecoration(
             color: MyColors.ashColor,
             border: Border.all(color: MyColors.offWhiteColor, width: 1),
-            borderRadius: BorderRadius.circular(20)),
+            borderRadius: BorderRadius.circular(20)
+        ),
         child: Column(
           children: [
             Container(
@@ -93,8 +94,8 @@ class _DealerInfoCardState extends State<DealerInfoCard> {
                                     maxLines: 1,
                                     style: TextStyle(
                                         color: MyColors.blackColor,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
                                         fontFamily: MyFonts.poppins),
                                   ),
                                   Text(
@@ -104,7 +105,7 @@ class _DealerInfoCardState extends State<DealerInfoCard> {
                                     style: TextStyle(
                                         color: MyColors.fadedBlack,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 11,
+                                        fontSize: 10,
                                         fontFamily: MyFonts.poppins),
                                   )
                                 ],
@@ -143,7 +144,7 @@ class _DealerInfoCardState extends State<DealerInfoCard> {
                                   Row(
                                     children: [
                                       Text(
-                                        'District',
+                                        'District:',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: TextStyle(

@@ -56,7 +56,9 @@ class _SubmitOdometerScreenState extends State<SubmitOdometerScreen> {
         attendanceServices.submitLoginOdometer(
             context: context,
             onSuccess: () {
-              Navigator.pushNamed(context, HomeScreen.routeName);
+              dataSync(context, () {
+                Navigator.pushNamed(context, HomeScreen.routeName);
+              });
             },
             vehicleType: selectedVehicleType,
             startKM: int.parse(_odometerController.text),

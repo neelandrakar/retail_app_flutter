@@ -3,10 +3,12 @@ const Employee = require('../models/employee');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const authRouter = express.Router();
+const Zone = require('../models/zone');
 const State = require('../models/state_tbl');
 const Cluster = require('../models/clusters');
 const District = require('../models/districts');
 const Block = require('../models/blocks');
+const JsonLog = require('../models/json_log');
 
 //Sign up
 authRouter.post('/v1/api/signup', async (req,res) => {
@@ -128,11 +130,33 @@ authRouter.post('/v1/api/signin', async (req,res) => {
         
                     return cluster ? cluster[0].cluster_name : 'NA';
                 }
+
+                async function getZoneData(get_state_id, zoneKey){
+
+                    let state = await State.find({
+                        state_id: { $in: get_state_id }
+                    });
+        
+                    let get_zone_id = state[0].zone_id;
+        
+                    let zone = await Zone.find({
+                        zone_id: get_zone_id
+                    });
+        
+                    if(zoneKey==1){
+                        return zone.length>0 ? zone[0].zone_name : 'NA';
+                    } else if(zoneKey==2){
+                        return zone.length>0 ? zone[0].zone_id : 0;
+        
+                    }
+                }
                 
                 const updatedEmp = {
                     ...employee.toObject(),
                     'state_names': await getStateNames(employee.state_id),
-                    'district_names': await getDistrictNames(employee.district_id)
+                    'district_names': await getDistrictNames(employee.district_id),
+                    'zone_name': await getZoneData(employee.state_id, 1),
+                    'zone_id': await getZoneData(employee.state_id, 2)
                 }
 
                 res.status(200).json(updatedEmp);
@@ -165,6 +189,19 @@ authRouter.post('/v1/api/signin', async (req,res) => {
 
         const checkEmp = await Employee.findById(verified.id);
         if(!checkEmp) return res.json(false);
+
+        let emp_id = '';
+
+        if(checkEmp){
+            emp_id = checkEmp._id;
+            let newJsonLog = new JsonLog({
+                post_user: emp_id,
+                api_name: '/v1/api/checkToken',
+                response: true
+              });
+              
+              newJsonLog = await newJsonLog.save();
+        }
 
         res.json(true);
 

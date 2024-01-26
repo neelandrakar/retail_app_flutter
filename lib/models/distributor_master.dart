@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class DealerMaster {
+class DistributorMaster {
   final String id;
   final int account_id;
   final String account_name;
@@ -12,6 +12,7 @@ class DealerMaster {
   final String state_name;
   final String cluster_name;
   final List<String> district_names;
+  final String main_district;
   final String block_name;
   final String street;
   final String area;
@@ -21,6 +22,7 @@ class DealerMaster {
   final String account_status;
   final int work_for;
   final int account_type_id;
+  final int working_as_dealer;
   final int d_status;
   final String latitude;
   final String longitude;
@@ -50,7 +52,7 @@ class DealerMaster {
   final int ninetyOne_to_above;
   final int security_deposite;
   final int created_before;
-  DealerMaster({
+  DistributorMaster({
     required this.id,
     required this.account_id,
     required this.account_name,
@@ -61,6 +63,7 @@ class DealerMaster {
     required this.state_name,
     required this.cluster_name,
     required this.district_names,
+    required this.main_district,
     required this.block_name,
     required this.street,
     required this.area,
@@ -70,6 +73,7 @@ class DealerMaster {
     required this.account_status,
     required this.work_for,
     required this.account_type_id,
+    required this.working_as_dealer,
     required this.d_status,
     required this.latitude,
     required this.longitude,
@@ -113,6 +117,7 @@ class DealerMaster {
       'state_name': state_name,
       'cluster_name': cluster_name,
       'district_names': district_names,
+      'main_district_name': main_district,
       'block_name': block_name,
       'street': street,
       'area': area,
@@ -122,6 +127,7 @@ class DealerMaster {
       'account_status': account_status,
       'work_for': work_for,
       'account_type_id': account_type_id,
+      'working_as_dealer': working_as_dealer,
       'd_status': d_status,
       'latitude': latitude,
       'longitude': longitude,
@@ -154,8 +160,8 @@ class DealerMaster {
     };
   }
 
-  factory DealerMaster.fromMap(Map<String, dynamic> map) {
-    return DealerMaster(
+  factory DistributorMaster.fromMap(Map<String, dynamic> map) {
+    return DistributorMaster(
       id: map['_id'] as String,
       account_id: map['account_id'] as int,
       account_name: map['account_name'] as String,
@@ -165,6 +171,7 @@ class DealerMaster {
       mobno: map['mobno'] as int,
       state_name: map['state_name'] as String,
       cluster_name: map['cluster_name'] as String,
+      main_district: map['main_district_name'] as String,
       district_names: List<String>.from((map['district_names'] as List)),
       block_name: map['block_name'] as String,
       street: map['street'] as String,
@@ -175,6 +182,7 @@ class DealerMaster {
       account_status: map['account_status'] as String,
       work_for: map['work_for'] as int,
       account_type_id: map['account_type_id'] as int,
+      working_as_dealer: map['working_as_dealer'] as int,
       d_status: map['d_status'] as int,
       latitude: map['latitude'] as String,
       longitude: map['longitude'] as String,
@@ -209,5 +217,5 @@ class DealerMaster {
 
   String toJson() => json.encode(toMap());
 
-  factory DealerMaster.fromJson(String source) => DealerMaster.fromMap(json.decode(source));
+  factory DistributorMaster.fromJson(String source) => DistributorMaster.fromMap(json.decode(source));
 }

@@ -26,6 +26,7 @@ class OutstandingBox extends StatelessWidget {
               Container(
                 height: 20,
                 alignment: Alignment.center,
+                // color: Colors.red,
                 child: Text(
                   date_range,
                   overflow: TextOverflow.ellipsis,

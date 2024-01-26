@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:retail_app_flutter/attendance/services/attendance_services.dart';
+import 'package:retail_app_flutter/constants/data_sync_loader.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
 
 void showSnackBar(BuildContext context,String text){
@@ -144,4 +146,32 @@ String getDateUniversalFormat(DateTime date){
   String formattedDate = DateFormat('d, MMM, yyy').format(date);
 
   return formattedDate;
+}
+
+void dataSync(BuildContext context, VoidCallback onSuccess)async{
+
+  AttendanceServices attendanceServices = AttendanceServices();
+  bool allowClosing = false;
+
+  showDialog(
+      context: context,
+      builder: (BuildContext con){
+        return DataSyncLoader(onSuccessCallBack: (){
+          onSuccess.call();
+        },);
+      });
+
+  // await attendanceServices.updateEmployeeData(context: context, onSuccess: () async {
+  //   print('emp data updated');
+  //   await attendanceServices.fetchDealerData(context: context, onSuccess: () async {
+  //     print('dealer data fetched');
+  //     await attendanceServices.fetchDistributorData(context: context, onSuccess: () async{
+  //       print('distributor data fetched');
+  //       await attendanceServices.fetchEngineerData(context: context, onSuccess: (){
+  //         print('engineer data fetched');
+  //         onSuccess.call();
+  //       });
+  //     });
+  //   });
+  // });
 }

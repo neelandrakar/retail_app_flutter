@@ -15,7 +15,7 @@ class _HomeMenuRadioButtonState extends State<HomeMenuRadioButton> {
         width: 80,
         height: 40,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20)
+          borderRadius: BorderRadius.circular(20),
         ),
         alignment: Alignment.center,
         child: Text(

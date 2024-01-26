@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/accounts/screens/accounts_screen.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/constants/utils.dart';
 import 'package:retail_app_flutter/home/widgets/menu_card.dart';
+import 'package:retail_app_flutter/visit_plan/screens/visit_plan_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../models/dashboard_menu.dart';
@@ -52,8 +54,14 @@ class _MenuScreenState extends State<MenuScreen> {
       Navigator.pushNamed(context, Accounts.routeName);
     } else if(index==1){
       print('Navigate to order screen');
-    }
+    } else if(index==7){
 
+      dataSync(context, () {
+        showSnackBar(context, 'Data is successfully synced');
+      });
+    } else if(index==5){
+      Navigator.pushNamed(context, VisitPlanScreen.routeName);
+    }
   }
 
   @override
