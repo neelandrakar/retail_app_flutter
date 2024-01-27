@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:retail_app_flutter/accounts/screens/create_account_screen.dart';
 import 'package:retail_app_flutter/accounts/widgets/outstanding_box.dart';
 import 'package:retail_app_flutter/accounts/widgets/sale_box_column.dart';
+import 'package:retail_app_flutter/accounts/widgets/visit_call_dialogue.dart';
 import 'package:retail_app_flutter/constants/account_list_button.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
+import 'package:retail_app_flutter/constants/data_sync_loader.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
 import 'package:retail_app_flutter/constants/utils.dart';
@@ -178,10 +181,23 @@ class _DealerInfoCardState extends State<DealerInfoCard> {
                       ]),
                       GestureDetector(
                         onTap: (){
-                          print('call ${dealer.account_name}');
+                          
+                          showDialog(context: context, builder: (_){
+                            List<String> accNameList = widget.dealerMaster.account_name.split(" ");
+                            String accName = accNameList[0];
+                            double acc_lat = double.parse(widget.dealerMaster.latitude);
+                            double acc_lon = double.parse(widget.dealerMaster.longitude);
+
+                            return VisitCallDoalogue(
+                              account_name: accName,
+                              account_latitude: acc_lat,
+                              account_longitude: acc_lon,
+                            );
+                          });
+                          print('cal ${dealer.account_name}');
                         },
                         child: Image.asset(
-                            AssetsConstants.call_icon,
+                            AssetsConstants.click_here,
                             height: 27,
                             width: 27
                         ),
