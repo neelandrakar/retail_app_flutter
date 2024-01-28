@@ -165,6 +165,12 @@ const accountMasterSchema = mongoose.Schema({
         default: '0.0'
     },
 
+    home_location_img: {
+
+        type: String,
+        default: ''
+    },
+
     office_longitude: {
 
         type: String,
@@ -175,6 +181,12 @@ const accountMasterSchema = mongoose.Schema({
 
         type: String,
         default: '0.0'
+    },
+
+    office_location_img: {
+
+        type: String,
+        default: ''
     },
 
     referred_by: {

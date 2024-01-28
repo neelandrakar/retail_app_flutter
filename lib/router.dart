@@ -54,11 +54,19 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       );
 
     case VisitPlanScreen.routeName:
-      return MaterialPageRoute(
-          settings: routeSettings,
-          builder: (_) => VisitPlanScreen()
-      );
+      List<dynamic> args = routeSettings.arguments as List;
 
+      if(args.length>1) {
+        return MaterialPageRoute(
+            settings: routeSettings,
+            builder: (_) =>
+                VisitPlanScreen(showAccDialogue: args[0], dealer: args[1])
+        );
+      } else{ return MaterialPageRoute(
+              settings: routeSettings,
+              builder: (_) =>
+              VisitPlanScreen(showAccDialogue: args[0]));
+  }
 
 
     default:

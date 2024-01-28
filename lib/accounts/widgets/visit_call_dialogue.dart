@@ -2,19 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/models/dealer_master.dart';
 import 'package:retail_app_flutter/visit_plan/screens/visit_plan_screen.dart';
 
 import '../../constants/my_fonts.dart';
 
 class VisitCallDoalogue extends StatefulWidget {
-  final String account_name;
-  final double account_latitude;
-  final double account_longitude;
+  final DealerMaster dealerMaster;
   const VisitCallDoalogue({
     super.key,
-    required this.account_name,
-    required this.account_latitude,
-    required this.account_longitude
+    required this.dealerMaster
   });
 
   @override
@@ -24,6 +21,13 @@ class VisitCallDoalogue extends StatefulWidget {
 class _VisitCallDoalogueState extends State<VisitCallDoalogue> {
   @override
   Widget build(BuildContext context) {
+
+    List<String> accNameList = widget.dealerMaster.account_name.split(" ");
+    String accName = accNameList[0];
+    double acc_lat = double.parse(widget.dealerMaster.latitude);
+    double acc_lon = double.parse(widget.dealerMaster.longitude);
+
+
     return Dialog(
       child: Container(
         height: 200,
@@ -37,7 +41,11 @@ class _VisitCallDoalogueState extends State<VisitCallDoalogue> {
           children: [
             GestureDetector(
               onTap: (){
-                Navigator.pushNamed(context, VisitPlanScreen.routeName);
+
+                Navigator.pushNamed(
+                    context, VisitPlanScreen.routeName,
+                    arguments: [false, widget.dealerMaster]
+                );
               },
               child: Container(
                 height: 35,
@@ -104,7 +112,7 @@ class _VisitCallDoalogueState extends State<VisitCallDoalogue> {
                   Icon(Icons.call, size: 20, color: MyColors.appBarColor,),
                   SizedBox(width: 5),
                   Text(
-                    'Call ${widget.account_name}',
+                    'Call ${accName}',
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: const TextStyle(

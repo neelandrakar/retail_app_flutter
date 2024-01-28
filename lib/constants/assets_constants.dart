@@ -36,4 +36,5 @@ class AssetsConstants{
   static const String call_icon = '$_pngPath/call_icon.png';
   static const String click_here = '$_pngPath/click_here.png';
   static const String location = '$_pngPath/location.png';
+  static const String earth_pin = '$_pngPath/earth-pin.png';
 }

@@ -60,7 +60,7 @@ class _MenuScreenState extends State<MenuScreen> {
         showSnackBar(context, 'Data is successfully synced');
       });
     } else if(index==5){
-      Navigator.pushNamed(context, VisitPlanScreen.routeName);
+      Navigator.pushNamed(context, VisitPlanScreen.routeName, arguments: [true]);
     }
   }
 

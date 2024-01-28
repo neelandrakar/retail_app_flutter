@@ -189,9 +189,7 @@ class _DealerInfoCardState extends State<DealerInfoCard> {
                             double acc_lon = double.parse(widget.dealerMaster.longitude);
 
                             return VisitCallDoalogue(
-                              account_name: accName,
-                              account_latitude: acc_lat,
-                              account_longitude: acc_lon,
+                              dealerMaster: widget.dealerMaster,
                             );
                           });
                           print('cal ${dealer.account_name}');

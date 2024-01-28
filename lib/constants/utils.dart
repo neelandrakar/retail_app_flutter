@@ -1,14 +1,20 @@
 import 'dart:io';
+import 'dart:math';
 
 // import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:geocoding/geocoding.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/attendance/services/attendance_services.dart';
 import 'package:retail_app_flutter/constants/data_sync_loader.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
+
+import '../models/employee.dart';
+import '../providers/user_provider.dart';
 
 void showSnackBar(BuildContext context,String text){
   ScaffoldMessenger.of(context).showSnackBar(
@@ -174,4 +180,27 @@ void dataSync(BuildContext context, VoidCallback onSuccess)async{
   //     });
   //   });
   // });
+}
+
+double calculateDistance(lat1, lon1, lat2, lon2){
+  var p = 0.017453292519943295;
+  var c = cos;
+  var a = 0.5 - c((lat2 - lat1) * p)/2 +
+      c(lat1 * p) * c(lat2 * p) *
+          (1 - c((lon2 - lon1) * p))/2;
+  return 12742 * asin(sqrt(a))* 1000;
+}
+
+// Future<String> getAddressFromLatLon(double lat, double lon) async {
+//   List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
+//   Placemark place = placemarks[0];
+//   return '${place.street}, ${place.subLocality}, ${place.locality}, ${place.administrativeArea}, ${place.country}';
+// }
+
+String getEmployeeName(BuildContext context){
+
+  Employee emp =
+      Provider.of<EmployeeProvider>(context, listen: false).employee;
+
+  return emp.emp_name;
 }

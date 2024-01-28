@@ -112,7 +112,7 @@ class _ChooseVisitPlanAccountsDialogueState extends State<ChooseVisitPlanAccount
             borderRadius: BorderRadius.circular(20),
             color: MyColors.boneWhite
           ),
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               CustomDropdown(

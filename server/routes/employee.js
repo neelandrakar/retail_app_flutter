@@ -238,11 +238,15 @@ employeeRouter.post('/v1/api/fetch-tagged-accounts', auth, async(req,res) => {
 
         const emp_id = req.user;
         let employee = await Employee.findById(emp_id);
-
         let emp_districts = employee.district_id;
 
         let taggedAccounts = await AccountMaster.find({
-            ASM: emp_id,
+            $or: [
+                {AGM_RSM: emp_id},
+                {ASM: emp_id},
+                {SO: emp_id},
+                {ME: emp_id},
+            ],
             all_districts : { $in: emp_districts },
             account_type_id: account_type_id,
             d_status: 0,
@@ -554,7 +558,7 @@ employeeRouter.post('/v1/api/fetch-districts', auth, async(req,res) => {
 
         const {district_id} = req.body;
 
-        console.log(req.body);
+        // console.log(req.body);
 
         let blockList = await Block.find({
             district_id: district_id
