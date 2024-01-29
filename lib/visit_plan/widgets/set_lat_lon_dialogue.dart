@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
+import 'package:retail_app_flutter/constants/custom_elevated_button.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/models/dealer_master.dart';
@@ -20,6 +23,8 @@ class _SetLatLonDialogueState extends State<SetLatLonDialogue> {
 
   String accName = 'NA';
   String noLocationText = 'NA';
+  String? _currentAddress;
+  Position? _currentPosition;
 
 
   @override
@@ -39,6 +44,7 @@ class _SetLatLonDialogueState extends State<SetLatLonDialogue> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -50,7 +56,12 @@ class _SetLatLonDialogueState extends State<SetLatLonDialogue> {
 
     String getLocationHeaderText(VisitLocationType visitLocType) {
       if (visitLocType == VisitLocationType.Home) {
-        return "Home location isn't plotted";
+        if(widget.dealer.latitude != 0.0.toString() || widget.dealer.longitude != 0.0.toString()) {
+          return "${widget.dealer.latitude}, ${widget.dealer.longitude}";
+        } else {
+          return "Home location isn't plotted";
+
+        }
       } else if (visitLocType == VisitLocationType.Office) {
         return "Office location isn't plotted";
       } else if (visitLocType == VisitLocationType.Site) {
@@ -112,12 +123,23 @@ class _SetLatLonDialogueState extends State<SetLatLonDialogue> {
               ),
             ),
             SizedBox(height: 10),
-            HomeOfficeSite(onRadioChange: (){
+            HomeOfficeSiteRadio(
+              onRadioChange: (){
               setState(() {
-                print('hello');
                 print(visitLocationType);
               });
-            },)
+            },),
+            SizedBox(height: 40),
+            CustomElevatedButton(
+                buttonText: 'Click Image',
+                buttonIcon: Icons.camera_alt,
+                buttonColor: MyColors.appBarColor,
+                buttonTextColor: MyColors.boneWhite,
+                buttonIconColor: MyColors.boneWhite,
+                height: 40,
+                width: 100,
+                onClick: (){}
+            )
           ],
         ),
       ),

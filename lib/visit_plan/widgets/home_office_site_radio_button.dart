@@ -4,16 +4,16 @@ import 'package:retail_app_flutter/constants/my_colors.dart';
 
 import '../../constants/my_fonts.dart';
 
-class HomeOfficeSite extends StatefulWidget {
+class HomeOfficeSiteRadio extends StatefulWidget {
 
   final VoidCallback onRadioChange;
-  const HomeOfficeSite({super.key, required this.onRadioChange});
+  const HomeOfficeSiteRadio({super.key, required this.onRadioChange});
 
   @override
-  State<HomeOfficeSite> createState() => _HomeOfficeSiteState();
+  State<HomeOfficeSiteRadio> createState() => _HomeOfficeSiteRadioState();
 }
 
-class _HomeOfficeSiteState extends State<HomeOfficeSite> {
+class _HomeOfficeSiteRadioState extends State<HomeOfficeSiteRadio> {
 
   @override
   Widget build(BuildContext context) {

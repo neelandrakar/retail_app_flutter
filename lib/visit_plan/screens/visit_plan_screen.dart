@@ -74,6 +74,11 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
         visitingAccLatitude = double.parse(widget.dealer!.latitude);
         visitingAccLongitude = double.parse(widget.dealer!.longitude);
 
+        showDialog(
+            context: context,
+            builder: (_) => SetLatLonDialogue(dealer: widget.dealer!)
+        );
+
         if(visitingAccLatitude != 0.0 || visitingAccLongitude != 0.0) {
           initialLatitude = visitingAccLatitude;
           initialLongitude = visitingAccLongitude;
@@ -85,11 +90,6 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
 
           initialLatitude = currentLatitude;
           initialLongitude = currentLongitude;
-
-          showDialog(
-              context: context,
-              builder: (_) => SetLatLonDialogue(dealer: widget.dealer!)
-          );
         }
       } else{
 

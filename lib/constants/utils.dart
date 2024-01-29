@@ -4,7 +4,8 @@ import 'dart:math';
 // import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:geocoding/geocoding.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
@@ -190,12 +191,6 @@ double calculateDistance(lat1, lon1, lat2, lon2){
           (1 - c((lon2 - lon1) * p))/2;
   return 12742 * asin(sqrt(a))* 1000;
 }
-
-// Future<String> getAddressFromLatLon(double lat, double lon) async {
-//   List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
-//   Placemark place = placemarks[0];
-//   return '${place.street}, ${place.subLocality}, ${place.locality}, ${place.administrativeArea}, ${place.country}';
-// }
 
 String getEmployeeName(BuildContext context){
 

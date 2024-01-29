@@ -38,6 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     return Scaffold(
       backgroundColor: MyColors.offWhiteColor,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child:
             ClipPath(
