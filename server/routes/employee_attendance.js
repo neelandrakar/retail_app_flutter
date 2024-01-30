@@ -126,14 +126,17 @@ attendanceRouter.get('/v1/api/get-attendance',  auth ,async (req,res) => {
 
             startDate = new Date(currentYear,currentMonth-1, 26);
             endDate = new Date(currentYear,currentMonth,25);
+            console.log(1);
            
         } else if(currentDate>=26 && currentDate<=31){
 
             startDate = formatDate(new Date(currentYear,currentMonth, 26));
-            endDate = formatDate(new Date(currentYear,currentMonth+1,25+1));
+            endDate = formatDate(new Date(currentYear,currentMonth+1,25));
+            console.log(endDate + ' $$ '+ startDate);
+
         }
 
-        if(formatDate(emp.joining_date>startDate)){
+        if(formatDate(emp.joining_date)>startDate){
           startDate = formatDate(emp.joining_date+1);
         }
 
@@ -312,7 +315,7 @@ attendanceRouter.get('/v1/api/get-attendance',  auth ,async (req,res) => {
 
         const full_attendance_data = ({
             'cycle_start_date': formatDate(startDate, true),
-            'cycle_end_date': formatDate(endDate-1, true),
+            'cycle_end_date': formatDate(endDate, true),
             'current_date': getTime,
             'hasLoggedInToday': hasLoggedInToday,
             get_attendance

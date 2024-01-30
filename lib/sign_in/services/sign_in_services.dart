@@ -63,7 +63,7 @@ class SignInServices{
     }
   }
 
-  void getUserData(
+  Future<void> getUserData(
       BuildContext context
       ) async {
 

@@ -40,13 +40,16 @@ dependencies:
   geolocator: ^10.1.0
   geocoding: ^2.1.1
   #file_picker: ^6.1.1
-#  image_picker: ^1.0.6
+  #image_picker: ^1.0.6
  # path_provider: ^2.1.1
   #flutter_plugin_android_lifecycle: ^2.0.17
   shimmer: ^3.0.0
   flutter_map: ^6.1.0
   latlong2: ^0.9.0
   loading_animation_widget: ^1.2.0+4
+  camera: ^0.10.5+9
+  permission_handler: ^11.2.0
+
 
 
 

@@ -238,5 +238,40 @@ accountRouter.post('/v1/api/create-engineer', auth, async(req,res) => {
 
 });
 
+accountRouter.post('/v1/api/account-location-update',  async (req,res) => {
+
+    try{
+
+        const { account_obj_id, new_lat, new_lon, account_type_id, address_type} = req.body;
+
+        const emp_id = req.user;
+        let account = await AccountMaster.findById(account_obj_id);
+
+        if(account.latitude!='' && account.longitude!=''){
+
+        if(account.latitude=='0.0' || account.longitude=='0.0'){
+
+            account.latitude = new_lat;
+            account.longitude = new_lon;
+
+            //account = await account.save();
+            
+
+
+        } else {
+            console.log('plotted');
+
+        }
+            
+            res.json(account);
+    } else {
+        res.status(500).json({error: 'Error: Location is invalid. Please contact developer'});
+    }
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+});
+
 
 module.exports = accountRouter;

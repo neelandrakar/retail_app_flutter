@@ -4,9 +4,11 @@ import 'package:retail_app_flutter/accounts/screens/accounts_screen.dart';
 import 'package:retail_app_flutter/accounts/screens/create_account_screen.dart';
 import 'package:retail_app_flutter/attendance/screens/attendance_screen.dart';
 import 'package:retail_app_flutter/attendance/screens/submit_odometer_screen.dart';
+import 'package:retail_app_flutter/constants/camera_screen.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/home/screens/visits_screen.dart';
+import 'package:retail_app_flutter/visit_plan/screens/confirm_location_screen.dart';
 import 'package:retail_app_flutter/visit_plan/screens/visit_plan_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings){
@@ -53,6 +55,20 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
           builder: (_) => CreateAccountScreen(account_type: account_type)
       );
 
+    case ConfirmLocationScreen.routeName:
+      List<dynamic> args = routeSettings.arguments as List;
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) => ConfirmLocationScreen(funKey: args[1], account_name: args[0])
+      );
+
+    case CameraScreen.routeName:
+      List<dynamic> args = routeSettings.arguments as List;
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) => CameraScreen(functionalityKey: args[1], account_name: args[0])
+      );
+
     case VisitPlanScreen.routeName:
       List<dynamic> args = routeSettings.arguments as List;
 
@@ -62,7 +78,8 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
             builder: (_) =>
                 VisitPlanScreen(showAccDialogue: args[0], dealer: args[1])
         );
-      } else{ return MaterialPageRoute(
+      } else{
+        return MaterialPageRoute(
               settings: routeSettings,
               builder: (_) =>
               VisitPlanScreen(showAccDialogue: args[0]));

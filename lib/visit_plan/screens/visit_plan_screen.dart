@@ -76,7 +76,11 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
 
         showDialog(
             context: context,
-            builder: (_) => SetLatLonDialogue(dealer: widget.dealer!)
+            builder: (_) => SetLatLonDialogue(
+                dealer: widget.dealer!,
+                emp_lat: currentLatitude,
+                emp_lon: currentLongitude,
+            )
         );
 
         if(visitingAccLatitude != 0.0 || visitingAccLongitude != 0.0) {

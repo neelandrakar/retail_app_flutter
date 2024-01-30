@@ -1,6 +1,10 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/attendance/screens/attendance_screen.dart';
+import 'package:retail_app_flutter/constants/assets_constants.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/providers/attendance_model_provider.dart';
@@ -13,7 +17,11 @@ import 'package:retail_app_flutter/router.dart';
 import 'package:retail_app_flutter/sign_in/screens/sign_in_screen.dart';
 import 'package:retail_app_flutter/sign_in/services/sign_in_services.dart';
 
-void main() {
+List<CameraDescription> cameras = [];
+void main() async{
+
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   runApp(
       MultiProvider(
         providers: [
@@ -39,31 +47,50 @@ class _MyAppState extends State<MyApp> {
 
   final SignInServices signInServices = SignInServices();
 
+  Future<void> _requestPermissions() async {
+    final PermissionStatus cameraStatus = await Permission.camera.request();
+    if (cameraStatus.isGranted) {
+      print('Camera permission is granted');
+      final PermissionStatus locationStatus = await Permission.location
+          .request();
+      if (locationStatus.isGranted) {
+        print('Location permission is granted');
+      } else {
+        print('Location permission is denied');
+      }
+    } else {
+      print('Permission is denied');
+    }
+  }
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
       signInServices.getUserData(context);
+      _requestPermissions();
     });
     // TODO: implement initState
     super.initState();
   }
 
-
-    // This widget is the root of your application.
-    @override
-    Widget build(BuildContext context) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Retail CRM Flutter',
-        onGenerateRoute: (settings) => generateRoute(settings),
-        theme: ThemeData(
-          // colorScheme: ColorScheme.light(),
-          primaryColor: MyColors.mainYellowColor,
-          useMaterial3: true,
-        ),
-        home: Provider.of<EmployeeProvider>(context).employee.jwt_token.isNotEmpty
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Retail CRM Flutter',
+      onGenerateRoute: (settings) => generateRoute(settings),
+      theme: ThemeData(
+        // colorScheme: ColorScheme.light(),
+        primaryColor: MyColors.mainYellowColor,
+        useMaterial3: true,
+      ),
+      home: Provider
+          .of<EmployeeProvider>(context)
+          .employee
+          .jwt_token
+          .isNotEmpty
           ? AttendanceScreen()
           : SignInScreen(),
-      );
-    }
+    );
   }
+}
