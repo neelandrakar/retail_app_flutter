@@ -24,8 +24,10 @@ class DealerMaster {
   final int d_status;
   final String latitude;
   final String longitude;
+  final String home_location_img;
   final String office_latitude;
   final String office_longitude;
+  final String office_location_img;
   final String referred_by;
   final String tagged_rsm;
   final String tagged_asm;
@@ -73,8 +75,10 @@ class DealerMaster {
     required this.d_status,
     required this.latitude,
     required this.longitude,
+    required this.home_location_img,
     required this.office_latitude,
     required this.office_longitude,
+    required this.office_location_img,
     required this.referred_by,
     required this.tagged_rsm,
     required this.tagged_asm,
@@ -125,8 +129,10 @@ class DealerMaster {
       'd_status': d_status,
       'latitude': latitude,
       'longitude': longitude,
+      'home_location_img': home_location_img,
       'office_latitude': office_latitude,
       'office_longitude': office_longitude,
+      'office_location_img': office_location_img,
       'referred_by': referred_by,
       'tagged_rsm': tagged_rsm,
       'tagged_asm': tagged_asm,
@@ -178,8 +184,10 @@ class DealerMaster {
       d_status: map['d_status'] as int,
       latitude: map['latitude'] as String,
       longitude: map['longitude'] as String,
+      home_location_img: map['home_location_img'] as String,
       office_latitude: map['office_latitude'] as String,
       office_longitude: map['office_longitude'] as String,
+      office_location_img: map['office_location_img'] as String,
       referred_by: map['referred_by'] as String,
       tagged_rsm: map['tagged_rsm'] as String,
       tagged_asm: map['tagged_asm'] as String,

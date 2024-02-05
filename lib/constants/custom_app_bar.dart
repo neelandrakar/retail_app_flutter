@@ -9,6 +9,7 @@ class CustomAppBar extends StatelessWidget {
   final Widget? leading;
   final List<Widget>? actions;
   final PreferredSizeWidget? bottom;
+  final bool? body_behind_appbar;
   const CustomAppBar({
     super.key,
     required this.module_name,
@@ -16,7 +17,8 @@ class CustomAppBar extends StatelessWidget {
     this.show_back_button = true,
     this.bottom,
     this.leading,
-    this.actions
+    this.actions,
+    this.body_behind_appbar = false
   });
 
   @override
@@ -28,6 +30,7 @@ class CustomAppBar extends StatelessWidget {
       foregroundColor: MyColors.boneWhite,
       actions: actions,
       automaticallyImplyLeading: show_back_button,
+      excludeHeaderSemantics: body_behind_appbar!,
       title: Column(
         children: [
           Text(module_name,

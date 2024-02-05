@@ -1,25 +1,33 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:retail_app_flutter/constants/global_variables.dart';
+import 'package:retail_app_flutter/constants/custom_elevated_button.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/constants/saved_location_sp.dart';
 import 'package:retail_app_flutter/constants/utils.dart';
 import 'package:retail_app_flutter/models/dealer_master.dart';
-import 'package:retail_app_flutter/visit_plan/widgets/choose_visit_plan_dialogue.dart';
+import 'package:retail_app_flutter/models/saved_visit_locations.dart';
+import 'package:retail_app_flutter/providers/dealer_master_provider.dart';
+import 'package:retail_app_flutter/visit_plan/screens/submit_remarks_screen.dart';
+import 'package:retail_app_flutter/visit_plan/widgets/location_marker.dart';
 import 'package:retail_app_flutter/visit_plan/widgets/set_lat_lon_dialogue.dart';
-import '../../accounts/widgets/account_creation_list_dialogue.dart';
 import '../../constants/custom_app_bar.dart';
+import '../../constants/my_fonts.dart';
 import '../../models/employee.dart';
 import '../../providers/user_provider.dart';
+import '../widgets/choose_visit_plan_dialogue.dart';
 
 class VisitPlanScreen extends StatefulWidget {
   static const String routeName = '/visit-plan-screen';
   final bool showAccDialogue;
-  final DealerMaster? dealer;
-  const VisitPlanScreen({Key? key, required this.showAccDialogue, this.dealer}) : super(key: key);
+  DealerMaster? dealer;
+  late int? funKey;
+  final bool? direct;
+  VisitPlanScreen({Key? key, required this.showAccDialogue, this.dealer, this.funKey, this.direct}) : super(key: key);
 
   @override
   State<VisitPlanScreen> createState() => _VisitPlanScreenState();
@@ -30,12 +38,19 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
   double currentLongitude = 0;
   double visitingAccLatitude =0 ;
   double visitingAccLongitude=0;
-  late double initialLatitude;
-  late double initialLongitude;
+  double initialLatitude=0;
+  double initialLongitude=0;
   late Future<void> _getLocationFuture;
   bool isLocationAlreadyPlotted = false;
+  bool allowBack = true;
   double distanceFromCurrentLocation = 0.0;
   String currentLocationData = 'NA';
+  String location_type = 'NA';
+  List<SavedVisitLocation> saved_locations = [];
+  List<Marker> initial_markers = [];
+  List<Polyline> initial_polylines = [];
+  List<CircleMarker> circle_layers = [];
+  List<DealerMaster> _dealer_master = [];
 
   @override
   void initState() {
@@ -43,6 +58,108 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
     _getLocationFuture = getCurrentLocation();
 
   }
+
+  void onClickFun() async {
+    print(distanceFromCurrentLocation);
+    // String address = await getAddressFromLatLon(visitingAccLatitude, visitingAccLongitude);
+    // print(address);
+    if(distanceFromCurrentLocation<=300){
+
+      print('You can submit visit remarks===> ${widget.funKey}');
+      showDialog(
+          context: context,
+          barrierDismissible: false,  //has to click a button
+          builder: (context){
+            return CupertinoAlertDialog(
+              title: Text('Warning!'),
+              content: Text('Are you sure you want to check in?'),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () {
+                      if(widget.dealer!.account_type_id==1){
+
+                        List<dynamic> _args = [widget.dealer?.account_type_id, widget.funKey, widget.dealer!];
+
+                        Navigator.pushNamed(context, SubmitRemarksScreen.routeName, arguments: _args);
+                      }
+                    },
+                    child: const Text('Yes')),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); //close Dialog
+                  },
+                  child: Text('No'),
+                )
+              ],
+            );
+          });
+    } else {
+      print('Please move closer within 300 meters of ${widget.dealer!.account_name} ===> ${widget.funKey}');
+      showDialog(
+          context: context,
+          barrierDismissible: false,  //has to click a button
+          builder: (context){
+            return CupertinoAlertDialog(
+              title: const Text(
+                "Warning!",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color: MyColors.appBarColor,
+                    fontSize: 17,
+                    fontFamily: MyFonts.poppins,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
+              content: Text(
+                "Please move within 300m of ${widget.dealer!.account_name}'s $location_type location to check in.",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: MyColors.appBarColor,
+                    fontSize: 11,
+                    fontFamily: MyFonts.poppins,
+                    fontWeight: FontWeight.w500),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); //close Dialog
+                  },
+                  child: const Text(
+                    "OK",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: MyColors.appBarColor,
+                        fontSize: 15,
+                        fontFamily: MyFonts.poppins,
+                        fontWeight: FontWeight.w600),
+                  ),
+                )
+              ],
+            );
+          });
+    }
+  }
+
+  storeLocation() async {
+
+    try {
+      final location = SavedVisitLocation(
+          account_obj_id: widget.dealer!.id,
+          location_type: widget.funKey!,
+          account_latitude: visitingAccLatitude,
+          account_longitude: visitingAccLongitude,
+          added_on: DateTime.now()
+      );
+      await SavedLocationSP.saveSavedVisitLocations(location);
+    } catch(e){
+      print(e.toString());
+      showSnackBar(context, e.toString());
+    }
+
+    }
 
   Future<void> getCurrentLocation() async {
     print("CHECKING LOCATION PERMISSION");
@@ -62,17 +179,84 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
         currentLatitude = currentLocation.latitude;
       });
 
+      //From dashboard
       if (widget.showAccDialogue) {
-        showDialog(
-            context: context,
-            builder: (_) => const ChooseVisitPlanAccountsDialogue()
+        print('a');
+        String locationTypeShort = 'NA';
+        _dealer_master = Provider.of<DealerMasterProvider>(context, listen: false).dealer_master;
+        saved_locations = await SavedLocationSP.getSavedVisitLocations();
+        print(saved_locations.length);
+        initial_markers.add(
+            Marker(
+              point: LatLng(currentLatitude, currentLongitude),
+              width: 100,
+              height: 100,
+              child: LocationMarker(
+                  visit_account_name: 'You',
+                  icon_color: Colors.blue,
+              )
+            )
         );
+        print('dealer_master length: ' + _dealer_master.length.toString());
+
+        for(int i=0; i<saved_locations.length; i++){
+
+          for(int j=0; j<_dealer_master.length; j++){
+            if(_dealer_master[j].id==saved_locations[i].account_obj_id){
+              widget.dealer = _dealer_master[j];
+            }
+          }
+
+          if(saved_locations[i].location_type==1){
+            locationTypeShort = 'H';
+            location_type = 'home';
+            widget.funKey=1;
+            distanceFromCurrentLocation = calculateDistance(currentLatitude, currentLongitude, double.parse(widget.dealer!.latitude), double.parse(widget.dealer!.longitude));
+          } else if(saved_locations[i].location_type==2){
+            locationTypeShort = 'O';
+            location_type = 'office';
+            widget.funKey=2;
+            distanceFromCurrentLocation = calculateDistance(currentLatitude, currentLongitude, double.parse(widget.dealer!.office_latitude), double.parse(widget.dealer!.office_longitude));
+          }
+
+          initial_markers.add(Marker(
+              point: LatLng(
+                  saved_locations[i].account_latitude,
+                  saved_locations[i].account_longitude
+              ),
+              width: 100,
+              height: 100,
+              child: LocationMarker(
+                  visit_account_name: "${widget.dealer!.account_name}($locationTypeShort)",
+                onClick: onClickFun
+              )
+          ));
+          
+          initial_polylines.add(Polyline(
+              points: [
+                LatLng(currentLatitude, currentLongitude),
+                LatLng(saved_locations[i].account_latitude,saved_locations[i].account_longitude),
+              ],
+              color: MyColors.blueColor,
+              strokeWidth: 9
+          ));
+
+              circle_layers.add(CircleMarker(
+                  point:  LatLng(saved_locations[i].account_latitude,saved_locations[i].account_longitude),
+                  radius: 300,
+                  color: Colors.redAccent.withOpacity(0.15),
+                  useRadiusInMeter: true,
+                  borderStrokeWidth: 1,
+                  borderColor: MyColors.redColor
+              ));
+        }
       }
 
-      if(widget.dealer!=null){
+      //From account section
+      else if(widget.dealer!=null && widget.direct==false){
+        print('b');
 
-        visitingAccLatitude = double.parse(widget.dealer!.latitude);
-        visitingAccLongitude = double.parse(widget.dealer!.longitude);
+
 
         showDialog(
             context: context,
@@ -80,22 +264,52 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
                 dealer: widget.dealer!,
                 emp_lat: currentLatitude,
                 emp_lon: currentLongitude,
+                onClick: (val) {
+                  print(val);
+                  setState(() {
+                    isLocationAlreadyPlotted = true;
+                    if(val=='home'){
+                      widget.funKey=1;
+                      visitingAccLatitude = double.parse(widget.dealer!.latitude);
+                      visitingAccLongitude = double.parse(widget.dealer!.longitude);
+                      distanceFromCurrentLocation = calculateDistance(currentLatitude, currentLongitude, visitingAccLatitude, visitingAccLongitude);
+                      storeLocation();
+                    } else if(val=='office'){
+                      widget.funKey=2;
+                      visitingAccLatitude = double.parse(widget.dealer!.office_latitude);
+                      visitingAccLongitude = double.parse(widget.dealer!.office_longitude);
+                      distanceFromCurrentLocation = calculateDistance(currentLatitude, currentLongitude, visitingAccLatitude, visitingAccLongitude);
+                      storeLocation();
+                    }
+                  });
+                }
             )
         );
 
-        if(visitingAccLatitude != 0.0 || visitingAccLongitude != 0.0) {
-          initialLatitude = visitingAccLatitude;
-          initialLongitude = visitingAccLongitude;
+        //From location approval
+      }
+      else if(widget.dealer!=null && widget.direct==true){
+      print('c');
 
-          distanceFromCurrentLocation = calculateDistance(currentLatitude, currentLongitude, visitingAccLatitude, visitingAccLongitude);
-
+        setState(() {
           isLocationAlreadyPlotted = true;
-        } else{
+          if(widget.funKey==1){
+            visitingAccLatitude = double.parse(widget.dealer!.latitude);
+            visitingAccLongitude = double.parse(widget.dealer!.longitude);
+            distanceFromCurrentLocation = calculateDistance(currentLatitude, currentLongitude, visitingAccLatitude, visitingAccLongitude);
+            storeLocation();
+          } else if(widget.funKey==2){
+            visitingAccLatitude = double.parse(widget.dealer!.office_latitude);
+            visitingAccLongitude = double.parse(widget.dealer!.office_longitude);
+            distanceFromCurrentLocation = calculateDistance(currentLatitude, currentLongitude, visitingAccLatitude, visitingAccLongitude);
+            storeLocation();
+          }
+        });
+      }
 
-          initialLatitude = currentLatitude;
-          initialLongitude = currentLongitude;
-        }
-      } else{
+      else{
+
+        print('hello ${widget.direct}');
 
         initialLatitude = currentLatitude;
         initialLongitude = currentLongitude;
@@ -110,117 +324,178 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
     Employee emp =
         Provider.of<EmployeeProvider>(context, listen: false).employee;
 
+    if(widget.funKey==1){
+      location_type = 'home';
+    } else if(widget.funKey==2){
+      location_type = 'office';
+    }
 
-    return Scaffold(
-      backgroundColor: MyColors.boneWhite,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(56),
-        child: CustomAppBar(
-          module_name: 'Visit Plan',
-          emp_name: getEmployeeName(context),
+    print('funKey===> ${widget.funKey}');
+
+    return WillPopScope(
+      onWillPop: () async => allowBack,
+      child: Scaffold(
+
+        floatingActionButton: Visibility(
+          visible: widget.showAccDialogue,
+          child: FloatingActionButton(
+            onPressed: (){
+              showDialog(
+            context: context,
+            builder: (_) => const ChooseVisitPlanAccountsDialogue()
+        );
+            },
+            child: Icon(Icons.add),
+            foregroundColor: MyColors.boneWhite,
+            backgroundColor: MyColors.appBarColor,
+          ),
         ),
-      ),
-      body: FutureBuilder<void>(
-        future: _getLocationFuture,
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-                child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: MyColors.appBarColor,
-                    size: 30
-                ));
-          } else {
-            return Center(
-              child: Container(
-                child: Column(
-                  children: [
-                    Flexible(
-                      child: FlutterMap(
-                        options: MapOptions(
+        backgroundColor: MyColors.boneWhite,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: CustomAppBar(
+            module_name: 'Visit Plan',
+            emp_name: getEmployeeName(context),
+          ),
+        ),
+        body: FutureBuilder<void>(
+          future: _getLocationFuture,
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: MyColors.appBarColor,
+                      size: 30
+                  ));
+            } else if(widget.showAccDialogue){
+              //From Dashboard
+              return Center(
+                child: Container(
+                  child: Column(
+                    children: [
+                      Flexible(
+                        child: FlutterMap(
+                          options: MapOptions(
 
-                          initialCenter:
-                          LatLng(initialLatitude, initialLongitude),
-                          initialZoom: 16,
-                        ),
 
-                        children: [
-
-
-                          TileLayer(
-                            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+                            initialCenter:
+                            LatLng(currentLatitude, currentLongitude),
+                            initialZoom: 15,
                           ),
-                          if(isLocationAlreadyPlotted)
-                            PolylineLayer(polylines: [
 
-                            Polyline(points: [
-                              LatLng(currentLatitude, currentLongitude),
-                              LatLng(visitingAccLatitude, visitingAccLongitude)
-                            ],
-                                color: MyColors.blueColor,
-                                strokeWidth: 9
+                          children: [
+
+
+                            TileLayer(
+                              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              userAgentPackageName: 'dev.fleaflet.flutter_map.example',
                             ),
-                          ]),
-                          MarkerLayer(
-                            markers: [
-                              Marker(
-                                point: LatLng(currentLatitude, currentLongitude),
-                                width: 100,
-                                height: 100,
-                                child: Icon(
-                                  Icons.location_on,
-                                  color: Colors.blue,
-                                  size: 30,
-                                ),
+                            CircleLayer(
+                              circles: circle_layers,
+                            ),
+                            MarkerLayer(
+                              markers: initial_markers,
+                            ),
+                            PolylineLayer(
+                                polylines: initial_polylines),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            //Specific
+            else if(visitingAccLatitude>0 && visitingAccLongitude>0 && isLocationAlreadyPlotted){
+
+              print(1);
+              return Center(
+                child: Container(
+                  child: Column(
+                    children: [
+                      Flexible(
+                        child: FlutterMap(
+                          options: MapOptions(
+
+
+                            initialCenter:
+                            LatLng(visitingAccLatitude, visitingAccLongitude),
+                            initialZoom: 15,
+                          ),
+
+                          children: [
+
+
+                            TileLayer(
+                              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+                            ),
+                            if(isLocationAlreadyPlotted)
+                              PolylineLayer(polylines: [
+
+                              Polyline(points: [
+                                LatLng(currentLatitude, currentLongitude),
+                                LatLng(visitingAccLatitude, visitingAccLongitude)
+                              ],
+                                  color: MyColors.blueColor,
+                                  strokeWidth: 9
                               ),
-                              if(isLocationAlreadyPlotted)
-                              Marker(
-                                point: LatLng(visitingAccLatitude,visitingAccLongitude),
-                                width: 100,
-                                height: 100,
-                                child: GestureDetector(
-                                  onTap: () async {
-
-                                    print(distanceFromCurrentLocation);
-                                    // String address = await getAddressFromLatLon(visitingAccLatitude, visitingAccLongitude);
-                                    // print(address);
-                                    if(distanceFromCurrentLocation<=300){
-
-                                      print('You can submit visit remarks');
-                                    } else {
-                                       print('Please move closer within 300 meters of ${widget.dealer!.account_name}');
-                                    }
-                                  },
-                                  child: Icon(
+                            ]),
+                            CircleLayer(
+                              circles: [
+                                CircleMarker(
+                                    point: LatLng(visitingAccLatitude, visitingAccLongitude),
+                                    radius: 300,
+                                    color: Colors.redAccent.withOpacity(0.15),
+                                    useRadiusInMeter: true,
+                                    borderStrokeWidth: 1,
+                                    borderColor: MyColors.redColor
+                                ),
+                              ],
+                            ),
+                            MarkerLayer(
+                              markers: [
+                                Marker(
+                                  point: LatLng(currentLatitude, currentLongitude),
+                                  width: 100,
+                                  height: 100,
+                                  child: const Icon(
                                     Icons.location_on,
-                                    color: Colors.red,
+                                    color: Colors.blue,
                                     size: 30,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          CircleLayer(
-                            circles: [
-                              CircleMarker(
-                                  point: LatLng(visitingAccLatitude, visitingAccLongitude),
-                                  radius: 300,
-                                  color: Colors.redAccent.withOpacity(0.4),
-                                  useRadiusInMeter: true,
-                                  borderStrokeWidth: 1,
-                                  borderColor: MyColors.redColor
-                              ),
-                            ],
-                          ),
-                        ],
+                                if(isLocationAlreadyPlotted)
+                                Marker(
+                                  point: LatLng(visitingAccLatitude,visitingAccLongitude),
+                                  width: 100,
+                                  height: 100,
+                                  child: GestureDetector(
+                                    onTap: onClickFun,
+                                    child: LocationMarker(visit_account_name: widget.dealer!.account_name)
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-        },
+              );
+            } else{
+              print('error===> my exception');
+              return Container(
+                child: Center(
+                  child: Text('404 Not found!'),
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

@@ -189,6 +189,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   ],
                 ),
                 child: Container(
+                  // color: MyColors.redColor,
                   margin: EdgeInsets.symmetric(horizontal: 15),
                   transform: Matrix4.translationValues(0.0, -25.0, 0),
                   child: Column(
@@ -335,6 +336,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             padding: EdgeInsets.all(8),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   height: 137,

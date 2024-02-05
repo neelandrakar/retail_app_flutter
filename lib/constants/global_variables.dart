@@ -1,6 +1,9 @@
-String uri = 'http://192.168.144.6:3000';
+import 'package:camera/camera.dart';
+
+String uri = 'http://192.168.35.6:3000';
 double currentLatitude = 0.0;
 double currentLongitude = 0.0;
+XFile? imageXFile;
 List<String> account_status = [
   'Active SSIL',
   'Inactive',

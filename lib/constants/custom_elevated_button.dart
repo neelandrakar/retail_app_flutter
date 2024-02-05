@@ -3,10 +3,10 @@ import 'package:retail_app_flutter/constants/my_fonts.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final String buttonText;
-  final IconData buttonIcon;
+  final IconData? buttonIcon;
   final Color buttonColor;
   final Color buttonTextColor;
-  final Color buttonIconColor;
+  final Color? buttonIconColor;
   final double? width;
   final double height;
   final double? iconSize;
@@ -15,10 +15,10 @@ class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
     super.key,
     required this.buttonText,
-    required this.buttonIcon,
+    this.buttonIcon,
     required this.buttonColor,
     required this.buttonTextColor,
-    required this.buttonIconColor,
+    this.buttonIconColor,
     this.width,
     required this.height,
     required this.onClick,
@@ -37,6 +37,7 @@ class CustomElevatedButton extends StatelessWidget {
             foregroundColor: buttonTextColor,
             backgroundColor: buttonColor,
             textStyle: TextStyle(
+              overflow: TextOverflow.ellipsis,
               fontFamily: MyFonts.poppins,
               color: buttonTextColor,
               fontSize: textSize
@@ -45,7 +46,9 @@ class CustomElevatedButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+              if(buttonIcon!=null)
               Icon(buttonIcon, color: buttonIconColor, size: iconSize,),
+            if(buttonIcon!=null)
               SizedBox(width: 3,),
               Text(buttonText)
           ],

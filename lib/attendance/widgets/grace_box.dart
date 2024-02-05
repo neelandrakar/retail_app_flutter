@@ -20,7 +20,7 @@ class _GraceBoxState extends State<GraceBox> {
   Widget build(BuildContext context) {
     return Container(
       width: 130,
-      height: 68,
+      height: 70,
       decoration: BoxDecoration(
           color: MyColors.graceBoxColor,
           borderRadius: BorderRadius.circular(10)

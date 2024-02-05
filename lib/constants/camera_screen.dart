@@ -10,12 +10,14 @@ import 'package:retail_app_flutter/visit_plan/screens/confirm_location_screen.da
 
 import '../main.dart';
 import 'custom_app_bar.dart';
+import 'global_variables.dart';
 
 class CameraScreen extends StatefulWidget {
   static const String routeName = '/camera-screen';
   final String account_name;
   final int functionalityKey;
-  const CameraScreen({super.key, required this.account_name, required this.functionalityKey});
+  final String account_obj_id;
+  const CameraScreen({super.key, required this.account_name, required this.functionalityKey, required this.account_obj_id});
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -42,6 +44,7 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void dispose() {
     controller.dispose();
+    imageFile!.delete();
     super.dispose();
   }
 
@@ -71,20 +74,20 @@ class _CameraScreenState extends State<CameraScreen> {
             onPressed: () async {
               if (!imageCaptured) {
                 try {
-                  final image = await controller.takePicture();
+                  imageXFile = await controller.takePicture();
                   setState(() {
-                    imageFile = File(image.path);
+                    imageFile = File(imageXFile!.path);
                     imageCaptured = true;
                   });
                   // Do something with the captured image
-                  print('Image Path: ${image.path}');
+                  print('Image Path: ${imageXFile!.path}');
                 } catch (e) {
                   print(e);
                 }
               } else {
                 Navigator.pushNamed(
                     context, ConfirmLocationScreen.routeName,
-                    arguments: [widget.account_name, widget.functionalityKey]
+                    arguments: [widget.account_name, widget.functionalityKey, widget.account_obj_id]
                 );                print('Navigate to map');
               }
             }

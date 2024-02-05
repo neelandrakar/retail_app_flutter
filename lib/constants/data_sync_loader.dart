@@ -84,9 +84,7 @@ class _DataSyncLoaderState extends State<DataSyncLoader> {
 
     return WillPopScope(
       onWillPop: () {
-        return Future.value(
-          showCloseButton
-        );
+        return Future.value(showCloseButton);
       },
       child: Dialog(
         child: Container(

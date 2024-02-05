@@ -19,7 +19,8 @@ class SetLatLonDialogue extends StatefulWidget {
   final DealerMaster dealer;
   final double emp_lat;
   final double emp_lon;
-  const SetLatLonDialogue({super.key, required this.dealer, required this.emp_lat, required this.emp_lon});
+  final void Function(String) onClick;
+  const SetLatLonDialogue({super.key, required this.dealer, required this.emp_lat, required this.emp_lon, required this.onClick});
 
   @override
   State<SetLatLonDialogue> createState() => _SetLatLonDialogueState();
@@ -208,20 +209,23 @@ class _SetLatLonDialogueState extends State<SetLatLonDialogue> {
 
       if (visitLocType == VisitLocationType.Home) {
         if (homeLocationAlreadyPlotted) {
-          print('Check in at home');
+          widget.onClick('home');
+          Navigator.pop(context);
         } else {
           Navigator.pushNamed(
               context, CameraScreen.routeName,
-              arguments: [accName, 1]
+              arguments: [1, accName, widget.dealer.id]
           );
         }
       } else if (visitLocType == VisitLocationType.Office) {
         if (officeLocationAlreadyPlotted) {
+          widget.onClick('office');
+          Navigator.pop(context);
           print('Check in at office');
         } else {
           Navigator.pushNamed(
               context, CameraScreen.routeName,
-              arguments: [2, accName]
+              arguments: [2, accName,  widget.dealer.id]
           );
         }
       } else if (visitLocType == VisitLocationType.Site) {
@@ -242,75 +246,78 @@ class _SetLatLonDialogueState extends State<SetLatLonDialogue> {
                       color: MyColors.appBarColor, size: 30)),
             );
           } else {
-            return Dialog(
-              child: Container(
-                height: 400,
-                decoration: BoxDecoration(
-                    color: MyColors.boneWhite,
-                    borderRadius: BorderRadius.circular(20)),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      AssetsConstants.earth_pin,
-                      height: 100,
-                      width: 100,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      getLocationHeaderText(visitLocationType),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        color: MyColors.blackColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        fontFamily: MyFonts.poppins,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      getLocationSmallText(visitLocationType),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: const TextStyle(
-                        color: MyColors.blackColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        fontFamily: MyFonts.poppins,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    HomeOfficeSiteRadio(
-                      onRadioChange: () async {
-                        // await getAddressFromLatLang(double.parse(widget.dealer.latitude), double.parse(widget.dealer.longitude));
-
-                        setState(() {
-                          print(visitLocationType);
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    getDistanceWidget(visitLocationType),
-                    SizedBox(height: 10,),
-                    CustomElevatedButton(
-                        buttonText: getButtonText(visitLocationType),
-                        buttonIcon: getButtonIcon(visitLocationType),
-                        buttonColor: MyColors.appBarColor,
-                        buttonTextColor: MyColors.boneWhite,
-                        buttonIconColor: MyColors.boneWhite,
-                        height: 40,
+            return WillPopScope(
+              onWillPop: Future.value,
+              child: Dialog(
+                child: Container(
+                  height: 400,
+                  decoration: BoxDecoration(
+                      color: MyColors.boneWhite,
+                      borderRadius: BorderRadius.circular(20)),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        AssetsConstants.earth_pin,
+                        height: 100,
                         width: 100,
-                        onClick: () {
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        getLocationHeaderText(visitLocationType),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: const TextStyle(
+                          color: MyColors.blackColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
+                          fontFamily: MyFonts.poppins,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        getLocationSmallText(visitLocationType),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: const TextStyle(
+                          color: MyColors.blackColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          fontFamily: MyFonts.poppins,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      HomeOfficeSiteRadio(
+                        onRadioChange: () async {
+                          // await getAddressFromLatLang(double.parse(widget.dealer.latitude), double.parse(widget.dealer.longitude));
+
+                          setState(() {
+                            print(visitLocationType);
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 15),
+                      getDistanceWidget(visitLocationType),
+                      SizedBox(height: 10,),
+                      CustomElevatedButton(
+                          buttonText: getButtonText(visitLocationType),
+                          buttonIcon: getButtonIcon(visitLocationType),
+                          buttonColor: MyColors.appBarColor,
+                          buttonTextColor: MyColors.boneWhite,
+                          buttonIconColor: MyColors.boneWhite,
+                          height: 40,
+                          width: 100,
+                          onClick: () {
 
 
-                          buttonClick(visitLocationType);
+                            buttonClick(visitLocationType);
 
 
-                        })
-                  ],
+                          })
+                    ],
+                  ),
                 ),
               ),
             );

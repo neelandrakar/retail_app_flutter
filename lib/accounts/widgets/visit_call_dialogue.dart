@@ -44,7 +44,7 @@ class _VisitCallDoalogueState extends State<VisitCallDoalogue> {
 
                 Navigator.pushNamed(
                     context, VisitPlanScreen.routeName,
-                    arguments: [false, widget.dealerMaster]
+                    arguments: [false, widget.dealerMaster, false, 1]
                 );
               },
               child: Container(

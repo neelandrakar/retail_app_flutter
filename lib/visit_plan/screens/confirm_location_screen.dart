@@ -10,6 +10,8 @@ import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/utils.dart';
 import 'package:retail_app_flutter/models/dealer_master.dart';
+import 'package:retail_app_flutter/visit_plan/screens/visit_plan_screen.dart';
+import 'package:retail_app_flutter/visit_plan/services/visit_plan_services.dart';
 import 'package:retail_app_flutter/visit_plan/widgets/choose_visit_plan_dialogue.dart';
 import 'package:retail_app_flutter/visit_plan/widgets/set_lat_lon_dialogue.dart';
 import '../../accounts/widgets/account_creation_list_dialogue.dart';
@@ -22,7 +24,8 @@ class ConfirmLocationScreen extends StatefulWidget {
   static const String routeName = '/confirm-location-screen';
   final String account_name;
   final int funKey;
-  const ConfirmLocationScreen({Key? key, required this.account_name, required this.funKey})
+  final String account_obj_id;
+  const ConfirmLocationScreen({Key? key, required this.account_name, required this.funKey, required this.account_obj_id})
       : super(key: key);
 
   @override
@@ -35,18 +38,23 @@ class _ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   late Future<void> _getLocationFuture;
   String _address = 'NA';
   String locationType = 'NA';
+  final VisitPlanServices visitPlanServices = VisitPlanServices();
+
   @override
   void initState() {
     super.initState();
     _getLocationFuture = getCurrentLocation();
   }
 
+
+
   Future<void> getAddressFromLatLang(double lat, double lon) async {
     List<Placemark> homePlaceMark = await placemarkFromCoordinates(lat, lon);
     Placemark homeAdd = homePlaceMark[0];
     _address =
     '${homeAdd.street}, ${homeAdd.subLocality}, ${homeAdd.locality}';
-    showSnackBar(context, _address);
+    // showSnackBar(context, _address);
+    setState(() {});
   }
 
   Future<void> getCurrentLocation() async {
@@ -77,6 +85,8 @@ class _ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
     if(widget.funKey==1){
       locationType = 'home';
+    } else if(widget.funKey==2){
+      locationType = 'office';
     }
 
     return Scaffold(
@@ -132,22 +142,76 @@ class _ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 10.0),
                             child: Container(
                               width: 340,
-                              height: 200,
+                              height: 130,
                               decoration: BoxDecoration(
                                 color: MyColors.appBarColor,
                                 borderRadius: BorderRadius.circular(20)
                               ),
-                              child: Row(
+                              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(
-                                    "Are you sure you want to plot ${widget.account_name}'s" ,
+                                  RichText(
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        color: MyColors.boneWhite,
+                                    maxLines: 2,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color: MyColors.offWhiteColor,
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 10,
-                                        fontFamily: MyFonts.poppins),
+                                        fontSize: 12,
+                                        fontFamily: MyFonts.poppins,
+                                      ),
+                                      children: [
+                                        TextSpan(text: "Are you sure you want to plot ${widget.account_name}'s ${locationType} location at "),
+                                        TextSpan(
+                                          text: _address,
+                                          style: TextStyle(
+                                              color: MyColors.boneWhite,
+                                            fontWeight: FontWeight.w500
+                                          ),
+                                        ),
+                                        TextSpan(text: ' ?')
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      CustomElevatedButton(
+                                          buttonText: 'Confirm',
+                                          buttonColor: MyColors.greenColor,
+                                          buttonTextColor: MyColors.boneWhite,
+                                          height: 40,
+                                          width: 150,
+                                          textSize: 15,
+                                          onClick: (){
+                                            visitPlanServices.setAccountLocation(
+                                                context: context,
+                                                account_obj_id: widget.account_obj_id,
+                                                new_lat: currentLatitude,
+                                                new_lon: currentLongitude,
+                                                address_type: widget.funKey,
+                                                image: imageXFile,
+                                                onSuccess: (dealer){
+                                                  Navigator.pushNamed(
+                                                      context,
+                                                      VisitPlanScreen.routeName,
+                                                      arguments: [false, dealer, true, widget.funKey]
+                                                  );
+                                                }
+                                            );
+                                          }
+                                      ),
+                                      CustomElevatedButton(
+                                          buttonText: 'Decline',
+                                          buttonColor: MyColors.redColor,
+                                          buttonTextColor: MyColors.boneWhite,
+                                          height: 40,
+                                          width: 150,
+                                          textSize: 15,
+                                          onClick: (){}
+                                      )
+                                    ],
                                   )
 
                                 ],

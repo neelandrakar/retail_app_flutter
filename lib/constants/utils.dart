@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -13,6 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/attendance/services/attendance_services.dart';
 import 'package:retail_app_flutter/constants/data_sync_loader.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
+import 'package:retail_app_flutter/constants/saved_location_sp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/employee.dart';
 import '../providers/user_provider.dart';
@@ -159,6 +162,7 @@ void dataSync(BuildContext context, VoidCallback onSuccess)async{
 
   AttendanceServices attendanceServices = AttendanceServices();
   bool allowClosing = false;
+  SavedLocationSP.clearSavedVisitLocationsKey();
 
   showDialog(
       context: context,
@@ -183,7 +187,7 @@ void dataSync(BuildContext context, VoidCallback onSuccess)async{
   // });
 }
 
-double calculateDistance(lat1, lon1, lat2, lon2){
+double calculateDistance(double lat1, double lon1, double lat2, double lon2){
   var p = 0.017453292519943295;
   var c = cos;
   var a = 0.5 - c((lat2 - lat1) * p)/2 +
@@ -198,4 +202,9 @@ String getEmployeeName(BuildContext context){
       Provider.of<EmployeeProvider>(context, listen: false).employee;
 
   return emp.emp_name;
+}
+
+saveVisitLocation(String key, value) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString(key, json.encode(value));
 }

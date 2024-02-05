@@ -9,6 +9,7 @@ import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/home/screens/visits_screen.dart';
 import 'package:retail_app_flutter/visit_plan/screens/confirm_location_screen.dart';
+import 'package:retail_app_flutter/visit_plan/screens/submit_remarks_screen.dart';
 import 'package:retail_app_flutter/visit_plan/screens/visit_plan_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings){
@@ -59,14 +60,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       List<dynamic> args = routeSettings.arguments as List;
       return MaterialPageRoute(
           settings: routeSettings,
-          builder: (_) => ConfirmLocationScreen(funKey: args[1], account_name: args[0])
+          builder: (_) => ConfirmLocationScreen(funKey: args[1], account_name: args[0], account_obj_id: args[2],)
       );
 
     case CameraScreen.routeName:
       List<dynamic> args = routeSettings.arguments as List;
       return MaterialPageRoute(
           settings: routeSettings,
-          builder: (_) => CameraScreen(functionalityKey: args[1], account_name: args[0])
+          builder: (_) => CameraScreen(functionalityKey: args[0], account_name: args[1], account_obj_id: args[2])
       );
 
     case VisitPlanScreen.routeName:
@@ -76,7 +77,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
         return MaterialPageRoute(
             settings: routeSettings,
             builder: (_) =>
-                VisitPlanScreen(showAccDialogue: args[0], dealer: args[1])
+                VisitPlanScreen(showAccDialogue: args[0], dealer: args[1], direct: args[2], funKey: args[3],)
         );
       } else{
         return MaterialPageRoute(
@@ -85,6 +86,25 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
               VisitPlanScreen(showAccDialogue: args[0]));
   }
 
+    case SubmitRemarksScreen.routeName:
+      List<dynamic> args = routeSettings.arguments as List;
+      int account_type_id = args[0] as int;
+
+      if(account_type_id==1) {
+        return MaterialPageRoute(
+            settings: routeSettings,
+            builder: (_) =>
+                SubmitRemarksScreen(account_type_id: account_type_id,
+                    location_type: args[1], dealer: args[2])
+        );
+      } else{
+        return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(
+                child: Text("Page not found 404!"),
+              ),
+            ));
+      }
 
     default:
       return MaterialPageRoute(

@@ -32,5 +32,7 @@ class MyColors{
   static  Color topNavigationBarSelected = Color(0xfff2b6af);
   static  Color topNavigationBarUnselected = Color(0xfff9dac2);
   static  Color actionsButtonColor = Color(0xffadd9f9);
+  static  Color lightBlueColor = Color(0xffecf7ff);
+  static  Color lightYellowColor = Color(0xfffff3b4);
 
 }

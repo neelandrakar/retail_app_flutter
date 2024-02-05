@@ -11,6 +11,7 @@ const MenuAccess = require('../models/menu_access');
 const AccountMaster = require('../models/account_master');
 const EngineerType = require('../models/engineer_type');
 const Zone = require('../models/zone');
+const QuestionMaster = require('../models/question_master');
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
@@ -565,6 +566,80 @@ employeeRouter.post('/v1/api/fetch-districts', auth, async(req,res) => {
         });
         
         res.json(blockList);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+employeeRouter.post('/v1/api/add-visit-question', auth, async(req,res) => {
+
+    try{
+
+        const {question_parent_id, question_parent_name, question, account_type_id, account_status, is_mandatory} = req.body;
+
+        let question_master = await QuestionMaster.find();
+        let question_id = question_master.length+1;
+
+        let new_question = QuestionMaster({
+            question_id,
+            question_parent_id,
+            question_parent_name,
+            question,
+            account_type_id,
+            account_status,
+            is_mandatory
+        });
+
+        new_question = await new_question.save();
+    
+        res.json(new_question);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
+
+    try{
+
+        const { account_obj_id } = req.body;
+
+        let account = await AccountMaster.findById(account_obj_id);
+        let account_type_id = account.account_type_id;
+        let account_status = account.account_status;
+        let account_status_array = [account_status,'All']
+
+        let visit_questions_discussions = await QuestionMaster.find({
+
+            account_type_id: account_type_id,
+            account_status: {$in: account_status_array},
+            question_parent_id: 1,
+            d_status: 0
+        });
+
+        let visit_questions_action_plan = await QuestionMaster.find({
+            account_type_id: account_type_id,
+            account_status: {$in: account_status_array},
+            question_parent_id: 2,
+            d_status: 0
+        });
+
+        let visit_questions_issues = await QuestionMaster.find({
+            account_type_id: account_type_id,
+            account_status: {$in: account_status_array},
+            question_parent_id: 3,
+            d_status: 0
+        });
+        
+        res.status(200).json({
+            'discussions': visit_questions_discussions,
+            'action_plan': visit_questions_action_plan,
+            'issues': visit_questions_issues
+        });
 
     }catch (e) {
         res.status(500).json({ error: e.message });

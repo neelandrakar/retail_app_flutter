@@ -101,7 +101,7 @@ class _AccountsState extends State<Accounts>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Primary Accounts',
+                Text('Primary Account',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,

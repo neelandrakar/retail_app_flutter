@@ -37,4 +37,12 @@ class AssetsConstants{
   static const String click_here = '$_pngPath/click_here.png';
   static const String location = '$_pngPath/location.png';
   static const String earth_pin = '$_pngPath/earth-pin.png';
+  static const String location_pin = '$_pngPath/location_pin.png';
+  static const String account_status_box = '$_pngPath/account_status_box.png';
+  static const String dizzy = '$_pngPath/dizzy.png';
+  static const String sad_face = '$_pngPath/sad-face.png';
+  static const String moderate_face = '$_pngPath/moderate_face.png';
+  static const String happy_face = '$_pngPath/happy_face.png';
+  static const String very_happy_face = '$_pngPath/very_happy_face.png';
+
 }
