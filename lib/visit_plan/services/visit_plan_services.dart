@@ -1,11 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_app_flutter/models/action_plan_questions.dart';
 import 'package:retail_app_flutter/models/dealer_master.dart';
+import 'package:retail_app_flutter/models/discussion_question_model.dart';
+import 'package:retail_app_flutter/models/visit_question_model.dart';
 import 'package:retail_app_flutter/providers/dealer_master_provider.dart';
+import 'package:retail_app_flutter/providers/visit_questions_provider.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/http_error_handeling.dart';
 import '../../constants/utils.dart';
@@ -84,6 +90,73 @@ class VisitPlanServices{
       showSnackBar(context, e.toString());
       print(e.toString());
     }
+  }
 
+  void fetchVisitQuestion({
+    required BuildContext context,
+    required String account_obj_id,
+    required VoidCallback onSuccess
+})async{
+
+    try{
+
+      final Employee emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
+
+      Map data = {
+        'account_obj_id': account_obj_id,
+      };
+
+      String jsonBody = jsonEncode(data);
+      var visit_question_provider = Provider.of<VisitQuestionsProvider>(context, listen: false);
+
+
+      http.Response res = await http.post(
+          Uri.parse('$uri/v1/api/fetch-visit-questions'),
+          body: jsonBody,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': emp.jwt_token
+          });
+
+      HttpErroHandeling(
+          response: res,
+          context: context,
+          onSuccess: (){
+
+            Map<String, dynamic> parsedJson = jsonDecode(res.body);
+            bool showBusinessSurvey = parsedJson['show_business_survey'] as bool;
+            bool showDealerCounterPotential = parsedJson['show_dealer_counter_potential'] as bool;
+            bool showGiftHadOver = parsedJson['show_gift_hand_over'] as bool;
+            bool showSubDealerCount = parsedJson['show_sub_dealer_count'] as bool;
+            List<String> purposeOfVisit = List<String>.from(
+              (parsedJson['purpose_of_visit'] as List)
+                  .map((url) => url.toString()),
+            );
+
+            List<DiscussionQuestionModel> discussionQuestions = List<DiscussionQuestionModel>.from(
+                parsedJson['discussions']?.map((x) => DiscussionQuestionModel.fromMap(x)));
+            List<ActionPlanQuestionModel> actionPlanQuestions = List<ActionPlanQuestionModel>.from(
+                parsedJson['action_plan']?.map((x) => ActionPlanQuestionModel.fromMap(x)));
+
+
+            visit_question_provider.visitQuestionsModel.action_plan_questions = [];
+            visit_question_provider.visitQuestionsModel.discussion_questions = [];
+            visit_question_provider.visitQuestionsModel.purpose_of_visit = [];
+            visit_question_provider.visitQuestionsModel.show_business_survey = false;
+            visit_question_provider.visitQuestionsModel.show_dealer_counter_potential = false;
+            visit_question_provider.visitQuestionsModel.show_gift_hand_over = false;
+            visit_question_provider.visitQuestionsModel.show_sub_dealer_count = false;
+
+
+            visit_question_provider.setVisitQuestion(res.body);
+
+            onSuccess.call();
+          }
+      );
+
+    } catch (e) {
+      showSnackBar(context, e.toString());
+      print(e.toString());
+    }
   }
 }

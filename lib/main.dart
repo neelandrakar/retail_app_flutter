@@ -13,6 +13,7 @@ import 'package:retail_app_flutter/providers/dealer_master_provider.dart';
 import 'package:retail_app_flutter/providers/distributor_master_provider.dart';
 import 'package:retail_app_flutter/providers/engineer_master_provider.dart';
 import 'package:retail_app_flutter/providers/user_provider.dart';
+import 'package:retail_app_flutter/providers/visit_questions_provider.dart';
 import 'package:retail_app_flutter/router.dart';
 import 'package:retail_app_flutter/sign_in/screens/sign_in_screen.dart';
 import 'package:retail_app_flutter/sign_in/services/sign_in_services.dart';
@@ -25,6 +26,7 @@ void main() async{
   runApp(
       MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (context)=> VisitQuestionsProvider()),
           ChangeNotifierProvider(create: (context)=> EmployeeProvider()),
           ChangeNotifierProvider(create: (context)=> AttendanceModelProvider()),
           ChangeNotifierProvider(create: (context)=> DashboardMenuProvider()),

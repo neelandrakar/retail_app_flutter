@@ -34,5 +34,7 @@ class MyColors{
   static  Color actionsButtonColor = Color(0xffadd9f9);
   static  Color lightBlueColor = Color(0xffecf7ff);
   static  Color lightYellowColor = Color(0xfffff3b4);
+  static  Color businessSurveyBackground = Color(0xffdff4f2);
+  static  Color businessSurveyForeground = Color(0xff11808c);
 
 }

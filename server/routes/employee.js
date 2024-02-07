@@ -612,6 +612,18 @@ employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
         let account_type_id = account.account_type_id;
         let account_status = account.account_status;
         let account_status_array = [account_status,'All']
+        let show_business_survey = false;
+        let show_dealer_counter_potential = false;
+        let show_sub_dealer_count = false;
+        let show_gift_hand_over = false;
+        let purpose_of_visit = ['Gift Hand Over', 'Visit'];
+
+        if(account.account_type_id==1 || account.account_type_id==7){
+            show_business_survey = true;
+            show_dealer_counter_potential = true;
+            show_sub_dealer_count = true;
+            show_gift_hand_over = true;
+        }
 
         let visit_questions_discussions = await QuestionMaster.find({
 
@@ -636,6 +648,11 @@ employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
         });
         
         res.status(200).json({
+            'show_business_survey': show_business_survey,
+            'show_dealer_counter_potential': show_dealer_counter_potential,
+            'show_sub_dealer_count': show_sub_dealer_count,
+            'show_gift_hand_over': show_gift_hand_over,
+            'purpose_of_visit': purpose_of_visit,
             'discussions': visit_questions_discussions,
             'action_plan': visit_questions_action_plan,
             'issues': visit_questions_issues

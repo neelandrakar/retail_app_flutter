@@ -51,6 +51,8 @@ dependencies:
   permission_handler: ^11.2.0
   cloudinary_public: ^0.21.0
   flutter_rating_bar: ^4.0.1
+  getwidget: ^4.0.0
+  dropdown_button2: ^2.3.9
 
 
 

@@ -162,7 +162,7 @@ void dataSync(BuildContext context, VoidCallback onSuccess)async{
 
   AttendanceServices attendanceServices = AttendanceServices();
   bool allowClosing = false;
-  SavedLocationSP.clearSavedVisitLocationsKey();
+  // SavedLocationSP.clearSavedVisitLocationsKey();
 
   showDialog(
       context: context,

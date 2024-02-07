@@ -51,6 +51,7 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
   List<Polyline> initial_polylines = [];
   List<CircleMarker> circle_layers = [];
   List<DealerMaster> _dealer_master = [];
+  late DealerMaster clickedDealer;
 
   @override
   void initState() {
@@ -59,13 +60,22 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
 
   }
 
-  void onClickFun() async {
+  void onClickFun(String obj_id) async {
     print(distanceFromCurrentLocation);
+
+    _dealer_master = Provider.of<DealerMasterProvider>(context, listen: false).dealer_master;
+    for(int i=0; i<_dealer_master.length; i++){
+      if(_dealer_master[i].id==obj_id){
+        clickedDealer = _dealer_master[i];
+        break;
+      }
+    }
+
     // String address = await getAddressFromLatLon(visitingAccLatitude, visitingAccLongitude);
     // print(address);
     if(distanceFromCurrentLocation<=300){
 
-      print('You can submit visit remarks===> ${widget.funKey}');
+      print('You can submit visit remarks===> ${clickedDealer.account_name}');
       showDialog(
           context: context,
           barrierDismissible: false,  //has to click a button
@@ -76,9 +86,9 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
               actions: <Widget>[
                 TextButton(
                     onPressed: () {
-                      if(widget.dealer!.account_type_id==1){
+                      if(clickedDealer.account_type_id==1){
 
-                        List<dynamic> _args = [widget.dealer?.account_type_id, widget.funKey, widget.dealer!];
+                        List<dynamic> _args = [clickedDealer.account_type_id, widget.funKey, clickedDealer];
 
                         Navigator.pushNamed(context, SubmitRemarksScreen.routeName, arguments: _args);
                       }
@@ -94,7 +104,7 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
             );
           });
     } else {
-      print('Please move closer within 300 meters of ${widget.dealer!.account_name} ===> ${widget.funKey}');
+      print('Please move closer within 300 meters of ${clickedDealer.account_name} ===> ${widget.funKey}');
       showDialog(
           context: context,
           barrierDismissible: false,  //has to click a button
@@ -112,7 +122,7 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
                 ),
               ),
               content: Text(
-                "Please move within 300m of ${widget.dealer!.account_name}'s $location_type location to check in.",
+                "Please move within 300m of ${clickedDealer.account_name}'s $location_type location to check in.",
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -203,6 +213,7 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
 
           for(int j=0; j<_dealer_master.length; j++){
             if(_dealer_master[j].id==saved_locations[i].account_obj_id){
+              print(saved_locations[i].account_obj_id);
               widget.dealer = _dealer_master[j];
             }
           }
@@ -228,7 +239,9 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
               height: 100,
               child: LocationMarker(
                   visit_account_name: "${widget.dealer!.account_name}($locationTypeShort)",
-                onClick: onClickFun
+                  onClick: (){
+                    onClickFun(saved_locations[i].account_obj_id);
+                  }
               )
           ));
           
@@ -473,7 +486,9 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
                                   width: 100,
                                   height: 100,
                                   child: GestureDetector(
-                                    onTap: onClickFun,
+                                    onTap: (){
+                                      onClickFun('aaa');
+                                    },
                                     child: LocationMarker(visit_account_name: widget.dealer!.account_name)
                                   ),
                                 ),
