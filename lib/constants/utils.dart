@@ -81,6 +81,15 @@ String fetchBasicTimeFormat(DateTime date){
   return formattedTime;
 }
 
+String fetchBasicTimeInAMPM(DateTime date){
+
+  DateTime istDate = date.add(Duration(hours: 5, minutes: 30));
+  var timeFormat = DateFormat('hh:mm a');
+  String formattedTime = timeFormat.format(istDate);
+
+  return formattedTime;
+}
+
 String fetchBasicDateFormat(DateTime date){
   DateTime istDate = date.add(Duration(hours: 5, minutes: 30));
   var timeFormat = DateFormat('dd-MM-yyyy');
@@ -162,7 +171,7 @@ void dataSync(BuildContext context, VoidCallback onSuccess)async{
 
   AttendanceServices attendanceServices = AttendanceServices();
   bool allowClosing = false;
-  // SavedLocationSP.clearSavedVisitLocationsKey();
+  SavedLocationSP.clearSavedVisitLocationsKey();
 
   showDialog(
       context: context,

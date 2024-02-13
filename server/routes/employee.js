@@ -12,6 +12,7 @@ const AccountMaster = require('../models/account_master');
 const EngineerType = require('../models/engineer_type');
 const Zone = require('../models/zone');
 const QuestionMaster = require('../models/question_master');
+const JsonLog = require('../models/json_log');
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
@@ -607,6 +608,7 @@ employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
     try{
 
         const { account_obj_id } = req.body;
+        const emp_id = req.user;
 
         let account = await AccountMaster.findById(account_obj_id);
         let account_type_id = account.account_type_id;
@@ -646,8 +648,8 @@ employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
             question_parent_id: 3,
             d_status: 0
         });
-        
-        res.status(200).json({
+
+        const finalRes = {
             'show_business_survey': show_business_survey,
             'show_dealer_counter_potential': show_dealer_counter_potential,
             'show_sub_dealer_count': show_sub_dealer_count,
@@ -656,7 +658,18 @@ employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
             'discussions': visit_questions_discussions,
             'action_plan': visit_questions_action_plan,
             'issues': visit_questions_issues
-        });
+        };
+
+        let newJsonLog = new JsonLog({
+            post_user: emp_id,
+            api_name: '/v1/api/fetch-visit-questions',
+            request: JSON.stringify(req.body),
+            response: JSON.stringify(finalRes)
+          });
+          
+          newJsonLog = await newJsonLog.save();
+        
+        res.status(200).json(finalRes);
 
     }catch (e) {
         res.status(500).json({ error: e.message });

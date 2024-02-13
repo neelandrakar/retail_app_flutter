@@ -80,6 +80,7 @@ class _SubmitOdometerScreenState extends State<SubmitOdometerScreen> {
     
     return Scaffold(
       backgroundColor: MyColors.offWhiteColor,
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(56),
         child: CustomAppBar(
@@ -161,7 +162,7 @@ class _SubmitOdometerScreenState extends State<SubmitOdometerScreen> {
           ),
           SizedBox(height: 20,),
           Container(
-            height: 240,
+            // height: 240,
             padding: EdgeInsets.all(15),
             width: double.infinity,
             decoration: BoxDecoration(
@@ -170,34 +171,37 @@ class _SubmitOdometerScreenState extends State<SubmitOdometerScreen> {
             ),
             child: Column(
               children: [
-                Container(
-                  height: 150,
-                    // color: Colors.red,
-                    width: double.infinity,
-                    child:
-                    Stack(
-                      children: [
-                        Image.asset(
-                            !imageIsUploaded ?
-                            AssetsConstants.odometer_no_image
-                                : AssetsConstants.car_selected,
-                          width: 600,
-                          fit: BoxFit.fill,
-                        ),
-                        Positioned(
-                              top: 75,
-                              right: 130,
-                              child: GestureDetector(
-                                onTap: captureImage,
-                                child: Image.asset(
-                                    AssetsConstants.odometer_camera,
-                                    width:70,
-                                    height: 70,
-                                ),
-                              )
+                Visibility(
+                  visible: selectedVehicleType!=3,
+                  child: Container(
+                    height: 150,
+                      // color: Colors.red,
+                      width: double.infinity,
+                      child:
+                      Stack(
+                        children: [
+                          Image.asset(
+                              !imageIsUploaded ?
+                              AssetsConstants.odometer_no_image
+                                  : AssetsConstants.car_selected,
+                            width: 600,
+                            fit: BoxFit.fill,
                           ),
-                      ],
-                    ),
+                          Positioned(
+                                top: 75,
+                                right: 130,
+                                child: GestureDetector(
+                                  onTap: captureImage,
+                                  child: Image.asset(
+                                      AssetsConstants.odometer_camera,
+                                      width:70,
+                                      height: 70,
+                                  ),
+                                )
+                            ),
+                        ],
+                      ),
+                  ),
                 ),
                 Container(
                   height: 55,

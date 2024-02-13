@@ -11,12 +11,14 @@ import 'package:retail_app_flutter/constants/custom_elevated_button.dart';
 import 'package:retail_app_flutter/constants/custom_text_formfield.dart';
 import 'package:retail_app_flutter/constants/simpleTextField.dart';
 import 'package:retail_app_flutter/models/dealer_master.dart';
+import 'package:retail_app_flutter/models/last_checkin_data.dart';
 import 'package:retail_app_flutter/models/visit_question_model.dart';
 import 'package:retail_app_flutter/visit_plan/services/visit_plan_services.dart';
 
 import '../../constants/custom_app_bar.dart';
 import '../../constants/my_colors.dart';
 import '../../constants/my_fonts.dart';
+import '../../constants/saved_location_sp.dart';
 import '../../constants/utils.dart';
 import '../../providers/visit_questions_provider.dart';
 
@@ -42,16 +44,17 @@ class SubmitRemarksScreen extends StatefulWidget {
 class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
   String actionType = 'NA';
   String accountType = 'NA';
+  bool fullyLoaded = false;
   String purposeOfVisitDropdown = 'NA';
   List<DropdownMenuItem> purposeOfVisitItems = [];
   String ratingText = 'Rate';
   String dealerPotLabel = 'Dealer Counter Potential';
   String subDealerCount = 'Sub-dealer count';
   double rating = 0.0;
+  String check_in_time = 'NA';
   String ratingIcon = AssetsConstants.shyam_steel_logo_round;
   final VisitPlanServices visitPlanServices = VisitPlanServices();
   late Future<void> _getVisitQuestions;
-  bool fullyLoaded = false;
   TextEditingController _dealerCounterPotentialController = TextEditingController();
   TextEditingController _subDealerCountController = TextEditingController();
   late VisitQuestionModel visitQuestions;
@@ -69,7 +72,7 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
     visitPlanServices.fetchVisitQuestion(
         context: context,
         account_obj_id: widget.dealer!.id,
-        onSuccess: (){
+        onSuccess: ()async{
           print('Successfully done!');
           fullyLoaded = true;
           setState(() {
@@ -79,6 +82,23 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
               accountType = 'Dealer';
             }
           });
+          DateTime checkInTime = DateTime.timestamp();
+          try {
+            final last_check_in_data = LastCheckInData(
+                account_obj_id: widget.dealer!.id,
+                location_type: widget.location_type,
+                check_in_time: checkInTime,
+                added_on: DateTime.now(),
+            );
+            await SavedLocationSP.saveLastCheckInTime(last_check_in_data);
+            LastCheckInData lastCheckInData = await SavedLocationSP.getLastCheckInData();
+            check_in_time = fetchBasicTimeInAMPM(lastCheckInData.check_in_time);
+            setState(() {});
+          } catch(e){
+            print(e.toString());
+            showSnackBar(context, e.toString());
+          }
+          // fullyLoaded = true;
         }
     );
   }
@@ -164,23 +184,56 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
               children: [
                 Align(
                   alignment: Alignment.topRight,
-                  child: Container(
-                    width: 80,
-                    height: 23,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(5),
-                    decoration:  BoxDecoration(
-                      image: DecorationImage(image: AssetImage(AssetsConstants.account_status_box), fit: BoxFit.fill),
-                    ),
-                    child: Text(
-                      widget.dealer!.account_status,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: MyColors.boneWhite,
-                          fontSize: 11,
-                          fontFamily: MyFonts.poppins,
-                          fontWeight: FontWeight.w500),
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 23,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(5),
+                        decoration:  const BoxDecoration(
+                          image: DecorationImage(image: AssetImage(AssetsConstants.account_status_box), fit: BoxFit.fill),
+                        ),
+                        child: Text(
+                          widget.dealer!.account_status,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: MyColors.boneWhite,
+                              fontSize: 11,
+                              fontFamily: MyFonts.poppins,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5, top: 2),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Check in time: ',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: const TextStyle(
+                                  color: MyColors.fadedBlack,
+                                  fontSize: 13,
+                                  fontFamily: MyFonts.poppins,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              check_in_time,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: const TextStyle(
+                                  color: MyColors.appBarColor,
+                                  fontSize: 12,
+                                  fontFamily: MyFonts.poppins,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 Padding(
@@ -237,7 +290,7 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                                                   color: MyColors.appBarColor,
                                                   fontSize: 13,
                                                   fontFamily: MyFonts.poppins,
-                                                  fontWeight: FontWeight.w500),
+                                                  fontWeight: FontWeight.w400),
                                             ),
                                           ],
                                         )
@@ -540,6 +593,7 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                 SimpleTextField(
                     labelText: 'Dealer Counter Potential*',
                     hintText: 'Please enter counter potential',
+                    textInputType: TextInputType.number,
                     height: 50,
                     width: double.infinity,
                     controller: _dealerCounterPotentialController,
@@ -552,6 +606,7 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                   SimpleTextField(
                       labelText: 'Sub-dealer count*',
                       hintText: 'Please enter sub-dealer count',
+                      textInputType: TextInputType.number,
                       height: 50,
                       width: double.infinity,
                       controller: _subDealerCountController,

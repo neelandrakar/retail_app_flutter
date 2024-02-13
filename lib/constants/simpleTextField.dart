@@ -6,6 +6,7 @@ class SimpleTextField extends StatefulWidget {
   final double height;
   final double width;
   final int? maxLines;
+  final TextInputType? textInputType;
   final TextEditingController controller;
   final Function(String) onChanged;
 
@@ -16,6 +17,7 @@ class SimpleTextField extends StatefulWidget {
     required this.width,
     required this.controller,
     required this.onChanged,
+    this.textInputType = TextInputType.text,
     this.maxLines = 1
   });
 
@@ -41,6 +43,7 @@ class _SimpleTextFieldState extends State<SimpleTextField> {
         ),
       ),
       child: TextField(
+        keyboardType: widget.textInputType,
         onChanged: widget.onChanged,
         maxLines: widget.maxLines,
         textAlign: TextAlign.start,

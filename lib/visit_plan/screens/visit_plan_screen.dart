@@ -60,8 +60,9 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
 
   }
 
-  void onClickFun(String obj_id) async {
+  void onClickFun(String obj_id, int loc_type) async {
     print(distanceFromCurrentLocation);
+    double distance_from_emp = 0.0;
 
     _dealer_master = Provider.of<DealerMasterProvider>(context, listen: false).dealer_master;
     for(int i=0; i<_dealer_master.length; i++){
@@ -70,10 +71,19 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
         break;
       }
     }
+    if(loc_type==0){
+      distance_from_emp = distanceFromCurrentLocation;
+    } else {
+      if(loc_type==1){
+        distance_from_emp = calculateDistance(currentLatitude, currentLongitude, double.parse(clickedDealer.latitude), double.parse(clickedDealer.longitude));
+      } else if(loc_type==2){
+        distance_from_emp = calculateDistance(currentLatitude, currentLongitude, double.parse(clickedDealer.office_latitude), double.parse(clickedDealer.office_longitude));
+      }
+    }
 
     // String address = await getAddressFromLatLon(visitingAccLatitude, visitingAccLongitude);
     // print(address);
-    if(distanceFromCurrentLocation<=300){
+    if(distance_from_emp<=300){
 
       print('You can submit visit remarks===> ${clickedDealer.account_name}');
       showDialog(
@@ -122,8 +132,8 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
                 ),
               ),
               content: Text(
-                "Please move within 300m of ${clickedDealer.account_name}'s $location_type location to check in.",
-                maxLines: 2,
+                "Please move within 300m of ${clickedDealer.account_name}'s $location_type location to check in. \n$distanceFromCurrentLocation m away",
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     color: MyColors.appBarColor,
@@ -229,6 +239,7 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
             widget.funKey=2;
             distanceFromCurrentLocation = calculateDistance(currentLatitude, currentLongitude, double.parse(widget.dealer!.office_latitude), double.parse(widget.dealer!.office_longitude));
           }
+          double save_location_distance = 0.0;
 
           initial_markers.add(Marker(
               point: LatLng(
@@ -239,8 +250,8 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
               height: 100,
               child: LocationMarker(
                   visit_account_name: "${widget.dealer!.account_name}($locationTypeShort)",
-                  onClick: (){
-                    onClickFun(saved_locations[i].account_obj_id);
+                  onClick: () {
+                    onClickFun(saved_locations[i].account_obj_id, saved_locations[i].location_type);
                   }
               )
           ));
@@ -420,7 +431,7 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
               );
             }
 
-            //Specific
+            //From account section
             else if(visitingAccLatitude>0 && visitingAccLongitude>0 && isLocationAlreadyPlotted){
 
               print(1);
@@ -487,7 +498,7 @@ class _VisitPlanScreenState extends State<VisitPlanScreen> {
                                   height: 100,
                                   child: GestureDetector(
                                     onTap: (){
-                                      onClickFun('aaa');
+                                      onClickFun(widget.dealer!.id,0);
                                     },
                                     child: LocationMarker(visit_account_name: widget.dealer!.account_name)
                                   ),
