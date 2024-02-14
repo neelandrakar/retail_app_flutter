@@ -10,7 +10,7 @@ class DiscussionQuestionModel {
   final int is_mandatory;
   final int d_status;
   final int answer_type;
-  final bool answer_status;
+  final String answer_status;
   DiscussionQuestionModel({
     required this.id,
     required this.question_id,
@@ -47,7 +47,7 @@ class DiscussionQuestionModel {
       is_mandatory: map['is_mandatory'] as int,
       d_status: map['d_status'] as int,
       answer_type: map['answer_type'] as int,
-      answer_status: false
+      answer_status: 'Add'
     );
   }
 
