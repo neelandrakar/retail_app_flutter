@@ -54,9 +54,16 @@ class SavedLocationSP {
   static Future<void> saveLastCheckInTime(LastCheckInData newLastCheckInData) async {
     final prefs = await SharedPreferences.getInstance();
     LastCheckInData lastCheckInData = await getLastCheckInData();
-    if(lastCheckInData.account_obj_id != newLastCheckInData.account_obj_id && lastCheckInData.location_type != newLastCheckInData.location_type){
+    print('last===> '+lastCheckInData.account_obj_id+ " == "+ lastCheckInData.location_type.toString());
+    print('new===> '+newLastCheckInData.account_obj_id+ " == "+ newLastCheckInData.location_type.toString());
+    if(lastCheckInData.account_obj_id != newLastCheckInData.account_obj_id){
       print('new check in');
       lastCheckInData = newLastCheckInData;
+    }else if(lastCheckInData.account_obj_id == newLastCheckInData.account_obj_id){
+      if(lastCheckInData.location_type.toString()!=newLastCheckInData.location_type.toString()){
+        print('new location for same account');
+        lastCheckInData = newLastCheckInData;
+      }
     }
     print('debug===> '+ lastCheckInData.toString());
     //var jsonList = locations.map((location) => location.toJson()).toList();

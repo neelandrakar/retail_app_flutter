@@ -10,6 +10,7 @@ class DiscussionQuestionModel {
   final int is_mandatory;
   final int d_status;
   final int answer_type;
+  final bool answer_status;
   DiscussionQuestionModel({
     required this.id,
     required this.question_id,
@@ -19,6 +20,7 @@ class DiscussionQuestionModel {
     required this.is_mandatory,
     required this.d_status,
     required this.answer_type,
+    required this.answer_status
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class DiscussionQuestionModel {
       'is_mandatory': is_mandatory,
       'd_status': d_status,
       'answer_type': answer_type,
+      'answer_status': answer_status,
     };
   }
 
@@ -44,6 +47,7 @@ class DiscussionQuestionModel {
       is_mandatory: map['is_mandatory'] as int,
       d_status: map['d_status'] as int,
       answer_type: map['answer_type'] as int,
+      answer_status: false
     );
   }
 

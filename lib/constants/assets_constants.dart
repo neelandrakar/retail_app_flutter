@@ -45,5 +45,7 @@ class AssetsConstants{
   static const String happy_face = '$_pngPath/happy_face.png';
   static const String very_happy_face = '$_pngPath/very_happy_face.png';
   static const String business_survey_icon = '$_pngPath/business_survey_icon.png';
+  static const String discussion_icon = '$_pngPath/discussion_icon.png';
+  static const String action_plan_icon = '$_pngPath/action_plan_icon.png';
 
 }

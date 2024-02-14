@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 
-String uri = 'http://192.168.35.6:3000';
+String uri = 'http://192.168.166.6:3000';
 double currentLatitude = 0.0;
 double currentLongitude = 0.0;
 XFile? imageXFile;

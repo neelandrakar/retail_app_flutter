@@ -14,6 +14,7 @@ import 'package:retail_app_flutter/models/dealer_master.dart';
 import 'package:retail_app_flutter/models/last_checkin_data.dart';
 import 'package:retail_app_flutter/models/visit_question_model.dart';
 import 'package:retail_app_flutter/visit_plan/services/visit_plan_services.dart';
+import 'package:retail_app_flutter/visit_plan/widgets/discusstion_action_plan_box.dart';
 
 import '../../constants/custom_app_bar.dart';
 import '../../constants/my_colors.dart';
@@ -121,7 +122,7 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
   @override
   Widget build(BuildContext context) {
 
-    print(widget.location_type);
+    print('location_type: '+widget.location_type.toString());
 
     return Scaffold(
         backgroundColor: MyColors.boneWhite,
@@ -676,11 +677,11 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                                 });
                               },
                             ),
-                            Text(
+                            const Text(
                               'Yes',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   color: MyColors.blackColor,
                                   fontSize: 14,
                                   fontFamily: MyFonts.poppins,
@@ -701,11 +702,11 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                                 });
                               },
                             ),
-                            Text(
+                            const Text(
                               'No',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   color: MyColors.blackColor,
                                   fontSize: 14,
                                   fontFamily: MyFonts.poppins,
@@ -717,12 +718,25 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                     )
 
                   ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DiscussionActionPlanBox(
+                      boxText: 'Discussed On',
+                      boxIcon: AssetsConstants.discussion_icon,
+                    ),
+                    DiscussionActionPlanBox(
+                      boxText: 'Action Plan',
+                      boxIcon: AssetsConstants.action_plan_icon,
+                    ),
+                  ],
                 )
 
               ],
             ),
           )
-
         ],
       ),
     );
