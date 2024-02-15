@@ -53,6 +53,8 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   getwidget: ^4.0.0
   dropdown_button2: ^2.3.9
+  text_scroll: ^0.2.0
+
 
 
 

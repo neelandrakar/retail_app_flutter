@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 import '../../constants/my_colors.dart';
 import '../../constants/my_fonts.dart';
@@ -77,11 +78,16 @@ class _VisitQuestionListBoxState extends State<VisitQuestionListBox> {
                 ),
                 Icon(Icons.add, color: MyColors.blueColor, size: 12,)
               ],
-            ) : Text(
-              widget.ans_status,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+            ) : TextScroll(
+                  widget.ans_status,
+                  mode: TextScrollMode.bouncing,
+                  velocity: Velocity(pixelsPerSecond: Offset(30, 0)),
+                  delayBefore: Duration(milliseconds: 1000),
+                  numberOfReps: 5,
+                  pauseBetween: Duration(milliseconds: 500),
+                  textAlign: TextAlign.right,
+                  selectable: false,
+                  style: const TextStyle(
                   color: MyColors.blueColor,
                   fontSize: 12,
                   fontFamily: MyFonts.poppins,

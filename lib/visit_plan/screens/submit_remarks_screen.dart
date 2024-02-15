@@ -466,10 +466,10 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                     decoration: BoxDecoration(
                       color: MyColors.whiteColor,
                       borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: MyColors.black12,
-                            offset: const Offset(
+                            offset: Offset(
                               1.0,
                               1.0,
                             ),
@@ -490,7 +490,7 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                             ratingText,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: MyColors.appBarColor,
                                 fontSize: 15,
                                 fontFamily: MyFonts.poppins,

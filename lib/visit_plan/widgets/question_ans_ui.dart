@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/custom_elevated_button.dart';
+import '../../constants/custom_search_field.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/my_colors.dart';
 import '../../constants/my_fonts.dart';
@@ -10,10 +11,11 @@ import '../../providers/visit_questions_provider.dart';
 
 class QuestionAnsUI extends StatefulWidget {
   final String ans_a_question;
+  final int question_type;
   final int question_index;
   final VoidCallback onClick;
   final int ans_type;
-  const QuestionAnsUI({super.key, required this.ans_a_question, required this.question_index, required this.onClick, required this.ans_type});
+  const QuestionAnsUI({super.key, required this.ans_a_question, required this.question_index, required this.onClick, required this.ans_type, required this.question_type});
 
   @override
   State<QuestionAnsUI> createState() => _QuestionAnsUIState();
@@ -22,6 +24,7 @@ class QuestionAnsUI extends StatefulWidget {
 class _QuestionAnsUIState extends State<QuestionAnsUI> {
   String ans = 'NA';
   late VisitQuestionModel visit_questions;
+  TextEditingController _enteredText = TextEditingController();
 
   getAnsType<Widget>(){
     if(widget.ans_type==1){
@@ -82,7 +85,23 @@ class _QuestionAnsUIState extends State<QuestionAnsUI> {
           )
         ],
       );
-    } else {
+    } else if(widget.ans_type==2){
+      return CustomSearchField(
+        height: 50,
+        width: double.infinity,
+        searchFieldColor: MyColors.black12,
+        controller: _enteredText,
+        hintText: 'Enter',
+        textColor: MyColors.appBarColor,
+        hintTextColor: MyColors.appBarColor,
+        hintTextSize: 16,
+        hintTextWeight: FontWeight.w500,
+        maxLength: 100,
+        textInputType: TextInputType.text,
+      );
+    }
+
+    else {
       return Container();
     }
   }
@@ -124,15 +143,39 @@ class _QuestionAnsUIState extends State<QuestionAnsUI> {
           textSize: 10,
           onClick: (){
             setState(() {
-              if(widget.ans_type==1){
-                if(questionAnswerType ==  QuestionAnswerType.Yes){
-                  visit_questions.discussion_questions[widget.question_index].answer_status = 'Yes';
-                } else{
-                  visit_questions.discussion_questions[widget.question_index].answer_status = 'No';
+              if(widget.question_type==1) {
+                if (widget.ans_type == 1) {
+                  if (questionAnswerType == QuestionAnswerType.Yes) {
+                    visit_questions.discussion_questions[widget.question_index]
+                        .answer_status = 'Yes';
+                  } else {
+                    visit_questions.discussion_questions[widget.question_index]
+                        .answer_status = 'No';
+                  }
                 }
+                else if (widget.ans_type == 2 && _enteredText.text.isNotEmpty) {
+                  visit_questions.discussion_questions[widget.question_index]
+                      .answer_status = _enteredText.text;
+                }
+                questionAnswerType = QuestionAnswerType.No;
+              } else if(widget.question_type==2){
+                if (widget.ans_type == 1) {
+                  if (questionAnswerType == QuestionAnswerType.Yes) {
+                    visit_questions.action_plan_questions[widget.question_index]
+                        .answer_status = 'Yes';
+                  } else {
+                    visit_questions.action_plan_questions[widget.question_index]
+                        .answer_status = 'No';
+                  }
+                }
+                else if (widget.ans_type == 2 && _enteredText.text.isNotEmpty) {
+                  visit_questions.action_plan_questions[widget.question_index]
+                      .answer_status = _enteredText.text;
+                }
+                questionAnswerType = QuestionAnswerType.No;
               }
-              questionAnswerType = QuestionAnswerType.No;
-            });
+            }
+            );
             widget.onClick.call();
           },
         )
