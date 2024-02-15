@@ -62,7 +62,7 @@ class _VisitQuestionListBoxState extends State<VisitQuestionListBox> {
               borderRadius: BorderRadius.circular(5),
               border: Border.all(color: MyColors.blueColor.withOpacity(0.5))
             ),
-            child: widget.ans_status=='Add' ? Row(
+            child: widget.ans_status == 'Add' ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(

@@ -10,7 +10,7 @@ class DiscussionQuestionModel {
   final int is_mandatory;
   final int d_status;
   final int answer_type;
-  final String answer_status;
+  late String answer_status;
   DiscussionQuestionModel({
     required this.id,
     required this.question_id,

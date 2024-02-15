@@ -48,5 +48,6 @@ List<Map<String, dynamic>> account_type = [
 enum VisitLocationType { Home, Office, Site }
 VisitLocationType visitLocationType = VisitLocationType.Home;
 
-
+enum QuestionAnswerType { Yes, No }
+QuestionAnswerType questionAnswerType= QuestionAnswerType.No;
 
