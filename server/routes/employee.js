@@ -13,6 +13,9 @@ const EngineerType = require('../models/engineer_type');
 const Zone = require('../models/zone');
 const QuestionMaster = require('../models/question_master');
 const JsonLog = require('../models/json_log');
+const VisitHistory = require('../models/visit_history');
+const AccountConversion = require('../models/account_conversion');
+// import * as myFunctions from '../common_functions'
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
@@ -619,6 +622,7 @@ employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
         let show_sub_dealer_count = false;
         let show_gift_hand_over = false;
         let purpose_of_visit = ['Gift Hand Over', 'Visit'];
+        let follow_up_persons = [emp_id]
 
         if(account.account_type_id==1 || account.account_type_id==7){
             show_business_survey = true;
@@ -657,7 +661,8 @@ employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
             'purpose_of_visit': purpose_of_visit,
             'discussions': visit_questions_discussions,
             'action_plan': visit_questions_action_plan,
-            'issues': visit_questions_issues
+            'issues': visit_questions_issues,
+            'follow_up_persons': follow_up_persons
         };
 
         let newJsonLog = new JsonLog({
@@ -670,6 +675,81 @@ employeeRouter.post('/v1/api/fetch-visit-questions', auth, async(req,res) => {
           newJsonLog = await newJsonLog.save();
         
         res.status(200).json(finalRes);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+
+employeeRouter.post('/v1/api/submit-visit-remarks', auth, async(req,res) => {
+
+    try{
+        const { account_obj_id, check_in_time, check_out_time, visit_call, selfie_image,
+             purpose_of_visit, gift_handed_over, submitted_counter_potential, submitted_sub_dealer_count,
+             submitted_business_survey, discussion_details, action_plan_details, issue_details,
+             follow_up_person, rating 
+            } = req.body;
+        const emp_id = req.user;
+        let initial_status = 'NA';
+        let new_status = 'NA';
+
+        let visited_account = await AccountMaster.findById(account_obj_id);
+        let employee = await Employee.findById(emp_id);
+        initial_status = visited_account.account_status;
+
+        function removeTime(date) {
+            var newDate =  new Date(date);  
+            return new Date(
+                newDate.getFullYear(),
+                newDate.getMonth(),
+                newDate.getDate()
+            );
+        }
+        
+        let visit_history = await VisitHistory.find();
+        let dh_id = visit_history.length+1;        
+
+        let newVisit = new VisitHistory({
+            dh_id: dh_id,
+            account_id: visited_account.account_id,
+            account_status: visited_account.account_status,
+            emp_id: emp_id,
+            date: removeTime(check_in_time),
+            check_in_time: check_in_time,
+            check_out_time: check_out_time,
+            visit_call: visit_call,
+            selfie_image: selfie_image,
+            purpose_of_visit: purpose_of_visit,
+            gift_handed_over: gift_handed_over,
+            submitted_business_survey: submitted_business_survey,
+            submitted_counter_potential: submitted_counter_potential,
+            submitted_sub_dealer_count: submitted_sub_dealer_count,
+            discussion_details: discussion_details,
+            action_plan_details: action_plan_details,
+            issue_details: issue_details,
+            follow_up_person: follow_up_person,
+            rating: rating
+        });
+
+        if(visited_account.account_status=='Survey'){
+            visited_account.account_status='Prospective';
+
+            visited_account = await visited_account.save();
+            new_status = visited_account.account_status;
+
+            let new_acc_conv = await AccountConversion({
+                account_id: visited_account.account_id,
+                from: initial_status,
+                to: new_status,
+                post_user: emp_id
+            });
+
+            new_acc_conv = await new_acc_conv.save();
+        }
+
+        res.status(200).json(newVisit);
 
     }catch (e) {
         res.status(500).json({ error: e.message });

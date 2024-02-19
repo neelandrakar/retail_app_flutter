@@ -9,6 +9,7 @@ class VisitQuestionModel {
   bool show_dealer_counter_potential;
   bool show_sub_dealer_count;
   List<String> purpose_of_visit;
+  List<String> follow_up_persons;
   bool show_gift_hand_over;
   List<DiscussionQuestionModel> discussion_questions;
   List<ActionPlanQuestionModel> action_plan_questions;
@@ -19,6 +20,7 @@ class VisitQuestionModel {
       required this.show_dealer_counter_potential,
       required this.show_sub_dealer_count,
       required this.purpose_of_visit,
+      required this.follow_up_persons,
       required this.show_gift_hand_over,
       required this.discussion_questions,
       required this.action_plan_questions
@@ -30,6 +32,7 @@ class VisitQuestionModel {
       'show_dealer_counter_potential': show_dealer_counter_potential,
       'show_sub_dealer_count': show_sub_dealer_count,
       'purpose_of_visit': purpose_of_visit,
+      'follow_up_persons': follow_up_persons,
       'show_gift_hand_over': show_gift_hand_over,
       'discussion_questions': discussion_questions.map((x) => x.toMap()).toList(),
       'action_plan_questions': action_plan_questions.map((x) => x.toMap()).toList(),
@@ -43,6 +46,7 @@ class VisitQuestionModel {
       show_sub_dealer_count: map['show_sub_dealer_count'] as bool,
       show_gift_hand_over: map['show_gift_hand_over'] as bool,
       purpose_of_visit: List<String>.from((map['purpose_of_visit'] as List).map((url) => url.toString())),
+      follow_up_persons: List<String>.from((map['follow_up_persons'] as List).map((url) => url.toString())),
       discussion_questions: List<DiscussionQuestionModel>.from(
           map['discussions']?.map((x) => DiscussionQuestionModel.fromMap(x))),
       action_plan_questions: List<ActionPlanQuestionModel>.from(

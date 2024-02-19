@@ -44,7 +44,9 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void dispose() {
     controller.dispose();
-    imageFile!.delete();
+    if (widget.functionalityKey != 0) {
+      imageFile!.delete();
+    }
     super.dispose();
   }
 
@@ -85,10 +87,19 @@ class _CameraScreenState extends State<CameraScreen> {
                   print(e);
                 }
               } else {
-                Navigator.pushNamed(
-                    context, ConfirmLocationScreen.routeName,
-                    arguments: [widget.account_name, widget.functionalityKey, widget.account_obj_id]
-                );                print('Navigate to map');
+                if (widget.functionalityKey == 0) {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pushNamed(
+                      context, ConfirmLocationScreen.routeName,
+                      arguments: [
+                        widget.account_name,
+                        widget.functionalityKey,
+                        widget.account_obj_id
+                      ]
+                  );
+                  print('Navigate to map');
+                }
               }
             }
           ),

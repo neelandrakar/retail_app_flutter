@@ -47,5 +47,7 @@ class AssetsConstants{
   static const String business_survey_icon = '$_pngPath/business_survey_icon.png';
   static const String discussion_icon = '$_pngPath/discussion_icon.png';
   static const String action_plan_icon = '$_pngPath/action_plan_icon.png';
+  static const String select_follow_up_date_image = '$_pngPath/select_follow_up_date_image.png';
+  static const String next_follow_up_human = '$_pngPath/next_follow_up_human.png';
 
 }

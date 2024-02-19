@@ -310,11 +310,7 @@ class _SetLatLonDialogueState extends State<SetLatLonDialogue> {
                           height: 40,
                           width: 100,
                           onClick: () {
-
-
                             buttonClick(visitLocationType);
-
-
                           })
                     ],
                   ),

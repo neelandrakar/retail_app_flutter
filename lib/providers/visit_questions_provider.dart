@@ -10,9 +10,10 @@ class VisitQuestionsProvider extends ChangeNotifier{
       show_dealer_counter_potential: false,
       show_sub_dealer_count: false,
       purpose_of_visit: [],
+      follow_up_persons: [],
       show_gift_hand_over: false,
       discussion_questions: [],
-      action_plan_questions: []
+      action_plan_questions: [],
   );
 
 

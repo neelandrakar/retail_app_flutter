@@ -12,7 +12,8 @@ import '../../constants/my_fonts.dart';
 
 class DiscussionActionPlanDialogue extends StatefulWidget {
   final String boxName;
-  const DiscussionActionPlanDialogue({Key? key, required this.boxName}) : super(key: key);
+  final VoidCallback onSuccess;
+  const DiscussionActionPlanDialogue({Key? key, required this.boxName, required this.onSuccess}) : super(key: key);
 
   @override
   State<DiscussionActionPlanDialogue> createState() => _DiscussionActionPlanDialogueState();
@@ -142,6 +143,9 @@ class _DiscussionActionPlanDialogueState extends State<DiscussionActionPlanDialo
                         canPop = false;
                       }
                     }
+                    if(canPop){
+                      discussion_submitted = true;
+                    }
                     } else if(boxType==2){
                       for(int i=0; i<visit_questions.action_plan_questions.length; i++){
                         var singleQuestion = visit_questions.action_plan_questions[i];
@@ -149,9 +153,13 @@ class _DiscussionActionPlanDialogueState extends State<DiscussionActionPlanDialo
                           canPop = false;
                         }
                       }
+                      if(canPop){
+                        action_plan_submitted = true;
+                      }
                     }
                     if(canPop) {
                       Navigator.pop(context);
+                      widget.onSuccess.call();
                     }
                     },
               ),

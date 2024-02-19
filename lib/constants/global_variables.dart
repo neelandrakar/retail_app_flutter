@@ -51,3 +51,6 @@ VisitLocationType visitLocationType = VisitLocationType.Home;
 enum QuestionAnswerType { Yes, No }
 QuestionAnswerType questionAnswerType= QuestionAnswerType.No;
 
+bool discussion_submitted = false;
+bool action_plan_submitted = false;
+

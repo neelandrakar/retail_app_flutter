@@ -159,4 +159,81 @@ class VisitPlanServices{
       print(e.toString());
     }
   }
+
+  Future<void> submitVisitRemarks({
+    required BuildContext context,
+    required String accountObjectId,
+    required DateTime checkIn,
+    required DateTime checkOut,
+    required String purposeOfVisit,
+    required bool hasHandedOverGift,
+    required XFile? image,
+    required int counterPotential,
+    required int subDealerCount,
+    required String businessSurvey,
+    required String discussionDetails,
+    required String actionPlanDetails,
+    required String issueDetails,
+    required String followUpPerson,
+    required double rating,
+    required VoidCallback onSuccess
+  })async {
+
+    try{
+      print('hello');
+
+      final Employee emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
+      DealerMasterProvider dealerMasterProvider = Provider.of<DealerMasterProvider>(context, listen: false);
+      final cloudinary = CloudinaryPublic('dhfiapa0x', 'giscyuqg');
+      String imageUrl = '';
+
+      CloudinaryResponse resCloudinary = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(image!.path, folder: 'Account Visit Remarks'));
+
+      imageUrl = resCloudinary.secureUrl;
+      print(imageUrl);
+
+      Map data = {
+        "account_obj_id": accountObjectId,
+        "check_in_time": checkIn,
+        "check_out_time": checkOut,
+        "visit_call": 1,
+        "selfie_image": imageUrl,
+        "purpose_of_visit": purposeOfVisit,
+        "gift_handed_over": hasHandedOverGift,
+        "submitted_counter_potential": counterPotential,
+        "submitted_sub_dealer_count": subDealerCount,
+        "submitted_business_survey": businessSurvey,
+        "discussion_details": discussionDetails,
+        "action_plan_details": actionPlanDetails,
+        "issue_details": issueDetails,
+        "follow_up_person": followUpPerson,
+        "rating": rating
+      };
+
+      String jsonBody = jsonEncode(data);
+
+      http.Response res = await http.post(
+          Uri.parse('$uri/v1/api/submit-visit-remarks'),
+          body: jsonBody,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': emp.jwt_token
+          });
+
+      HttpErroHandeling(
+          response: res,
+          context: context,
+          onSuccess: () {
+            print(res.body);
+
+
+            onSuccess();
+          }
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+      print(e.toString());
+    }
+  }
 }

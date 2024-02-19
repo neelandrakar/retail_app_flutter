@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/visit_plan/widgets/discussion_action_plan_dialogue.dart';
 
@@ -15,9 +18,32 @@ class DiscussionActionPlanBox extends StatefulWidget {
 }
 
 class _DiscussionActionPlanBoxState extends State<DiscussionActionPlanBox> {
+  int boxType = 0;
+  String navText = 'Add Topic';
+  bool showUnderline = false;
+
+    @override
+    void initState() {
+      super.initState();
+      if(widget.boxText == 'Discussed On') {
+        boxType = 1;
+      } else if(widget.boxText == 'Action Plan') {
+        boxType = 2;
+      }
+    }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+
+      if(boxType==1 && discussion_submitted){
+        navText = 'View';
+        showUnderline = true;
+      } else if(boxType==2 && action_plan_submitted){
+        navText = 'View';
+        showUnderline = true;
+      }
+
+      return Container(
       height: 64.3,
       width: 140,
       padding: EdgeInsets.all(10),
@@ -51,20 +77,25 @@ class _DiscussionActionPlanBoxState extends State<DiscussionActionPlanBox> {
                       builder: (BuildContext con){
                         return DiscussionActionPlanDialogue(
                           boxName: widget.boxText,
+                          onSuccess: (){
+                            setState(() {});
+                          },
                         );
                       });
                 },
-                child: const Row(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Add Topic',
+                      navText,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: MyColors.blueColor,
                           fontSize: 12,
                           fontFamily: MyFonts.poppins,
+                          decoration: showUnderline ? TextDecoration.underline : TextDecoration.none,
+                          decorationColor: MyColors.blueColor,
                           fontWeight: FontWeight.w500),
                     ),
                     Icon(

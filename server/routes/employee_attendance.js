@@ -94,12 +94,13 @@ attendanceRouter.get('/v1/api/get-attendance',  auth ,async (req,res) => {
         }
 
         function removeTime(date) {
+          var newDate =  new Date(date);  
           return new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate()
+              newDate.getFullYear(),
+              newDate.getMonth(),
+              newDate.getDate()
           );
-        }
+      }
 
         function formatDate(date, shortYear=false) {
             var d = new Date(date),
