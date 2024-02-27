@@ -64,7 +64,8 @@ class SignInServices{
   }
 
   Future<void> getUserData(
-      BuildContext context
+      BuildContext context,
+      VoidCallback onSuccess
       ) async {
 
     try{
@@ -86,9 +87,9 @@ class SignInServices{
               savedEmp);
           print(
               'Saved employee name: ${jsonDecode(savedEmp)['emp_name']}');
-
         }
       }
+      onSuccess.call();
 
     }catch (e) {
       print(e);

@@ -15,6 +15,7 @@ import 'package:retail_app_flutter/models/dashboard_menu.dart';
 
 import '../../models/employee.dart';
 import '../../providers/user_provider.dart';
+import '../../sidemenu/screens/side_menu.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home-one';
@@ -46,90 +47,98 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-          backgroundColor: MyColors.boneWhite,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(190),
-            child: CustomAppBar(
-              module_name: 'Dashboard',
-              emp_name: emp.emp_name,
-              show_back_button: false,
-              actions: [
-                Icon(Icons.live_help_outlined, color: MyColors.actionsButtonColor,size: 18,),
-                SizedBox(width: 10,),
-                Icon(Icons.notifications, color: MyColors.actionsButtonColor,size: 18,),
-                SizedBox(width: 10,),
-              ],
-              leading: Icon(Icons.menu_outlined, color: MyColors.actionsButtonColor,size: 20,),
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(100),
-                child: Container(
-                  color: MyColors.boneWhite,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20,),
-                      Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: CustomSearchField(
-                          height: 50,
-                          width: double.infinity,
-                          searchFieldColor: MyColors.black12,
-                          controller: _wildCardSearch,
-                          hintText: 'Search anything',
-                          textColor: MyColors.appBarColor,
-                          hintTextColor: MyColors.appBarColor,
-                          hintTextSize: 16,
-                          hintTextWeight: FontWeight.w500,
-                          maxLength: 3,
-                          textInputType: TextInputType.number,
-                        ),
-                      ),
-                      SizedBox(height: 20,),
-
-                      Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: MyColors.topNavigationBarUnselected,
-
-                        ),
-                        child: TabBar(
-
-                          indicator: BoxDecoration(
-                            color: MyColors.topNavigationBarSelected,
-                            borderRadius: BorderRadius.circular(20)
+      child: Transform.translate(
+        offset: Offset(0, 0),
+        child: Scaffold(
+          drawer: Drawer(
+            backgroundColor: MyColors.appBarColor,
+            child: SideMenu(),
+            width: 280,
+          ),
+            backgroundColor: MyColors.boneWhite,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(190),
+              child: CustomAppBar(
+                module_name: 'Dashboard',
+                emp_name: emp.emp_name,
+                show_back_button: false,
+                actions: [
+                  Icon(Icons.live_help_outlined, color: MyColors.actionsButtonColor,size: 18,),
+                  SizedBox(width: 10,),
+                  Icon(Icons.notifications, color: MyColors.actionsButtonColor,size: 18,),
+                  SizedBox(width: 10,),
+                ],
+                leading: Icon(Icons.menu_outlined, color: MyColors.actionsButtonColor,size: 20,),
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(100),
+                  child: Container(
+                    color: MyColors.boneWhite,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20,),
+                        Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: CustomSearchField(
+                            height: 50,
+                            width: double.infinity,
+                            searchFieldColor: MyColors.black12,
+                            controller: _wildCardSearch,
+                            hintText: 'Search anything',
+                            textColor: MyColors.appBarColor,
+                            hintTextColor: MyColors.appBarColor,
+                            hintTextSize: 16,
+                            hintTextWeight: FontWeight.w500,
+                            maxLength: 3,
+                            textInputType: TextInputType.number,
                           ),
-                          labelColor: MyColors.appBarColor,
-                          // unselectedLabelColor: MyColors.topNavigationBarSelected,
-                          tabs: [
-                            HomeMenuRadioButton(
-                              bar_name: "Menus",
-                            ),
-                            HomeMenuRadioButton(
-                              bar_name: "Visits",
-                            ),
-                            HomeMenuRadioButton(
-                              bar_name: "Liftings",
-                            ),
-                          ],
                         ),
-                      ),
+                        SizedBox(height: 20,),
 
-                    ],
+                        Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: MyColors.topNavigationBarUnselected,
+
+                          ),
+                          child: TabBar(
+
+                            indicator: BoxDecoration(
+                              color: MyColors.topNavigationBarSelected,
+                              borderRadius: BorderRadius.circular(20)
+                            ),
+                            labelColor: MyColors.appBarColor,
+                            // unselectedLabelColor: MyColors.topNavigationBarSelected,
+                            tabs: [
+                              HomeMenuRadioButton(
+                                bar_name: "Menus",
+                              ),
+                              HomeMenuRadioButton(
+                                bar_name: "Visits",
+                              ),
+                              HomeMenuRadioButton(
+                                bar_name: "Liftings",
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
 
-          body: TabBarView(
-            children: [
-              MenuScreen(),
-              VisitsScreen(),
-              LiftingsScreen(),
-            ],
-          ),
+            body: TabBarView(
+              children: [
+                MenuScreen(),
+                VisitsScreen(),
+                LiftingsScreen(),
+              ],
+            ),
+        ),
       ),
     );
   }

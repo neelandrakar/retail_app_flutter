@@ -1,11 +1,14 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/components/loader/gf_loader.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/attendance/screens/attendance_screen.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
+import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/constants/utils.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/providers/attendance_model_provider.dart';
 import 'package:retail_app_flutter/providers/dashboard_menu_provider.dart';
@@ -48,8 +51,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   final SignInServices signInServices = SignInServices();
+  bool fullyLoaded = false;
 
   Future<void> _requestPermissions() async {
+    // appVersion = await getAppInfo();
     final PermissionStatus cameraStatus = await Permission.camera.request();
     if (cameraStatus.isGranted) {
       print('Camera permission is granted');
@@ -68,8 +73,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      signInServices.getUserData(context);
       _requestPermissions();
+      signInServices.getUserData(context, (){
+        print('is fully loaded');
+        setState(() {
+          fullyLoaded = true;
+        });
+      });
     });
     // TODO: implement initState
     super.initState();
@@ -77,22 +87,32 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Retail CRM Flutter',
-      onGenerateRoute: (settings) => generateRoute(settings),
-      theme: ThemeData(
-        // colorScheme: ColorScheme.light(),
-        primaryColor: MyColors.mainYellowColor,
-        useMaterial3: true,
-      ),
-      home: Provider
-          .of<EmployeeProvider>(context)
-          .employee
-          .jwt_token
-          .isNotEmpty
-          ? AttendanceScreen()
-          : SignInScreen(),
+    return FutureBuilder(
+      future: Future.delayed(Duration(seconds: 1)), // replace this with your async operation
+      builder: (context, snapshot) {
+        if (!fullyLoaded) {
+          return Container(
+            color: MyColors.appBarColor,
+            child: Center(
+              child: Image.asset(AssetsConstants.shyam_steel_logo_round),
+            ),
+          ); // or any other loading indicator
+        } else {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Retail CRM Flutter',
+            onGenerateRoute: (settings) => generateRoute(settings),
+            theme: ThemeData(
+              // colorScheme: ColorScheme.light(),
+              primaryColor: MyColors.mainYellowColor,
+              useMaterial3: true,
+            ),
+            home: Provider.of<EmployeeProvider>(context).employee.jwt_token.isNotEmpty
+                ? AttendanceScreen()
+                : SignInScreen(),
+          );
+        }
+      },
     );
   }
 }

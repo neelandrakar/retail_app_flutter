@@ -26,7 +26,13 @@ class CustomAppBar extends StatelessWidget {
     return AppBar(
       backgroundColor: MyColors.appBarColor,
       centerTitle: true,
-      leading: leading,
+      leading: GestureDetector(
+          child: leading,
+        onTap: (){
+          Scaffold.of(context).openDrawer();
+          print('Open drawer');
+        },
+      ),
       foregroundColor: MyColors.boneWhite,
       actions: actions,
       automaticallyImplyLeading: show_back_button,
@@ -48,7 +54,6 @@ class CustomAppBar extends StatelessWidget {
                 color: MyColors.actionsButtonColor,
                 fontSize: 11,
                 fontWeight: FontWeight.w400
-
             ),
           ),
         ],

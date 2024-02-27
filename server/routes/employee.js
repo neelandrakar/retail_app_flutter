@@ -734,9 +734,10 @@ employeeRouter.post('/v1/api/submit-visit-remarks', auth, async(req,res) => {
         });
 
         if(visited_account.account_status=='Survey'){
+            
             visited_account.account_status='Prospective';
-
             visited_account = await visited_account.save();
+            
             new_status = visited_account.account_status;
 
             let new_acc_conv = await AccountConversion({
@@ -748,6 +749,18 @@ employeeRouter.post('/v1/api/submit-visit-remarks', auth, async(req,res) => {
 
             new_acc_conv = await new_acc_conv.save();
         }
+
+        let newJsonLog = new JsonLog({
+            post_user: emp_id,
+            api_name: '/v1/api/submit-visit-remarks',
+            request: JSON.stringify(req.body),
+            response: JSON.stringify(newVisit)
+          });
+          
+          newJsonLog = await newJsonLog.save();
+
+          newVisit = await newVisit.save();
+  
 
         res.status(200).json(newVisit);
 

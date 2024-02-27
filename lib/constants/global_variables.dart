@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 
-String uri = 'http://192.168.166.6:3000';
+String uri = 'http://192.168.243.6:3000';
+String appVersion = 'NA';
 double currentLatitude = 0.0;
 double currentLongitude = 0.0;
 XFile? imageXFile;
@@ -17,6 +18,11 @@ List<String> demo_distributors = [
   'Neelandra Kar',
   'Damon Salvatore',
 ];
+
+Map discussionData= {};
+Map actionPlanData= {};
+
+
 
 List<Map<String, dynamic>> account_type = [
   {

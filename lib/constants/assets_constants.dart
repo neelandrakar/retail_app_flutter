@@ -49,5 +49,9 @@ class AssetsConstants{
   static const String action_plan_icon = '$_pngPath/action_plan_icon.png';
   static const String select_follow_up_date_image = '$_pngPath/select_follow_up_date_image.png';
   static const String next_follow_up_human = '$_pngPath/next_follow_up_human.png';
+  static const String side_bar_profile_box = '$_pngPath/side_bar_profile_box.png';
+  static const String side_bar_back_button = '$_pngPath/side_bar_back_button.png';
+  static const String no_profile_pic = '$_pngPath/no_profile_pic.png';
+  static const String side_bar_cam = '$_pngPath/side_bar_cam.png';
 
 }

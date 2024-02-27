@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -145,6 +147,18 @@ class _DiscussionActionPlanDialogueState extends State<DiscussionActionPlanDialo
                     }
                     if(canPop){
                       discussion_submitted = true;
+                      discussionData = {};
+                      for(int i=0; i<visit_questions.discussion_questions.length; i++) {
+                        if (visit_questions.discussion_questions[i]
+                            .answer_status != 'Add') {
+                          discussionData[visit_questions.discussion_questions[i].question] =
+                              visit_questions.discussion_questions[i].answer_status;
+                        } else {
+                          discussionData[visit_questions.discussion_questions[i]
+                              .question] = 'NA';
+                        }
+                      }
+                      print(jsonEncode(discussionData));
                     }
                     } else if(boxType==2){
                       for(int i=0; i<visit_questions.action_plan_questions.length; i++){
@@ -154,7 +168,18 @@ class _DiscussionActionPlanDialogueState extends State<DiscussionActionPlanDialo
                         }
                       }
                       if(canPop){
+                        actionPlanData = {};
                         action_plan_submitted = true;
+                        for(int i=0; i<visit_questions.action_plan_questions.length; i++){
+                          if (visit_questions.action_plan_questions[i]
+                              .answer_status != 'Add') {
+                            actionPlanData[visit_questions.action_plan_questions[i]
+                                .question] = visit_questions
+                                .action_plan_questions[i].answer_status;
+                          } else {
+                            actionPlanData[visit_questions.action_plan_questions[i]
+                                .question] = 'NA';
+                          }                        }
                       }
                     }
                     if(canPop) {

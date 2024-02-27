@@ -195,8 +195,8 @@ class VisitPlanServices{
 
       Map data = {
         "account_obj_id": accountObjectId,
-        "check_in_time": checkIn,
-        "check_out_time": checkOut,
+        "check_in_time": checkIn.toIso8601String(),
+        "check_out_time": checkOut.toIso8601String(),
         "visit_call": 1,
         "selfie_image": imageUrl,
         "purpose_of_visit": purposeOfVisit,
@@ -204,8 +204,8 @@ class VisitPlanServices{
         "submitted_counter_potential": counterPotential,
         "submitted_sub_dealer_count": subDealerCount,
         "submitted_business_survey": businessSurvey,
-        "discussion_details": discussionDetails,
-        "action_plan_details": actionPlanDetails,
+        "discussion_details": jsonEncode(discussionData).toString(),
+        "action_plan_details": jsonEncode(actionPlanData).toString(),
         "issue_details": issueDetails,
         "follow_up_person": followUpPerson,
         "rating": rating

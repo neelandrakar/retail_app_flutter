@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 // import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
@@ -10,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/attendance/services/attendance_services.dart';
 import 'package:retail_app_flutter/constants/data_sync_loader.dart';
@@ -19,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/employee.dart';
 import '../providers/user_provider.dart';
+import 'assets_constants.dart';
 
 void showSnackBar(BuildContext context,String text){
   ScaffoldMessenger.of(context).showSnackBar(
@@ -216,4 +219,54 @@ String getEmployeeName(BuildContext context){
 saveVisitLocation(String key, value) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setString(key, json.encode(value));
+}
+
+ImageProvider<Object> getProfilePic(BuildContext context){
+
+  ImageProvider<Object> backgroundImageProvider = AssetImage(AssetsConstants.no_profile_pic);
+  Employee emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
+
+    String userProfilePic = emp.profile_pic;
+
+    if (userProfilePic != '') {
+      return
+      backgroundImageProvider = NetworkImage(userProfilePic);
+    }
+    return backgroundImageProvider;
+  }
+
+String getDesignation(BuildContext context){
+  Employee emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
+  String designation = 'NA';
+
+  if(emp.profile_id==59){
+    designation = 'State Head';
+  } else if(emp.profile_id==2){
+    designation = 'RSM';
+  } else if(emp.profile_id==3){
+    designation = 'ASM';
+  } else if(emp.profile_id==5){
+    designation = 'SO';
+  } else if(emp.profile_id==28){
+    designation = 'Sr. SO';
+  } else if(emp.profile_id==7){
+    designation = 'ME';
+  } else if(emp.profile_id==23){
+    designation = 'Sr. ME';
+  } else if(emp.profile_id==65){
+    designation = 'ATM';
+  }
+  return designation;
+}
+
+Future<String> getAppInfo()async{
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  print('fetching appversion');
+
+  String appName = packageInfo.appName;
+  String packageName = packageInfo.packageName;
+  String version = packageInfo.version;
+  String buildNumber = packageInfo.buildNumber;
+
+  return version;
 }

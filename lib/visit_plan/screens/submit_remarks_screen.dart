@@ -11,6 +11,7 @@ import 'package:retail_app_flutter/constants/custom_elevated_button.dart';
 import 'package:retail_app_flutter/constants/custom_text_formfield.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/constants/simpleTextField.dart';
+import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/models/dealer_master.dart';
 import 'package:retail_app_flutter/models/last_checkin_data.dart';
 import 'package:retail_app_flutter/models/visit_question_model.dart';
@@ -411,7 +412,7 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Rate your experience',
+                            'Rate your experience*',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -454,9 +455,10 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                           color: Colors.amber,
                         ),
                       ),
-                      onRatingUpdate: (rating) {
+                      onRatingUpdate: (newRating) {
 
                         setState(() {
+                          rating = newRating;
                           if (rating > 0 && rating <= 1) {
                             ratingText = 'Very Bad';
                             ratingIcon = AssetsConstants.dizzy;
@@ -973,29 +975,41 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                         buttonTextColor: MyColors.boneWhite,
                         height: 40,
                         width: 141,
-                        onClick: ()async{
+                        onClick: ()async {
+                          if (rating == 0) {
+                            showSnackBar(context, 'Please submit rating...');
 
-                          LastCheckInData lastCheckInData = await SavedLocationSP.getLastCheckInData();
-                          check_in_time = fetchBasicTimeInAMPM(lastCheckInData.check_in_time);
+                          } else {
+                            LastCheckInData lastCheckInData = await SavedLocationSP
+                                .getLastCheckInData();
+                            check_in_time = fetchBasicTimeInAMPM(
+                                lastCheckInData.check_in_time);
 
-                          visitPlanServices.submitVisitRemarks(
-                              context: context,
-                              accountObjectId: widget.dealer!.id,
-                              checkIn: lastCheckInData.check_in_time,
-                              checkOut: DateTime.now(),
-                              purposeOfVisit: purposeOfVisitDropdown,
-                              hasHandedOverGift: hasHandedOverGift,
-                              image: imageXFile,
-                              counterPotential: int.parse(_dealerCounterPotentialController.text),
-                              subDealerCount: int.parse(_subDealerCountController.text),
-                              businessSurvey: 'NA',
-                              discussionDetails: 'discussionDetails',
-                              actionPlanDetails: 'actionPlanDetails',
-                              issueDetails: 'No issue',
-                              followUpPerson: nextFollowUpPerson,
-                              rating: rating,
-                              onSuccess: (){}
-                          );
+                            visitPlanServices.submitVisitRemarks(
+                                context: context,
+                                accountObjectId: widget.dealer!.id,
+                                checkIn: lastCheckInData.check_in_time,
+                                checkOut: DateTime.now(),
+                                purposeOfVisit: purposeOfVisitDropdown,
+                                hasHandedOverGift: hasHandedOverGift,
+                                image: imageXFile,
+                                counterPotential: int.parse(
+                                    _dealerCounterPotentialController.text),
+                                subDealerCount: int.parse(
+                                    _subDealerCountController.text),
+                                businessSurvey: 'NA',
+                                discussionDetails: 'discussionDetails',
+                                actionPlanDetails: 'actionPlanDetails',
+                                issueDetails: 'NA',
+                                followUpPerson: nextFollowUpPerson,
+                                rating: rating,
+                                onSuccess: () {
+                                  dataSync(context, () {
+                                    Navigator.pushNamed(context, HomeScreen.routeName);
+                                  });
+                                }
+                            );
+                          }
                         }
                     )
                   ],
