@@ -27,6 +27,11 @@ const menuSchema = mongoose.Schema({
         required: true
     },
 
+    nav_path: {
+        type: String,
+        required: true
+    },
+
     d_status: {
         type: Number,
         default: 0

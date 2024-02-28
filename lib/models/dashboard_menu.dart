@@ -8,6 +8,7 @@ class DashboardMenu {
   final String menu_image;
   final int menu_type;
   final String menu_color;
+  final String? nav_path;
   final int d_status;
   final int menu_division;
   final int order;
@@ -19,6 +20,7 @@ class DashboardMenu {
     required this.menu_image,
     required this.menu_type,
     required this.menu_color,
+    required this.nav_path,
     required this.d_status,
     required this.menu_division,
     required this.order,
@@ -33,6 +35,7 @@ class DashboardMenu {
       'menu_image': menu_image,
       'menu_type': menu_type,
       'menu_color': menu_color,
+      'nav_path': nav_path,
       'd_status': d_status,
       'menu_division': menu_division,
       'order': order,
@@ -48,6 +51,7 @@ class DashboardMenu {
       menu_image: map['menu_image'] as String,
       menu_type: map['menu_type'] as int,
       menu_color: map['menu_color'] as String,
+      nav_path: map['nav_path'] as String?,
       d_status: map['d_status'] as int,
       menu_division: map['menu_division'] as int,
       order: map['order'] as int,

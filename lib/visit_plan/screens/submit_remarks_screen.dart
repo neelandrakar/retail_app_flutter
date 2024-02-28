@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,8 @@ import 'package:retail_app_flutter/constants/simpleTextField.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/models/dealer_master.dart';
 import 'package:retail_app_flutter/models/last_checkin_data.dart';
+import 'package:retail_app_flutter/models/pending_data_model.dart';
+import 'package:retail_app_flutter/models/submitted_visit_model.dart';
 import 'package:retail_app_flutter/models/visit_question_model.dart';
 import 'package:retail_app_flutter/visit_plan/services/visit_plan_services.dart';
 import 'package:retail_app_flutter/visit_plan/widgets/discusstion_action_plan_box.dart';
@@ -89,12 +93,12 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
     }
   }
 
-  Future<void> fetchQuestions()async{
+  Future<void> fetchQuestions() async {
 
     visitPlanServices.fetchVisitQuestion(
         context: context,
         account_obj_id: widget.dealer!.id,
-        onSuccess: ()async{
+        onSuccess: () async {
           print('Successfully done!');
           fullyLoaded = true;
           setState(() {
@@ -118,8 +122,8 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
             check_in_time = fetchBasicTimeInAMPM(lastCheckInData.check_in_time);
             setState(() {});
           } catch(e){
-            print(e.toString());
-            showSnackBar(context, e.toString());
+            print('Last check in error: ${e.toString()}');
+            showSnackBar(context, 'Last check in error: ${e.toString()}');
           }
           // fullyLoaded = true;
         }
@@ -982,34 +986,73 @@ class _SubmitRemarksScreenState extends State<SubmitRemarksScreen> {
                           } else {
                             LastCheckInData lastCheckInData = await SavedLocationSP
                                 .getLastCheckInData();
-                            check_in_time = fetchBasicTimeInAMPM(
-                                lastCheckInData.check_in_time);
 
-                            visitPlanServices.submitVisitRemarks(
-                                context: context,
-                                accountObjectId: widget.dealer!.id,
-                                checkIn: lastCheckInData.check_in_time,
-                                checkOut: DateTime.now(),
-                                purposeOfVisit: purposeOfVisitDropdown,
-                                hasHandedOverGift: hasHandedOverGift,
-                                image: imageXFile,
-                                counterPotential: int.parse(
-                                    _dealerCounterPotentialController.text),
-                                subDealerCount: int.parse(
-                                    _subDealerCountController.text),
-                                businessSurvey: 'NA',
-                                discussionDetails: 'discussionDetails',
-                                actionPlanDetails: 'actionPlanDetails',
-                                issueDetails: 'NA',
-                                followUpPerson: nextFollowUpPerson,
-                                rating: rating,
-                                onSuccess: () {
-                                  dataSync(context, () {
-                                    Navigator.pushNamed(context, HomeScreen.routeName);
-                                  });
-                                }
-                            );
-                          }
+                            print('check in ${fetchBasicTimeFormat(lastCheckInData.check_in_time)}');
+                            print('check out ${DateTime.now()}');
+
+                              SubmittedVisitModel new_visit =
+                                  SubmittedVisitModel(
+                                      account_obj_id: widget.dealer!.id,
+                                      check_in_time: lastCheckInData
+                                          .check_in_time,
+                                      check_out_time: DateTime.now(),
+                                      purpose_of_visit: purposeOfVisitDropdown,
+                                      has_handed_over_gift: hasHandedOverGift,
+                                      visit_image: imageXFile,
+                                      counter_potential: int.parse(
+                                          _dealerCounterPotentialController
+                                              .text),
+                                      sub_dealer_count: int.parse(
+                                          _subDealerCountController.text),
+                                      business_survey: 'NA',
+                                      discussion_details: jsonEncode(
+                                          discussionData).toString(),
+                                      action_plan_details: jsonEncode(
+                                          actionPlanData).toString(),
+                                      issue_details: 'NA',
+                                      follow_up_person: nextFollowUpPerson,
+                                      rating: rating,
+                                      is_sent: false
+                                  );
+
+                              await SavedLocationSP.storeNewVisit(
+                                  new_visit,
+                                  ()async {
+                                    dataSync(context, () {
+                                      Navigator.pushNamed(context, HomeScreen.routeName);
+                                    });
+                                  }
+                              );
+                            }
+
+
+
+
+
+                            // visitPlanServices.submitVisitRemarks(
+                            //     context: context,
+                            //     accountObjectId: widget.dealer!.id,
+                            //     checkIn: lastCheckInData.check_in_time,
+                            //     checkOut: DateTime.now(),
+                            //     purposeOfVisit: purposeOfVisitDropdown,
+                            //     hasHandedOverGift: hasHandedOverGift,
+                            //     image: imageXFile,
+                            //     counterPotential: int.parse(
+                            //         _dealerCounterPotentialController.text),
+                            //     subDealerCount: int.parse(
+                            //         _subDealerCountController.text),
+                            //     businessSurvey: 'NA',
+                            //     discussionDetails: 'discussionDetails',
+                            //     actionPlanDetails: 'actionPlanDetails',
+                            //     issueDetails: 'NA',
+                            //     followUpPerson: nextFollowUpPerson,
+                            //     rating: rating,
+                            //     onSuccess: () {
+                            //       dataSync(context, () {
+                            //         Navigator.pushNamed(context, HomeScreen.routeName);
+                            //       });
+                            //     }
+                            // );
                         }
                     )
                   ],

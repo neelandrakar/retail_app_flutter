@@ -12,6 +12,7 @@ class CustomElevatedButton extends StatelessWidget {
   final double? iconSize;
   final double? textSize;
   final VoidCallback onClick;
+  final bool? isDisabled;
   const CustomElevatedButton({
     super.key,
     required this.buttonText,
@@ -24,6 +25,7 @@ class CustomElevatedButton extends StatelessWidget {
     required this.onClick,
     this.iconSize = 15,
     this.textSize = 10,
+    this.isDisabled = false,
   });
 
   @override
@@ -33,7 +35,8 @@ class CustomElevatedButton extends StatelessWidget {
       height: height,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          disabledForegroundColor: buttonColor.withOpacity(0.5),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
             foregroundColor: buttonTextColor,
             backgroundColor: buttonColor,
             textStyle: TextStyle(
@@ -42,7 +45,7 @@ class CustomElevatedButton extends StatelessWidget {
               color: buttonTextColor,
               fontSize: textSize
         )),
-        onPressed: onClick,
+        onPressed: isDisabled==true ? null : onClick,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -52,7 +55,8 @@ class CustomElevatedButton extends StatelessWidget {
               SizedBox(width: 3,),
               Container(
                   alignment: Alignment.center,
-                  width: (width!-20),
+                  // color: Colors.red,
+                  width: 40,
                   child: Text(buttonText, maxLines: 1, overflow: TextOverflow.ellipsis,))
           ],
         ),

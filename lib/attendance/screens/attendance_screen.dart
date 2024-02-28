@@ -25,6 +25,7 @@ import '../../models/employee.dart';
 import '../../providers/attendance_model_provider.dart';
 import '../../providers/attendance_model_provider.dart';
 import '../../providers/user_provider.dart';
+import '../../sidemenu/screens/side_menu.dart';
 
 class AttendanceScreen extends StatefulWidget {
   static const String routeName = '/attendance-screen';
@@ -37,6 +38,7 @@ class AttendanceScreen extends StatefulWidget {
 class _AttendanceScreenState extends State<AttendanceScreen> {
 
   final AttendanceServices attendanceServices = AttendanceServices();
+  int sideMenuItemNo = 2;
 
 
   Future<void> _fetchAttendanceData(BuildContext context) async {
@@ -150,6 +152,13 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
     return Scaffold(
       backgroundColor: MyColors.offWhiteColor,
+      drawer: Drawer(
+        backgroundColor: MyColors.appBarColor,
+        child: SideMenu(
+          side_menu_item_no: sideMenuItemNo,
+        ),
+        width: 280,
+      ),
       appBar: AppBar(
           title: Image.asset(
             AssetsConstants.shyam_steel_logo_round,

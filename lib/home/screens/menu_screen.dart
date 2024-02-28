@@ -23,6 +23,7 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
 
   final HomeServices homeServices = HomeServices();
+  List<DashboardMenu> dashboardMenus = [];
   // List<DashboardMenu> dashboardMenus = [];
 
   fetchAllDashboardMenus() async {
@@ -31,7 +32,16 @@ class _MenuScreenState extends State<MenuScreen> {
         context: context,
         onSuccess: (){
           print('success!');
-          setState(() {});
+          setState(() {
+            var allMenus = Provider.of<DashboardMenuProvider>(context, listen: false).dashboardMenus;
+
+
+            for(int i=0; i<allMenus.length; i++){
+              if(allMenus[i].menu_type==1){
+                dashboardMenus.add(allMenus[i]);
+              }
+            }
+          });
         });
 
   }
@@ -44,6 +54,7 @@ class _MenuScreenState extends State<MenuScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchAllDashboardMenus();
     });
+
 
     //print(allFetchedTweets.toString());
   }
@@ -66,9 +77,6 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    var dashboardMenus = Provider.of<DashboardMenuProvider>(context, listen: false).dashboardMenus;
-
 
     return Scaffold(
       backgroundColor: MyColors.boneWhite,

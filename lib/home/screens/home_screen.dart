@@ -27,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedBar = 1;
+  int sideMenuItemNo = 1;
 
 
 
@@ -52,7 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           drawer: Drawer(
             backgroundColor: MyColors.appBarColor,
-            child: SideMenu(),
+            child: SideMenu(
+              side_menu_item_no: sideMenuItemNo,
+            ),
             width: 280,
           ),
             backgroundColor: MyColors.boneWhite,

@@ -175,6 +175,7 @@ void dataSync(BuildContext context, VoidCallback onSuccess)async{
   AttendanceServices attendanceServices = AttendanceServices();
   bool allowClosing = false;
   SavedLocationSP.clearSavedVisitLocationsKey();
+  // SavedLocationSP.clearLastCheckInData();
 
   showDialog(
       context: context,

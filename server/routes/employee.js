@@ -21,7 +21,7 @@ employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
     try{
 
-        const {menu_title, menu_subtitle, menu_image, menu_type, menu_color,menu_division, order} = req.body;
+        const {menu_title, menu_subtitle, menu_image, menu_type, menu_color,menu_division, order, nav_path} = req.body;
 
         let newMenu = Menu({
             menu_title,
@@ -30,7 +30,8 @@ employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
             menu_type,
             menu_color,
             menu_division,
-            order
+            order,
+            nav_path
         });
 
         newMenu = await newMenu.save();
@@ -78,20 +79,25 @@ employeeRouter.get('/v1/api/fetch-dashboard-menus', auth, async(req,res) => {
 
         let allMenus = await Menu.find({
             d_status: 0,
-            menu_type: 1
         });
+
+        console.log(myMenuAccess[0].accessable_menus.length);
+        console.log(allMenus.length);
+
 
         for(let i=0; i<allMenus.length; i++){
 
             for(let j=0; j<myMenuAccess[0].accessable_menus.length; j++){
 
-                if(allMenus[i]._id=myMenuAccess[0].accessable_menus[j]){
+                if(allMenus[i]._id==myMenuAccess[0].accessable_menus[j]){
 
                     myMenus.push(allMenus[i]);
                     break;
                 }
             }
         }
+
+        console.log(myMenus.length);
 
         
         res.json(myMenus);

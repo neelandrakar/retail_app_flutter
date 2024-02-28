@@ -1,4 +1,7 @@
 import 'package:camera/camera.dart';
+import 'package:retail_app_flutter/models/pending_data_model.dart';
+
+import '../models/submitted_visit_model.dart';
 
 String uri = 'http://192.168.243.6:3000';
 String appVersion = 'NA';
@@ -59,4 +62,7 @@ QuestionAnswerType questionAnswerType= QuestionAnswerType.No;
 
 bool discussion_submitted = false;
 bool action_plan_submitted = false;
+
+List<SubmittedVisitModel> storedVisits = [];
+PendingDataModel allPendingData = PendingDataModel(stored_visits: storedVisits);
 

@@ -36,5 +36,7 @@ class MyColors{
   static  Color lightYellowColor = Color(0xfffff3b4);
   static  Color businessSurveyBackground = Color(0xffdff4f2);
   static  Color businessSurveyForeground = Color(0xff11808c);
+  static  Color pendingDataBlue = Color(0xff3d95d4);
+  static  Color pendingDataRefresh = Color(0xff4da3e0);
 
 }
