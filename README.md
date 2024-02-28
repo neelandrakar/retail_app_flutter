@@ -1,4 +1,4 @@
-# retail_app_flutter
+# Retail App Flutter
 
 Retail App Clone made with flutter
 
