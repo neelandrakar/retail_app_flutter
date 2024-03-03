@@ -38,5 +38,6 @@ class MyColors{
   static  Color businessSurveyForeground = Color(0xff11808c);
   static  Color pendingDataBlue = Color(0xff3d95d4);
   static  Color pendingDataRefresh = Color(0xff4da3e0);
+  static  Color fadedAppbarColor = Color(0xff235477);
 
 }

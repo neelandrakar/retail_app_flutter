@@ -8,6 +8,7 @@ const Cluster = require('../models/clusters');
 const District = require('../models/districts');
 const Block = require('../models/blocks');
 const EngineerType = require('../models/engineer_type');
+const AccountConversionInitial = require('../models/account_conversion_initial');
 
 accountRouter.post('/v1/api/create-dealer', auth, async(req,res) => {
 
@@ -77,6 +78,23 @@ accountRouter.post('/v1/api/create-dealer', auth, async(req,res) => {
         });
     
             account = await account.save();
+
+            function getMonth(date) {
+                var newDate =  new Date(date);  
+                return new Date(
+                    newDate.getFullYear(),
+                    newDate.getMonth(),
+                    1
+                );
+            }
+
+            let newAccountConvInitial = await AccountConversionInitial({
+                account_id : account_id,
+                post_user : emp_id,
+                month: getMonth(Date.now())
+            });
+
+            newAccountConvInitial = await newAccountConvInitial.save();
             
             res.json(account);
 

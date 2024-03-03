@@ -56,7 +56,7 @@ class CustomElevatedButton extends StatelessWidget {
               Container(
                   alignment: Alignment.center,
                   // color: Colors.red,
-                  width: 40,
+                  width: buttonIcon==null ? 80 : 40,
                   child: Text(buttonText, maxLines: 1, overflow: TextOverflow.ellipsis,))
           ],
         ),

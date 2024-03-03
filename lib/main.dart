@@ -13,6 +13,7 @@ import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/providers/attendance_model_provider.dart';
 import 'package:retail_app_flutter/providers/dashboard_menu_provider.dart';
 import 'package:retail_app_flutter/providers/dealer_master_provider.dart';
+import 'package:retail_app_flutter/providers/dealer_target_achievement_provider.dart';
 import 'package:retail_app_flutter/providers/distributor_master_provider.dart';
 import 'package:retail_app_flutter/providers/engineer_master_provider.dart';
 import 'package:retail_app_flutter/providers/user_provider.dart';
@@ -36,6 +37,7 @@ void main() async{
           ChangeNotifierProvider(create: (context)=> DealerMasterProvider()),
           ChangeNotifierProvider(create: (context)=> DistributorMasterProvider()),
           ChangeNotifierProvider(create: (context)=> EngineerMasterProvider()),
+          ChangeNotifierProvider(create: (context)=> DealerTargetAchievementProvider()),
         ],
         child: const MyApp(),
       ));

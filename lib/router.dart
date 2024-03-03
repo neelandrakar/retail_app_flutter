@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:retail_app_flutter/accounts/screens/account_list.dart';
 import 'package:retail_app_flutter/accounts/screens/accounts_screen.dart';
 import 'package:retail_app_flutter/accounts/screens/create_account_screen.dart';
+import 'package:retail_app_flutter/accounts/screens/target_vs_achievement_screen.dart';
 import 'package:retail_app_flutter/attendance/screens/attendance_screen.dart';
 import 'package:retail_app_flutter/attendance/screens/submit_odometer_screen.dart';
 import 'package:retail_app_flutter/constants/camera_screen.dart';
@@ -75,6 +76,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       return MaterialPageRoute(
           settings: routeSettings,
           builder: (_) => PendingDataScreen()
+      );
+
+    case TargetVsAchievementScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) => TargetVsAchievementScreen()
       );
 
     case VisitPlanScreen.routeName:

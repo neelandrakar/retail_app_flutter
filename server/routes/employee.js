@@ -15,6 +15,8 @@ const QuestionMaster = require('../models/question_master');
 const JsonLog = require('../models/json_log');
 const VisitHistory = require('../models/visit_history');
 const AccountConversion = require('../models/account_conversion');
+const AccountConversionInitial = require('../models/account_conversion_initial');
+const AccountTarget = require('../models/account_target');
 // import * as myFunctions from '../common_functions'
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
@@ -775,6 +777,287 @@ employeeRouter.post('/v1/api/submit-visit-remarks', auth, async(req,res) => {
       }
 
 });
+
+employeeRouter.post('/v1/api/auto-inital-status-entry', auth, async(req,res) => {
+
+    try{
+
+        const emp_id = req.user;
+        let taggedAccounts = [];
+
+        taggedAccounts = await AccountMaster.find({
+            d_status: 0,
+        });
+
+        function getMonth(date) {
+            var newDate =  new Date(date);  
+            return new Date(
+                newDate.getFullYear(),
+                newDate.getMonth(),
+                1
+            );
+        }
+
+        let curr_month = getMonth(Date.now());
+
+        let account_conversion_initial = await AccountConversionInitial.find({
+            month: curr_month,
+        });
+
+        for(let i=0; i<taggedAccounts.length; i++){
+            let insertData = true;
+        
+            for(let j=0; j<account_conversion_initial.length; j++){
+
+                if(taggedAccounts[i].account_id == account_conversion_initial[j].account_id){
+                    insertData = false;
+                }
+            }
+
+            if(insertData){
+            let newAccountConvInitial = await AccountConversionInitial({
+                account_id : taggedAccounts[i].account_id,
+                post_user : req.user,
+                month: curr_month,
+                account_status: taggedAccounts[i].account_status
+            });
+                newAccountConvInitial = await newAccountConvInitial.save();
+        }
+    }
+       
+        res.json(account_conversion_initial);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+employeeRouter.post('/v1/api/set-dealer-target', auth, async(req,res) => {
+
+    try{
+
+        const { account_id, primary_target, secondary_target } = req.body;
+
+        const emp_id = req.user;
+        let primary_target_taken = false;
+        let secondary_target_taken = false;
+        let new_target;
+
+        if(primary_target>0){
+            primary_target_taken = true;
+        }
+        if(secondary_target>0){
+            secondary_target_taken = true;
+        }
+
+
+        function getMonth(date) {
+            var newDate =  new Date(date);  
+            return new Date(
+                newDate.getFullYear(),
+                newDate.getMonth(),
+                1
+            );
+        }
+        let curr_month = getMonth(Date.now());
+
+        let dealer = await AccountMaster.find({
+            account_id: account_id
+        });
+
+        let target_tbl = await AccountTarget.find({
+            month: curr_month
+        });
+
+        if(target_tbl.length>0){
+
+        } else {
+                new_target = AccountTarget({
+                account_id : account_id,
+                month: curr_month,
+                primary_target: primary_target,
+                primary_target_taken: primary_target_taken,
+                secondary_target: secondary_target,
+                secondary_target_taken: secondary_target_taken,
+                post_user: emp_id,
+                updated_on: Date.now()
+            });
+
+            new_target = await new_target.save();
+        }
+        
+        res.json(new_target);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+employeeRouter.post('/v1/api/get-target-vs-achievement', auth, async(req,res) => {
+
+    try{
+
+        const { account_type_id } = req.body;
+
+        const emp_id = req.user;
+
+        let employee = await Employee.findById(emp_id);
+        let emp_districts = employee.district_id;
+        let emp_profile = employee.profile_id;
+        let taggedAccounts = [];
+        let taggedDLPPT = [];
+        let target_data = [];
+        let secondary_target_percentage = 80;  //Secondary target % is fixed to be 80% of Primary Target
+        let active_dealer_count = 0;
+        let inactive_dealer_count = 0;
+        let prospective_dealer_count = 0;
+        let min_target_for_active = 0;
+        let min_target_for_inactive = 0;
+        let min_target_for_prospective = 0;
+
+        if(emp_profile==3){
+            min_target_for_active = 10, //Min treshhold for active accounts
+            min_target_for_inactive = 5; //Min treshhold for inactive accounts
+            min_target_for_prospective = 5; //Min treshhold for prospective accounts
+        }
+
+
+
+        taggedAccounts = await AccountMaster.find({
+            $or: [
+                {AGM_RSM: emp_id},
+                {ASM: emp_id},
+                {SO: emp_id},
+                {ME: emp_id},
+            ],
+            all_districts : { $in: emp_districts },
+            account_type_id: account_type_id,
+            d_status: 0,
+            account_status: { $nin: ['Rejected']}
+        });
+
+        if(account_type_id==1){
+
+                taggedDLPPT = await AccountMaster.find({
+                $or: [
+                    {AGM_RSM: emp_id},
+                    {ASM: emp_id},
+                    {SO: emp_id},
+                    {ME: emp_id},
+                ],
+                all_districts : { $in: emp_districts },
+                account_type_id: 7 ,
+                working_as_dealer: 1,
+                d_status: 0,
+                account_status: { $nin: ['Rejected']}
+            });
+        }
+
+
+        //Merging both dealer & distributor working as dealer data
+        taggedAccounts = taggedAccounts.concat(taggedDLPPT);
+
+        for(let i=0;i < taggedAccounts.length; i++){
+            if(taggedAccounts[i].account_status=='Active SSIL'){
+                active_dealer_count++;
+            } else if(taggedAccounts[i].account_status=='Inactive'){
+                inactive_dealer_count++;
+            } else if(taggedAccounts[i].account_status=='Prospective' || taggedAccounts[i].account_status=='Survey'){
+                prospective_dealer_count++;
+            }
+        }
+
+        if(min_target_for_active>active_dealer_count){
+            min_target_for_active = active_dealer_count;
+
+        } 
+        if(min_target_for_inactive>inactive_dealer_count){
+            min_target_for_inactive = inactive_dealer_count;
+            
+        }
+        if(min_target_for_prospective>prospective_dealer_count) {
+            min_target_for_prospective = prospective_dealer_count;
+        }
+
+
+
+        function getMonth(date) {
+            var newDate =  new Date(date);  
+            return new Date(
+                newDate.getFullYear(),
+                newDate.getMonth(),
+                1
+            );
+        }
+
+
+        //Fetch district name array
+        async function getDistrictNames(district_array){
+
+            let ditricts_names = [];
+
+            let district = await District.find({
+                district_id: { $in: district_array }
+            });
+            
+            for(let i=0; i<district.length; i++){
+                ditricts_names.push(district[i].district_title);
+            }
+
+            return district ? ditricts_names : [];
+        }
+
+        for(let i=0; i<taggedAccounts.length; i++){
+
+            let initial_status = await AccountConversionInitial.find({
+                account_id: taggedAccounts[i].account_id,
+                month: getMonth(Date.now())
+            });
+
+            let dealer_target = await AccountTarget.find({
+                account_id: taggedAccounts[i].account_id,
+                month: getMonth(Date.now())
+            });
+
+            if(dealer_target.length>0){
+
+            if(dealer_target[0].primary_target_taken==true){
+
+                target_data.push({
+                    'account_id': taggedAccounts[i].account_id,
+                    'dealer_name': taggedAccounts[i].account_name,
+                    'account_status': taggedAccounts[i].account_status,
+                    'initial_status': initial_status.length>0 ? initial_status[0].account_status : 'NA',
+                    'primary_target': dealer_target[0].primary_target,
+                    'cm_achievement': 20,
+                    'lm_achievement': 40,
+                    'district_names': await getDistrictNames(taggedAccounts[i].all_districts),
+                    'district_ids': taggedAccounts[i].all_districts
+                });
+            }
+            }
+        }
+
+        const finalRes = {
+            'secondary_target_percentage': secondary_target_percentage,
+            'target_data': target_data,
+            'min_target_for_active': min_target_for_active,
+            'min_target_for_inactive': min_target_for_inactive,
+            'min_target_for_prospective': min_target_for_prospective
+        }
+
+        
+        res.json(finalRes);
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+
 
 
 

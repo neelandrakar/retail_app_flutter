@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_app_flutter/accounts/screens/target_vs_achievement_screen.dart';
 import 'package:retail_app_flutter/accounts/widgets/account_summary_widget.dart';
 import 'package:retail_app_flutter/accounts/widgets/dealer_info_card.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
@@ -19,6 +20,7 @@ import 'package:retail_app_flutter/providers/distributor_master_provider.dart';
 import 'package:retail_app_flutter/providers/engineer_master_provider.dart';
 
 import '../../constants/custom_app_bar.dart';
+import '../../constants/custom_elevated_button.dart';
 import '../../models/employee.dart';
 import '../../providers/user_provider.dart';
 import '../widgets/account_info_card.dart';
@@ -314,27 +316,16 @@ class _AccountListState extends State<AccountList> {
           if(widget.account_type_id==1)
             Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50.0),
-            child: GestureDetector(
-              onTap: (){
-                print('view target');
-              },
-              child: Container(
+            child: CustomElevatedButton(
+                buttonText: 'View Target v/s Achievement',
+                textSize: 14,
+                buttonColor: MyColors.purpleColor,
+                buttonTextColor: MyColors.boneWhite,
                 height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: MyColors.purpleColor
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'View Target v/s Achievement',
-                  style: TextStyle(
-                    color: MyColors.boneWhite,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: MyFonts.poppins
-                  ),
-                ),
-              ),
+                onClick: (){
+                  print('view target');
+                  Navigator.pushNamed(context, TargetVsAchievementScreen.routeName);
+                }
             ),
           ),
           SizedBox(height: 25,),
