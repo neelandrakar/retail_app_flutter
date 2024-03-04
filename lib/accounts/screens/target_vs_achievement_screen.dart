@@ -8,6 +8,7 @@ import 'package:retail_app_flutter/accounts/widgets/data_column_item.dart';
 import 'package:retail_app_flutter/constants/custom_elevated_button.dart';
 import 'package:retail_app_flutter/models/dealer_target_achievement_model.dart';
 import 'package:retail_app_flutter/providers/dealer_target_achievement_provider.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../constants/assets_constants.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/custom_button_two.dart';
@@ -20,6 +21,8 @@ import '../../constants/utils.dart';
 import '../../models/employee.dart';
 import '../../providers/user_provider.dart';
 import '../widgets/account_summary_widget.dart';
+import '../widgets/dealer_target_data_grid.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 
 class TargetVsAchievementScreen extends StatefulWidget {
   static const String routeName = '/target-vs-achievement';
@@ -45,8 +48,41 @@ class _TargetVsAchievementScreenState extends State<TargetVsAchievementScreen> {
   int total_billed = 0;
   late Employee emp;
   TextEditingController _searchController = TextEditingController();
+  bool editing_mode = false;
+  late DealerTargetDataSource dealerTargetDataSource;
 
-  fetchDealersTarget() async {
+
+  void changeToEditingMode(){
+
+    setState(() {
+      if(editing_mode){
+        editing_mode = false;
+      } else{
+        editing_mode = true;
+      }
+    });
+  }
+
+  void _runFilter(String enteredKeyword, VoidCallback onSuccess) {
+
+      dealerTargetAchievement = Provider.of<DealerTargetAchievementProvider>(context, listen: false).dealerTargetAchievementModel;
+
+      if (enteredKeyword.isEmpty) {
+        // if the search field is empty or only contains white-space, we'll display all users
+        dealerTargetAchievement = dealerTargetAchievement;
+      } else {
+        dealerTargetAchievement.target_data
+            .where((i) =>
+            i.dealer_name.toLowerCase().contains(enteredKeyword.toLowerCase()))
+            .toList();
+
+        // we use the toLowerCase() method to make it case-insensitive
+      }
+
+      onSuccess.call();
+  }
+
+  fetchDealersTarget(VoidCallback onSuccess) async {
 
     await accountServices.fetchDealerTarget(context: context, onSuccess: (){
       print('target is fetched!!!!');
@@ -92,21 +128,25 @@ class _TargetVsAchievementScreenState extends State<TargetVsAchievementScreen> {
 
       });
     });
+    onSuccess.call();
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getDealersTarget = fetchDealersTarget();
-    emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
+    _getDealersTarget = fetchDealersTarget((){
+      dealerTargetDataSource = DealerTargetDataSource(dealerTargets: dealerTargetAchievement.target_data);
+      emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
+    });
+
   }
 
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getDealersTarget, // Replace _yourFutureFunction with your actual asynchronous function
+      future: _getDealersTarget,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!fullyLoaded) {
           return Container(
@@ -147,7 +187,10 @@ class _TargetVsAchievementScreenState extends State<TargetVsAchievementScreen> {
                         buttonTextColor: MyColors.actionsButtonColor,
                         height: 40,
                         width: 100,
-                        onClick: (){},
+                        onClick: (){
+                          changeToEditingMode();
+                          DealerTargetDataSource(dealerTargets: []).enableEditingMode();
+                        },
                       )
                     ],
                   ),
@@ -215,279 +258,215 @@ class _TargetVsAchievementScreenState extends State<TargetVsAchievementScreen> {
                   ),
                   SizedBox(height: 25,),
                   Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal:20.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(30),
-                              topLeft: Radius.circular(30),
-                            ),
-                            color: MyColors.boneWhite
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 3,),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 110.0),
-                              child: Divider(
-                                color: MyColors.ashColor,
-                                thickness: 3,
+                      child: SingleChildScrollView(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal:20.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(30),
+                                topLeft: Radius.circular(30),
                               ),
-                            ),
-                            SizedBox(height: 10,),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CustomDropdown(
-                                    dropdownItems: emp.state_names.map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    dropdownIcon: Icon(Icons.arrow_drop_down),
-                                    height: 35,
-                                    width: 100,
-                                    hintText: 'State',
-                                    hintTextWeight: FontWeight.w400,
-                                    hintTextSize: 10,
-                                    hintTextColor: MyColors.fadedBlack,
-                                    boxColor: MyColors.ashColor,
-                                    onSelect: print,
-                                  ),
-                                  CustomDropdown(
-                                    dropdownItems: emp.district_names.map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    dropdownIcon: Icon(Icons.arrow_drop_down),
-                                    height: 35,
-                                    width: 100,
-                                    hintText: 'District',
-                                    hintTextWeight: FontWeight.w400,
-                                    hintTextSize: 10,
-                                    hintTextColor: MyColors.fadedBlack,
-                                    boxColor: MyColors.ashColor,
-                                    onSelect: (value){
-
-                                      print(value);
-                                    },
-
-                                  ),
-                                  CustomDropdown(
-                                    dropdownItems: account_status.map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                    dropdownIcon: Icon(Icons.arrow_drop_down),
-                                    height: 35,
-                                    width: 100,
-                                    hintText: 'Status',
-                                    hintTextWeight: FontWeight.w400,
-                                    hintTextSize: 10,
-                                    hintTextColor: MyColors.fadedBlack,
-                                    boxColor: MyColors.ashColor,
-                                    onSelect: (value){
-                                      print(value);
-                                    },
-                                  ),
-                                ],
-                            ),
-                            SizedBox(height: 5,),
-                            Row(
-                                children: [
-                                  CustomSearchField(
-                                    height: 45,
-                                    width: 220,
-                                    controller: _searchController,
-                                    hintText: 'Search by name/mobile no.',
-                                    searchFieldColor: MyColors.ashColor,
-                                    hintTextWeight: FontWeight.w400,
-                                    hintTextSize: 13,
-                                    hintTextColor: MyColors.fadedBlack,
-                                    maxLength: 30,
-                                    textColor: MyColors.blackColor,
-                                    textInputType: TextInputType.text,
-                                  ),
-                                  SizedBox(width: 10,),
-                                  CustomButtonTwo(
-                                      height: 45,
-                                      width: 80,
-                                      buttonColor: MyColors.deepBlueColor,
-                                      borderRadius: 30,
-                                      button_text: 'Search',
-                                      text_color: MyColors.boneWhite,
-                                      button_text_size: 13,
-                                      onClick: (){
-
-                                        setState(() {});
-                                      }
-                                  )
-                                ],
-                            ),
-                            SizedBox(height: 20),
-                            Text(
-                              "Accounts Billed",
-                              maxLines: 1,
-                              style: TextStyle(
-                                  color: MyColors.appBarColor,
-                                  fontSize: 15,
-                                  fontFamily: MyFonts.poppins,
-                                  fontWeight: FontWeight.w500
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                                decoration: BoxDecoration(
-                                    color: MyColors.ivoryWhite,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        offset: Offset(
-                                          1.0,
-                                          1.0,
-                                        ),
-                                        blurRadius: 3.0,
-                                        spreadRadius: 1.0,
-                                      ), //BoxShadow
-                                    ],
+                              color: MyColors.boneWhite
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 3,),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 110.0),
+                                child: Divider(
+                                  color: MyColors.ashColor,
+                                  thickness: 3,
                                 ),
-                                height: 60,
-                                width: double.infinity,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                              ),
+                              SizedBox(height: 10,),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    AccountSummaryWidget(
-                                        account_status: 'Active SSIL',
-                                        account_count: active_billed,
-                                        account_count_color: MyColors.greenColor
+                                    CustomDropdown(
+                                      dropdownItems: emp.state_names.map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      dropdownIcon: Icon(Icons.arrow_drop_down),
+                                      height: 35,
+                                      width: 100,
+                                      hintText: 'State',
+                                      hintTextWeight: FontWeight.w400,
+                                      hintTextSize: 10,
+                                      hintTextColor: MyColors.fadedBlack,
+                                      boxColor: MyColors.ashColor,
+                                      onSelect: print,
                                     ),
-                                    AccountSummaryWidget(
-                                        account_status: 'Inactive',
-                                        account_count: inactive_billed,
-                                        account_count_color: MyColors.redColor
+                                    CustomDropdown(
+                                      dropdownItems: emp.district_names.map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      dropdownIcon: Icon(Icons.arrow_drop_down),
+                                      height: 35,
+                                      width: 100,
+                                      hintText: 'District',
+                                      hintTextWeight: FontWeight.w400,
+                                      hintTextSize: 10,
+                                      hintTextColor: MyColors.fadedBlack,
+                                      boxColor: MyColors.ashColor,
+                                      onSelect: (value){
+                        
+                                        print(value);
+                                      },
+                        
                                     ),
-                                    AccountSummaryWidget(
-                                        account_status: 'Prospective',
-                                        account_count: prospective_billed,
-                                        account_count_color: MyColors.blueColor
+                                    CustomDropdown(
+                                      dropdownItems: account_status.map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      dropdownIcon: Icon(Icons.arrow_drop_down),
+                                      height: 35,
+                                      width: 100,
+                                      hintText: 'Status',
+                                      hintTextWeight: FontWeight.w400,
+                                      hintTextSize: 10,
+                                      hintTextColor: MyColors.fadedBlack,
+                                      boxColor: MyColors.ashColor,
+                                      onSelect: (value){
+                                        print(value);
+                                      },
                                     ),
-                                    AccountSummaryWidget(
-                                        account_status: 'Survey',
-                                        account_count: survey_billed,
-                                        account_count_color: MyColors.orangeColor
+                                  ],
+                              ),
+                              SizedBox(height: 5,),
+                              Row(
+                                  children: [
+                                    CustomSearchField(
+                                      height: 45,
+                                      width: 220,
+                                      controller: _searchController,
+                                      hintText: 'Search by name/mobile no.',
+                                      searchFieldColor: MyColors.ashColor,
+                                      hintTextWeight: FontWeight.w400,
+                                      hintTextSize: 13,
+                                      hintTextColor: MyColors.fadedBlack,
+                                      maxLength: 30,
+                                      textColor: MyColors.blackColor,
+                                      textInputType: TextInputType.text,
                                     ),
-                                    AccountSummaryWidget(
-                                      account_status: 'Total',
-                                      account_count: total_billed,
-                                      account_count_color: MyColors.blackColor,
-                                      isLast: true,
+                                    SizedBox(width: 10,),
+                                    CustomButtonTwo(
+                                        height: 45,
+                                        width: 80,
+                                        buttonColor: MyColors.deepBlueColor,
+                                        borderRadius: 30,
+                                        button_text: 'Search',
+                                        text_color: MyColors.boneWhite,
+                                        button_text_size: 13,
+                                        onClick: (){
+                        
+                                          _runFilter(
+                                            _searchController.text,
+                                              (){
+                                              setState(() {
+                        
+                                              });
+                                              }
+                                          );
+                        
+                                        }
                                     )
                                   ],
-                                )
-                            ),
-                            SizedBox(height: 10),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                                child: DataTable(
-                                  headingRowColor: MaterialStateColor.resolveWith((states) => Colors.transparent),
-                                  headingRowHeight: 60,
-                                  horizontalMargin: 0,
-                                  // horizontalMargin: 2,
-                                  headingTextStyle: TextStyle(
-                                      color: MyColors.boneWhite,
-                                      fontSize: 12,
-                                      fontFamily: MyFonts.poppins,
-                                      fontWeight: FontWeight.w400
-                                  ),
-                                  columnSpacing: 0,
-                                  showBottomBorder: true,
-                                  columns: <DataColumn>[
-                                    DataColumn(
-                                      label: DataColumnItem(
-                                          column_name: 'Dealer Name',
-                                          max_line: 1,
-                                          column_color: MyColors.deepBlueColor,
-                                          is_first: true,
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: DataColumnItem(
-                                          column_name: 'Initial\nStatus',
-                                          max_line: 2,
-                                          column_color: MyColors.deepBlueColor,
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: DataColumnItem(
-                                          column_name: 'Initial\nStatus',
-                                          max_line: 2,
-                                          column_color: MyColors.deepBlueColor,
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: DataColumnItem(
-                                          column_name: 'Target',
-                                          max_line: 1,
-                                          column_color: MyColors.deepBlueColor,
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: DataColumnItem(
-                                          column_name: 'Curr\nMonth\nAchv',
-                                          max_line: 3,
-                                          column_color: MyColors.deepBlueColor,
-                                      )
-                                    ),
-                                    DataColumn(
-                                        label: DataColumnItem(
-                                          column_name: 'Last\nMonth\nAchv',
-                                          max_line: 3,
-                                          is_last: true,
-                                          column_color: MyColors.deepBlueColor,
-                                        )
-                                    )
-                                  ],
-                                  rows: dealerTargetAchievement.target_data.map((data) {
-                                    String initialStatus = "NA";
-                                    String currentStatus = "NA";
-
-                                    if(data.initial_status=='Active SSIL'){
-                                      initialStatus = 'A';
-                                    } else if(data.initial_status=='Inactive'){
-                                      initialStatus = 'I';
-                                    } else if(data.initial_status=='Prospective'){
-                                      initialStatus = 'P';
-                                    } else if(data.initial_status=='Survey'){
-                                      initialStatus = 'S';
-                                    }
-                                    if(data.account_status=='Active SSIL'){
-                                      currentStatus = 'A';
-                                    } else if(data.account_status=='Inactive'){
-                                      currentStatus = 'I';
-                                    } else if(data.account_status=='Prospective'){
-                                      currentStatus = 'P';
-                                    } else if(data.account_status=='Survey'){
-                                      currentStatus = 'S';
-                                    }
-                                    return DataRow(cells: [
-                                      DataCell(Text(data.dealer_name)),
-                                      DataCell(Text(initialStatus)),
-                                      DataCell(Text(currentStatus)),
-                                      DataCell(Text(data.primary_target.toString())),
-                                      DataCell(Text(data.cm_achievement.toString())),
-                                      DataCell(Text(data.lm_achievement.toString())),
-                                    ]);
-                                  }).toList(),
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                "Accounts Billed",
+                                maxLines: 1,
+                                style: TextStyle(
+                                    color: MyColors.appBarColor,
+                                    fontSize: 15,
+                                    fontFamily: MyFonts.poppins,
+                                    fontWeight: FontWeight.w500
                                 ),
-                              )
-                          ],
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                  decoration: BoxDecoration(
+                                      color: MyColors.ivoryWhite,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          offset: Offset(
+                                            1.0,
+                                            1.0,
+                                          ),
+                                          blurRadius: 3.0,
+                                          spreadRadius: 1.0,
+                                        ), //BoxShadow
+                                      ],
+                                  ),
+                                  height: 60,
+                                  width: double.infinity,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      AccountSummaryWidget(
+                                          account_status: 'Active SSIL',
+                                          account_count: active_billed,
+                                          account_count_color: MyColors.greenColor
+                                      ),
+                                      AccountSummaryWidget(
+                                          account_status: 'Inactive',
+                                          account_count: inactive_billed,
+                                          account_count_color: MyColors.redColor
+                                      ),
+                                      AccountSummaryWidget(
+                                          account_status: 'Prospective',
+                                          account_count: prospective_billed,
+                                          account_count_color: MyColors.blueColor
+                                      ),
+                                      AccountSummaryWidget(
+                                          account_status: 'Survey',
+                                          account_count: survey_billed,
+                                          account_count_color: MyColors.orangeColor
+                                      ),
+                                      AccountSummaryWidget(
+                                        account_status: 'Total',
+                                        account_count: total_billed,
+                                        account_count_color: MyColors.blackColor,
+                                        isLast: true,
+                                      )
+                                    ],
+                                  )
+                              ),
+                              SizedBox(height: 10),
+                              SfDataGridTheme(
+                                data: SfDataGridThemeData(
+                                    headerColor: MyColors.deepBlueColor,
+                                ),
+                                child: SfDataGrid(
+                                  source: dealerTargetDataSource,
+                                    // columnWidthMode: ColumnWidthMode.fill,
+                                    gridLinesVisibility: GridLinesVisibility.both,
+                                    headerRowHeight: 60,
+                                    headerGridLinesVisibility: GridLinesVisibility.both,
+                                    columns: <GridColumn>[
+                                        DataGridItem('name', 'Name'),
+                                        DataGridItem('current_status', 'Current\nStatus'),
+                                        DataGridItem('initial_status', 'Initial\nStatus'),
+                                        DataGridItem('primary_target', 'Target'),
+                                        DataGridItem('cm_achievement', 'CM\nAchv'),
+                                        DataGridItem('lm_achievement', 'LM\nAchv'),
+                                      ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                   )
@@ -497,5 +476,25 @@ class _TargetVsAchievementScreenState extends State<TargetVsAchievementScreen> {
         }
       },
     );
+  }
+
+
+  GridColumn DataGridItem(String column_name, String val) {
+    return GridColumn(
+            autoFitPadding: EdgeInsets.all(5),
+              columnWidthMode: ColumnWidthMode.fill,
+              columnName: column_name,
+              label: Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                  alignment: Alignment.center,
+                  child: Text(
+                    val,
+                    overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: MyColors.boneWhite,
+                          fontFamily: MyFonts.poppins,
+                          fontSize: 12
+                      )
+                  )));
   }
 }

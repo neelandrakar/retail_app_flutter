@@ -9,13 +9,15 @@ class DataColumnItem extends StatelessWidget {
   final bool? is_last;
   final bool? is_first;
   final Color column_color;
+  final bool? isDataRow;
   const DataColumnItem({
     super.key,
     required this.column_name,
     required this.max_line,
     this.is_last = false,
     required this.column_color,
-    this.is_first = false
+    this.is_first = false,
+    this.isDataRow = false
   });
 
 
@@ -45,7 +47,7 @@ class DataColumnItem extends StatelessWidget {
           ),
           Visibility(
               visible: is_last == false,
-              child: VerticalDivider(thickness: 0,color: MyColors.boneWhite)),
+              child: VerticalDivider(thickness: 0,color: isDataRow! ? MyColors.deepBlueColor : MyColors.boneWhite)),
           Visibility(
               visible: is_last==true,
               child: SizedBox(width: 10,)

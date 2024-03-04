@@ -55,6 +55,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   text_scroll: ^0.2.0
   package_info_plus: ^5.0.1
+  syncfusion_flutter_datagrid: ^24.2.8
 
 
 
