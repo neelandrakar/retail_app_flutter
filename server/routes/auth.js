@@ -1,5 +1,6 @@
 const express = require('express');
 const Employee = require('../models/employee');
+const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const authRouter = express.Router();
@@ -209,6 +210,30 @@ authRouter.post('/v1/api/signin', async (req,res) => {
         res.status(500).json({ error: e.message });
     }
 
+    });
+
+
+    authRouter.post('/v1/api/change-password', auth, async (req,res)=>{
+
+        try{
+
+            const{ old_password, new_password } = req.body;
+
+            let employee = await Employee.findById(req.user);
+            const isMatch = await bcryptjs.compare(old_password, employee.password);
+
+            if(isMatch){
+            const hashedPassword = await bcryptjs.hash(new_password,8);
+            employee.password = hashedPassword;
+            employee = await employee.save();
+            res.status(200).json({msg: "Password has been updated!"});
+            } else {
+
+            res.status(500).json({error: "Please enter valid current password"});
+            }
+        }catch(e){
+            res.status(500).json({ error: e.message });
+        }
     });
 
     

@@ -1026,6 +1026,7 @@ employeeRouter.post('/v1/api/get-target-vs-achievement', auth, async(req,res) =>
             if(dealer_target[0].primary_target_taken==true){
 
                 target_data.push({
+                    'id': dealer_target[0]._id,
                     'account_id': taggedAccounts[i].account_id,
                     'dealer_name': taggedAccounts[i].account_name,
                     'account_status': taggedAccounts[i].account_status,

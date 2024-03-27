@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/attendance/screens/attendance_screen.dart';
+import 'package:retail_app_flutter/change_password/screens/change_password_screen.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
@@ -214,6 +215,12 @@ class _SideMenuState extends State<SideMenu> {
                                     Navigator.pop(context);
                                   } else {
                                     Navigator.pushNamed(context, PendingDataScreen.routeName);
+                                  }
+                                }   else if(index==3){
+                                  if(index+1==widget.side_menu_item_no){
+                                    Navigator.pop(context);
+                                  } else {
+                                    Navigator.pushNamed(context, ChangePasswordScreen.routeName);
                                   }
                                 }
                               },

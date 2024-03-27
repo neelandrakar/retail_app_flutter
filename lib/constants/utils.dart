@@ -1,24 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-
-// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/attendance/services/attendance_services.dart';
 import 'package:retail_app_flutter/constants/data_sync_loader.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
+import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/saved_location_sp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../models/employee.dart';
 import '../providers/user_provider.dart';
 import 'assets_constants.dart';
@@ -26,10 +22,22 @@ import 'assets_constants.dart';
 void showSnackBar(BuildContext context,String text){
   ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        backgroundColor: MyColors.fadedAppbarColor,
+          behavior: SnackBarBehavior.floating,
+          action: SnackBarAction(
+            label: 'Dismiss',
+            disabledTextColor: MyColors.boneWhite,
+            textColor: Colors.yellow,
+            onPressed: () {
+              //Do whatever you want
+            },
+          ),
           content:
-          Text(text,
+          Text(
+            text,
             style: TextStyle(
-                fontFamily: 'Poppins'
+                fontFamily: 'Poppins',
+              color: MyColors.boneWhite
             ),
           )));
 }

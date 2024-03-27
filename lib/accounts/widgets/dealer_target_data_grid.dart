@@ -1,3 +1,4 @@
+import 'package:retail_app_flutter/accounts/screens/target_vs_achievement_screen.dart';
 import 'package:retail_app_flutter/models/dealer_target_model.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +53,7 @@ class DealerTargetDataSource extends DataGridSource {
       DataGridCell<int>(columnName: 'cm_achievement', value: e.cm_achievement),
       DataGridCell<int>(columnName: 'lm_achievement', value: e.lm_achievement),
     ]);
-        }
-    ).toList();
+   }).toList();
   }
 
 
@@ -65,18 +65,15 @@ class DealerTargetDataSource extends DataGridSource {
   @override
   DataGridRowAdapter buildRow(DataGridRow row) {
 
-    void editingMode(){
-
-    }
-    dynamic newCellValue;
     /// Helps to control the editable text in the [TextField] widget.
     TextEditingController editingController = TextEditingController();
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
-          bool is_editing_mode = enableEditing;
+          bool is_editing_mode = false;
           if(e.columnName=='primary_target'){
-            is_editing_mode = enableEditing;
+            is_editing_mode = is_editing_mode;
           }
+
           Color getColor() {
             if (e.value == 'P') {
               if (e.value == 'P') {
@@ -88,35 +85,39 @@ class DealerTargetDataSource extends DataGridSource {
 
             return Colors.transparent;
           }
-          return Container(
-            // color: getColor(),
-            alignment: Alignment.center,
-            // padding: EdgeInsets.all(8.0),
-            child: is_editing_mode==false ? Text(e.value.toString(),
-                style: TextStyle(
-                    color: MyColors.appBarColor,
-                    fontFamily: MyFonts.poppins,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500
-                )) : TextField(
-                    autofocus: false,
-                    controller: editingController,
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: MyColors.ashColor,
-                      hintText: e.value.toString(),
-                      contentPadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    ),
-                    keyboardType: TextInputType.number,
 
-                    onSubmitted: (String value) {
-                      // In Mobile Platform.
-                      // Call [CellSubmit] callback to fire the canSubmitCell and
-                      // onCellSubmit to commit the new value in single place.
-                      print(value);
-                    },
-                  ),
+          return GestureDetector(
+            onTap: (){
+              print(e.value.toString());
+              is_editing_mode = true;
+            },
+            child: Container(
+              // color: getColor(),
+              alignment: Alignment.center,
+              // padding: EdgeInsets.all(8),
+              child: is_editing_mode==false ? Text(e.value.toString(),
+                  style: TextStyle(
+                      color: MyColors.appBarColor,
+                      fontFamily: MyFonts.poppins,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500
+                  )) : TextField(
+                      autofocus: false,
+                      controller: editingController,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: MyColors.ashColor,
+                        hintText: e.value.toString(),
+                        contentPadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      ),
+                      keyboardType: TextInputType.number,
+
+                      onSubmitted: (String value) {
+                        print(value);
+                      },
+                    ),
+            ),
           );
         }).toList());
   }
