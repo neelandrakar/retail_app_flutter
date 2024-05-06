@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:retail_app_flutter/account_map/screens/account_map_screen.dart';
 import 'package:retail_app_flutter/accounts/screens/account_list.dart';
 import 'package:retail_app_flutter/accounts/screens/accounts_screen.dart';
 import 'package:retail_app_flutter/accounts/screens/create_account_screen.dart';
@@ -83,6 +84,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       return MaterialPageRoute(
           settings: routeSettings,
           builder: (_) => ChangePasswordScreen()
+      );
+
+    case AccountMap.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) => AccountMap()
       );
 
     case TargetVsAchievementScreen.routeName:

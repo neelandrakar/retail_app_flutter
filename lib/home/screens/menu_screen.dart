@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:retail_app_flutter/account_map/screens/account_map_screen.dart';
 import 'package:retail_app_flutter/accounts/screens/accounts_screen.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/utils.dart';
@@ -63,9 +64,13 @@ class _MenuScreenState extends State<MenuScreen> {
 
     if(index==0){
       Navigator.pushNamed(context, Accounts.routeName);
-    } else if(index==1){
+    } else if(index==1) {
       print('Navigate to order screen');
-    } else if(index==7){
+    }
+      else if(index==2){
+      Navigator.pushNamed(context, AccountMap.routeName);
+    }
+     else if(index==7){
 
       dataSync(context, () {
         showSnackBar(context, 'Data is successfully synced');
