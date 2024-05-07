@@ -10,7 +10,7 @@ const Cluster = require('../models/clusters');
 const District = require('../models/districts');
 const Block = require('../models/blocks');
 const JsonLog = require('../models/json_log');
-const axios = require('axios');
+// const axios = require('axios');
 
 //Sign up
 authRouter.post('/v1/api/signup', async (req,res) => {
@@ -237,7 +237,7 @@ authRouter.post('/v1/api/signin', async (req,res) => {
         }
     });
 
-    authRouter.post(
+    /*authRouter.post(
         "/v1/api/put-hazard-and-terry-in-pl-hof",
         auth,
         async (req, res) => {
@@ -296,7 +296,7 @@ authRouter.post('/v1/api/signin', async (req,res) => {
             res.status(500).json({ error: e.message });
           }
         }
-      );
+      );*/
 
       authRouter.get("/v1/api/get-sec-da",
         auth,
