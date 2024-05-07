@@ -9,6 +9,7 @@ const District = require('../models/districts');
 const Block = require('../models/blocks');
 const EngineerType = require('../models/engineer_type');
 const AccountConversionInitial = require('../models/account_conversion_initial');
+const authRouter = require('./auth');
 
 accountRouter.post('/v1/api/create-dealer', auth, async(req,res) => {
 
@@ -261,7 +262,7 @@ accountRouter.post('/v1/api/create-engineer', auth, async(req,res) => {
 
 });
 
-accountRouter.post('/v1/api/account-location-update',  async (req,res) => {
+accountRouter.post('/v1/api/account-location-update', auth, async (req,res) => {
 
     try{
 
@@ -482,7 +483,33 @@ accountRouter.post('/v1/api/account-location-update',  async (req,res) => {
 
     }catch (e) {
         res.status(500).json({ error: e.message });
-      }
+    }
+});
+
+//Set SAP ID
+
+accountRouter.post('/v1/api/set-sap-id', auth, async (req,res) => {
+
+    try{
+
+        const { sapid, dealer_id } = req.body;
+
+        const emp_id = req.user;
+
+        let account = await AccountMaster.find({
+            account_id: dealer_id
+        });
+
+        res.json(account[0].account_name);
+
+
+
+
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+
 });
 
 
