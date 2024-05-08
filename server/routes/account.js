@@ -10,6 +10,7 @@ const Block = require('../models/blocks');
 const EngineerType = require('../models/engineer_type');
 const AccountConversionInitial = require('../models/account_conversion_initial');
 const authRouter = require('./auth');
+const sapMaster = require('../models/sap_master');
 
 accountRouter.post('/v1/api/create-dealer', auth, async(req,res) => {
 
@@ -500,10 +501,42 @@ accountRouter.post('/v1/api/set-sap-id', auth, async (req,res) => {
             account_id: dealer_id
         });
 
-        res.json(account[0].account_name);
+        let sap_id_exists = await sapMaster.find({
+            sapid: sapid
+        });
+
+        if(sap_id_exists.length>0){
+            res.json({msg: 'SAP Id already exists'});
+        } else {
+            // console.log(`length: ${sap_id_exists.length}`);
+
+            let dealer_id_exists = await sapMaster.find({
+                dealer_id: dealer_id
+            });
+
+            if(dealer_id_exists.length>0){
+
+                for(let i=0; i<dealer_id_exists.length; i++){
+                    dealer_id_exists[i].is_active = false;
+                    await dealer_id_exists[i].save();
+                }
+            }
+
+            let new_sap_trn = sapMaster({
+                sapid,
+                dealer_id: account[0].account_id,
+                post_user: req.user
+            });
+
+            account[0].sapid = sapid;
+
+            new_sap_trn = await new_sap_trn.save();
+            await account[0].save();
+
+            res.json(new_sap_trn);
 
 
-
+        }
 
 
     }catch (e) {
