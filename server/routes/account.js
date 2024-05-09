@@ -10,7 +10,8 @@ const Block = require('../models/blocks');
 const EngineerType = require('../models/engineer_type');
 const AccountConversionInitial = require('../models/account_conversion_initial');
 const authRouter = require('./auth');
-const sapMaster = require('../models/sap_master');
+const SapMaster = require('../models/sap_master');
+const DealerLiftingMaster = require('../models/dealer_lifting_master');
 
 accountRouter.post('/v1/api/create-dealer', auth, async(req,res) => {
 
@@ -501,7 +502,7 @@ accountRouter.post('/v1/api/set-sap-id', auth, async (req,res) => {
             account_id: dealer_id
         });
 
-        let sap_id_exists = await sapMaster.find({
+        let sap_id_exists = await SapMaster.find({
             sapid: sapid
         });
 
@@ -510,7 +511,7 @@ accountRouter.post('/v1/api/set-sap-id', auth, async (req,res) => {
         } else {
             // console.log(`length: ${sap_id_exists.length}`);
 
-            let dealer_id_exists = await sapMaster.find({
+            let dealer_id_exists = await SapMaster.find({
                 dealer_id: dealer_id
             });
 
@@ -522,7 +523,7 @@ accountRouter.post('/v1/api/set-sap-id', auth, async (req,res) => {
                 }
             }
 
-            let new_sap_trn = sapMaster({
+            let new_sap_trn = SapMaster({
                 sapid,
                 dealer_id: account[0].account_id,
                 post_user: req.user
@@ -550,7 +551,49 @@ authRouter.post('/v1/api/add-dispatch-data', auth, async (req,res) => {
     try{
 
 
-        res.json(req.body);
+        const emp_id = req.user;
+        const dispatch_data = req.body;
+        let num =0;
+
+        for(let i=0; i<dispatch_data.length; i++){
+
+            let dispatch_data_exists = await DealerLiftingMaster.find({
+                invoice_no: dispatch_data[i].invoice_no,
+                material_code: parseInt(dispatch_data[i].material_code)
+            });
+
+            if(dispatch_data_exists==0){
+
+                console.log('New data entry\n');
+                let all_dispatch_data = await DealerLiftingMaster.find();
+                let dispatch_data_length = all_dispatch_data.length;
+                let all_tagged_emps = [];
+                
+
+                let new_dispatch_data = DealerLiftingMaster({
+                    lifting_id: dispatch_data_length+1,
+                    invoice_no: dispatch_data[i].invoice_no,
+                    material_code: dispatch_data[i].material_code,
+                    material_desc: dispatch_data[i].material_desc,
+                    sapid: dispatch_data[i].sapid,
+                    quantity: dispatch_data[i].quantity,
+                    tagged_emps: dispatch_data[i].tagged_emps,
+                    truck_no: dispatch_data[i].truck_no
+                });
+
+                await new_dispatch_data.save();
+
+
+            } else {
+                console.log('Duplicate entry\n');
+                continue;
+            }
+            
+        }
+
+        res.status(200).json({ msg: 'Dispatch data updated' });
+
+
 
     } catch(e){
         res.status(500).json({ error: e.message });

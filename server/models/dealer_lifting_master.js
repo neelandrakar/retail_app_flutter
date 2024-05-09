@@ -8,7 +8,7 @@ const dealerLiftingMasterSchema = mongoose.Schema({
     },
 
     invoice_no: {
-        type: Number,
+        type: String,
         requried: true
     },
 
