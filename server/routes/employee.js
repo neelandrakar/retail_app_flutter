@@ -1059,6 +1059,45 @@ employeeRouter.post('/v1/api/get-target-vs-achievement', auth, async(req,res) =>
 });
 
 
+//Get employee's eligible slab
+
+employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
+
+    try{
+        const emp_id = req.user;
+        const myDate = new Date();
+        let start_date, end_date;
+
+        const currentDate = new Date();
+
+        function convertToIST(date) {
+
+            const differenceInMinutes = 330;
+            const differenceInMilliseconds = differenceInMinutes * 60 * 1000;
+            const currentDate = new Date(date);
+            const localTime = currentDate.getTime();
+            const istDate = new Date(localTime + differenceInMilliseconds);
+            return istDate;
+          }
+
+        if(currentDate.getMonth()>=3){
+            start_date = new Date(currentDate.getFullYear(), 3, 1);
+            end_date = new Date(currentDate.getFullYear()+1, 2, 31, 23, 59, 59);
+        }
+
+          
+
+        res.status(200).json({ msg: {
+            start_date,
+            end_date
+        } });
+
+    }catch(e){
+        res.status(500).json({ error: e.message });
+    }
+} );
+
+
 
 
 

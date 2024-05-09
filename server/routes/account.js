@@ -564,7 +564,7 @@ authRouter.post('/v1/api/add-dispatch-data', auth, async (req,res) => {
 
             if(dispatch_data_exists==0){
 
-                console.log('New data entry\n');
+                console.log('New data entry');
                 let all_dispatch_data = await DealerLiftingMaster.find();
                 let dispatch_data_length = all_dispatch_data.length;
                 let all_tagged_emps = [];
@@ -585,7 +585,7 @@ authRouter.post('/v1/api/add-dispatch-data', auth, async (req,res) => {
 
 
             } else {
-                console.log('Duplicate entry\n');
+                console.log('Duplicate entry');
                 continue;
             }
             
