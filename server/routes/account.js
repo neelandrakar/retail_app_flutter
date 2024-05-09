@@ -506,7 +506,7 @@ accountRouter.post('/v1/api/set-sap-id', auth, async (req,res) => {
         });
 
         if(sap_id_exists.length>0){
-            res.json({msg: 'SAP Id already exists'});
+            res.status(403).json({msg: 'SAP Id already exists'});
         } else {
             // console.log(`length: ${sap_id_exists.length}`);
 
@@ -543,6 +543,18 @@ accountRouter.post('/v1/api/set-sap-id', auth, async (req,res) => {
         res.status(500).json({ error: e.message });
     }
 
+});
+
+
+authRouter.post('/v1/api/add-dispatch-data', auth, async (req,res) => {
+    try{
+
+
+        res.json(req.body);
+
+    } catch(e){
+        res.status(500).json({ error: e.message });
+    }
 });
 
 
