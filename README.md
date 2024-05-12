@@ -1,6 +1,6 @@
 # Retail App Flutter
 
-Retail App Clone made with flutter
+Retail App Clone made with flutter and Node JS
 
 ## Getting Started
 

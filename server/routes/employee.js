@@ -1081,16 +1081,20 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
           }
 
         if(currentDate.getMonth()>=3){
-            start_date = new Date(currentDate.getFullYear(), 3, 1);
+            start_date = new Date(currentDate.getFullYear(), 3, 1, 0, 0, 0);
             end_date = new Date(currentDate.getFullYear()+1, 2, 31, 23, 59, 59);
-        }
+        } else {
+            start_date = new Date(currentDate.getFullYear()-1, 3, 1, 0, 0, 0);
+            end_date = new Date(currentDate.getFullYear(), 2, 31, 23, 59, 59);
+        }  
 
-          
-
-        res.status(200).json({ msg: {
-            start_date,
-            end_date
-        } });
+        res.status(200).json({ 
+            msg: {
+                start_date,
+                end_date
+                } 
+            }
+        );
 
     }catch(e){
         res.status(500).json({ error: e.message });
