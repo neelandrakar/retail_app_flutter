@@ -1067,6 +1067,7 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
         const emp_id = req.user;
         const myDate = new Date();
         let start_date, end_date;
+        let total_sale = 0;
 
         const currentDate = new Date();
 
