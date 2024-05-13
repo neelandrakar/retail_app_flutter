@@ -1108,9 +1108,10 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
         }
 
         res.status(200).json({ 
-            msg: {
-                'total_sale': total_sale
-            }
+            
+            'total_sale': total_sale,
+            'details': emp_dispatches
+    
             }
         );
 
