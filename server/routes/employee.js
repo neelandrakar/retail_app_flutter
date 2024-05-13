@@ -18,6 +18,7 @@ const AccountConversion = require('../models/account_conversion');
 const AccountConversionInitial = require('../models/account_conversion_initial');
 const AccountTarget = require('../models/account_target');
 const DealerLiftingMaster = require('../models/dealer_lifting_master');
+const Calender = require('../models/calender');
 // import * as myFunctions from '../common_functions'
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
@@ -1083,21 +1084,21 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
             return istDate;
           }
 
-        if(currentDate.getMonth()<3){
-            start_date = new Date(currentDate.getFullYear(), 3, 1, 0, 0, 0);
-            end_date = new Date(currentDate.getFullYear()+1, 2, 31, 23, 59, 59);
-        } else {
+        if(currentDate.getMonth()>=3){
             start_date = new Date(currentDate.getFullYear()-1, 3, 1, 0, 0, 0);
             end_date = new Date(currentDate.getFullYear(), 2, 31, 23, 59, 59);
+        } else {
+            start_date = new Date(currentDate.getFullYear(), 3, 1, 0, 0, 0);
+            end_date = new Date(currentDate.getFullYear()+1, 2, 31, 23, 59, 59);
         }
-
-        console.log(start_date);
         
+        //Fetching dispatch data with date range
         let all_dispatches = await DealerLiftingMaster.find({
             d_status: 0,
             date:{$gte:new Date(start_date).toISOString(),$lt:new Date(end_date).toISOString()}
         });
 
+        //Filtering only those dispatches that the  employee is tagged too
         for(let i=0; i<all_dispatches.length; i++){
             for(let j=0; j<all_dispatches[i].tagged_emps.length; j++){
                 if(all_dispatches[i].tagged_emps[j] === emp_id){
@@ -1106,6 +1107,39 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
                 }
             }
         }
+
+        const calender = await Calender.find({
+            d_status:0,
+            date:{
+             $gte:start_date,
+             $lte:end_date
+         }
+         });
+
+         Calender.aggregate([
+            {
+              $match: {
+                date: {
+                  $gte: start_date,
+                  $lte: end_date,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $month: "$date",
+                }
+              },
+            },
+          ])
+            .then((data) => {
+              console.log(data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
 
         res.status(200).json({ 
             
