@@ -17,6 +17,7 @@ const VisitHistory = require('../models/visit_history');
 const AccountConversion = require('../models/account_conversion');
 const AccountConversionInitial = require('../models/account_conversion_initial');
 const AccountTarget = require('../models/account_target');
+const DealerLiftingMaster = require('../models/dealer_lifting_master');
 // import * as myFunctions from '../common_functions'
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
@@ -1068,6 +1069,7 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
         const myDate = new Date();
         let start_date, end_date;
         let total_sale = 0;
+        let emp_dispatches = [];
 
         const currentDate = new Date();
 
@@ -1081,19 +1083,34 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
             return istDate;
           }
 
-        if(currentDate.getMonth()>=3){
+        if(currentDate.getMonth()<3){
             start_date = new Date(currentDate.getFullYear(), 3, 1, 0, 0, 0);
             end_date = new Date(currentDate.getFullYear()+1, 2, 31, 23, 59, 59);
         } else {
             start_date = new Date(currentDate.getFullYear()-1, 3, 1, 0, 0, 0);
             end_date = new Date(currentDate.getFullYear(), 2, 31, 23, 59, 59);
-        }  
+        }
+
+        console.log(start_date);
+        
+        let all_dispatches = await DealerLiftingMaster.find({
+            d_status: 0,
+            date:{$gte:new Date(start_date).toISOString(),$lt:new Date(end_date).toISOString()}
+        });
+
+        for(let i=0; i<all_dispatches.length; i++){
+            for(let j=0; j<all_dispatches[i].tagged_emps.length; j++){
+                if(all_dispatches[i].tagged_emps[j] === emp_id){
+                    emp_dispatches.push(all_dispatches[i]);
+                    total_sale += all_dispatches[i].quantity;
+                }
+            }
+        }
 
         res.status(200).json({ 
             msg: {
-                start_date,
-                end_date
-                } 
+                'total_sale': total_sale
+            }
             }
         );
 
