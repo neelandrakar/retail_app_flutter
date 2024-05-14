@@ -1108,43 +1108,76 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
             }
         }
 
-        const calender = await Calender.find({
+        const calendar = await Calender.find({
             d_status:0,
             date:{
-             $gte:start_date,
-             $lte:end_date
+             $gte: start_date,
+             $lte: end_date
          }
          });
 
-         Calender.aggregate([
-            {
-              $match: {
-                date: {
-                  $gte: start_date,
-                  $lte: end_date,
-                },
-              },
-            },
-            {
-              $group: {
-                _id: {
-                  $month: "$date",
-                }
-              },
-            },
-          ])
-            .then((data) => {
-              console.log(data);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+         let months = [
+            { "month": 4, "year": 2023 },
+            { "month": 5, "year": 2023 },
+            { "month": 6, "year": 2023 },
+            { "month": 7, "year": 2023 },
+            { "month": 8, "year": 2023 },
+            { "month": 9, "year": 2023 },
+            { "month": 10, "year": 2023 },
+            { "month": 11, "year": 2023 },
+            { "month": 12, "year": 2023 },
+            { "month": 1, "year": 2024 },
+            { "month": 2, "year": 2024 },
+            { "month": 3, "year": 2024 }
+        ]
 
+        let monthly_sale = [];
+
+        function formatDate(input) {
+            const [month, year] = input.split(' '); // Split by ', ' instead of ' '
+            const date = new Date(`${month}/1/${year}`);
+            return date.toLocaleString('default', { month: 'short', year: 'numeric' });
+        }
+        
+        for(let i=0; i<months.length; i++){ 
+
+            let total_sale = 0;
+            let emp_sale = await DealerLiftingMaster.find({
+                d_status: 0,
+                tagged_emps: { $in: [ emp_id ]  },
+                $expr: {
+                    $and: [
+                    { $eq: [{ $month: '$date' }, months[i]['month']] },
+                    { $eq: [{ $year: '$date' }, months[i]['year']] }
+                    ]
+                },
+                });
+            const month_no = months[i]['month'];
+            const year_no = months[i]['year'];
+
+            let month_year = month_no + " " + year_no;
+            if(emp_sale.length>0){
+                for (let j = 0; j < emp_sale.length; j++) {
+                    total_sale += emp_sale[j].quantity;
+                }
+            }
+
+            console.log(formatDate(month_year));    
+
+             
+            monthly_sale.push({
+                'month': formatDate(month_year),
+                'total_sale': total_sale
+            });    
+
+            
+        }
+         
 
         res.status(200).json({ 
             
             'total_sale': total_sale,
-            'details': emp_dispatches
+            'details': monthly_sale
     
             }
         );
