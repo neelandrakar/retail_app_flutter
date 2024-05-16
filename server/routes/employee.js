@@ -1067,6 +1067,10 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
 
     try{
         const emp_id = req.user;
+
+        const emp = await Employee.findById(emp_id);
+        const emp_profile = emp.profile_id;
+        console.log(emp_profile);
         const myDate = new Date();
         let start_date, end_date;
         let total_sale = 0;
@@ -1138,6 +1142,19 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
             const date = new Date(`${month}/1/${year}`);
             return date.toLocaleString('default', { month: 'short', year: 'numeric' });
         }
+
+        function getPoints(profile_id, lifting_qty){
+
+            let emp_points = 0;
+
+            if(profile_id==2){
+                emp_points = 200 * lifting_qty;
+            }
+            else if(profile_id==3){
+                emp_points = 150 * lifting_qty;
+            }
+            return emp_points;
+        }
         
         for(let i=0; i<months.length; i++){ 
 
@@ -1167,7 +1184,8 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
              
             monthly_sale.push({
                 'month': formatDate(month_year),
-                'total_sale': total_sale
+                'total_sale': total_sale,
+                'earned_points': getPoints(emp_profile, total_sale)
             });    
 
             
