@@ -53,5 +53,7 @@ class AssetsConstants{
   static const String side_bar_back_button = '$_pngPath/side_bar_back_button.png';
   static const String no_profile_pic = '$_pngPath/no_profile_pic.png';
   static const String side_bar_cam = '$_pngPath/side_bar_cam.png';
+  static const String tier_logo = '$_pngPath/tier_logo.png';
+  static const String activity = '$_pngPath/activity.png';
 
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 
+import '../../constants/assets_constants.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/utils.dart';
 import '../../sidemenu/screens/side_menu.dart';
+import '../../sidemenu/widgets/bottom_nav_bar_pages.dart';
 
 class LoyaltyBottomBar extends StatefulWidget {
   static const String routeName = '/loyalty-bottom-bar';
@@ -24,6 +27,7 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
     setState(() {
       _page = index;
     });
+    print('page is changed to $index');
   }
 
   @override
@@ -35,15 +39,12 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
           child: SideMenu(
             side_menu_item_no: side_menu_item_no,
           ),
-          width: 280,
+          width: 281,
         ),
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: CustomAppBar(
-            module_name: pageName,
-            emp_name: getEmployeeName(context),
-            leading: Icon(Icons.menu_outlined, color: MyColors.actionsButtonColor, size: 20,),
-          ),
+        body: IndexedStack(
+            index: _page,
+            children: BottomNavBarPages.allWidgets
+
         ),
         bottomNavigationBar: CupertinoTabBar(
           backgroundColor: MyColors.appBarColor,
@@ -51,13 +52,27 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
           onTap: onPageChange,
           border: Border(
               top: BorderSide(
-                  color: Colors.pink
+                  color: MyColors.appBarColor
               )
           ),
 
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.ac_unit, color: Colors.red,)),
-            BottomNavigationBarItem(icon: Icon(Icons.account_balance, color: Colors.green,)),
+            BottomNavigationBarItem(
+                icon: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Image.asset(
+                    AssetsConstants.tier_logo,
+                    color: _page==0 ? MyColors.greenColor : MyColors.boneWhite
+                  ),
+                )),
+            BottomNavigationBarItem(
+                icon: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Image.asset(
+                      AssetsConstants.activity,
+                      color: _page==1 ? MyColors.greenColor : MyColors.boneWhite
+                  ),
+                )),
           ],
 
         )
