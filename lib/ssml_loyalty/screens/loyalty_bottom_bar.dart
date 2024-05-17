@@ -7,7 +7,7 @@ import '../../constants/assets_constants.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/utils.dart';
 import '../../sidemenu/screens/side_menu.dart';
-import '../../sidemenu/widgets/bottom_nav_bar_pages.dart';
+import '../widgets/bottom_nav_bar_pages.dart';
 
 class LoyaltyBottomBar extends StatefulWidget {
   static const String routeName = '/loyalty-bottom-bar';
