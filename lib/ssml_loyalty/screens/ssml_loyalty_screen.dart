@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SSMLLoyaltyProgram extends StatefulWidget {
+  static const String routeName = '/ssml-loyalty-screen';
   const SSMLLoyaltyProgram({super.key});
 
   @override

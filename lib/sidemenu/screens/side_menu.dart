@@ -12,6 +12,7 @@ import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/pending_data/screens/pending_data.dart';
 import 'package:retail_app_flutter/providers/dashboard_menu_provider.dart';
 import 'package:retail_app_flutter/sidemenu/widgets/side_menu_item.dart';
+import 'package:retail_app_flutter/ssml_loyalty/screens/loyalty_bottom_bar.dart';
 
 import '../../models/dashboard_menu.dart';
 import '../../models/employee.dart';
@@ -210,13 +211,21 @@ class _SideMenuState extends State<SideMenu> {
                                   } else {
                                     Navigator.pushNamed(context, AttendanceScreen.routeName);
                                   }
-                                }  else if(index==2){
+                                }
+                                else if(index==2){
+                                  if(index+1==widget.side_menu_item_no){
+                                    Navigator.pop(context);
+                                  } else {
+                                    Navigator.pushNamed(context, LoyaltyBottomBar.routeName);
+                                  }
+                                }
+                                else if(index==3){
                                   if(index+1==widget.side_menu_item_no){
                                     Navigator.pop(context);
                                   } else {
                                     Navigator.pushNamed(context, PendingDataScreen.routeName);
                                   }
-                                }   else if(index==3){
+                                }   else if(index==4){
                                   if(index+1==widget.side_menu_item_no){
                                     Navigator.pop(context);
                                   } else {

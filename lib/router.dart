@@ -12,6 +12,7 @@ import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/home/screens/visits_screen.dart';
 import 'package:retail_app_flutter/pending_data/screens/pending_data.dart';
+import 'package:retail_app_flutter/ssml_loyalty/screens/loyalty_bottom_bar.dart';
 import 'package:retail_app_flutter/visit_plan/screens/confirm_location_screen.dart';
 import 'package:retail_app_flutter/visit_plan/screens/submit_remarks_screen.dart';
 import 'package:retail_app_flutter/visit_plan/screens/visit_plan_screen.dart';
@@ -90,6 +91,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       return MaterialPageRoute(
           settings: routeSettings,
           builder: (_) => AccountMap()
+      );
+
+    case LoyaltyBottomBar.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) => LoyaltyBottomBar()
       );
 
     case TargetVsAchievementScreen.routeName:

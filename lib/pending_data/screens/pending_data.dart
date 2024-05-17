@@ -24,13 +24,13 @@ class PendingDataScreen extends StatefulWidget {
 }
 
 class _PendingDataScreenState extends State<PendingDataScreen> {
-  int side_menu_item_no = 3;
+  int side_menu_item_no = 4;
   final VisitPlanServices visitPlanServices = VisitPlanServices();
 
   fetchPendingData() async {
 
     allPendingData = await SavedLocationSP.getPendingData();
-    print('data is fetched');
+    print('data is fetched!');
   }
 
   @override
