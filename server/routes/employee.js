@@ -1063,30 +1063,32 @@ employeeRouter.post('/v1/api/get-target-vs-achievement', auth, async(req,res) =>
 
 //Get employee's eligible slab
 
-employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
+employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
+
+    const { slab_type } = req.body;
 
     try{
         const emp_id = req.user;
 
         const emp = await Employee.findById(emp_id);
         const emp_profile = emp.profile_id;
-        console.log(emp_profile);
         const myDate = new Date();
         let start_date, end_date;
         let total_sale = 0;
-        let emp_dispatches = [];
-
         const currentDate = new Date();
 
-        function convertToIST(date) {
+        function getPoints(profile_id, lifting_qty){
 
-            const differenceInMinutes = 330;
-            const differenceInMilliseconds = differenceInMinutes * 60 * 1000;
-            const currentDate = new Date(date);
-            const localTime = currentDate.getTime();
-            const istDate = new Date(localTime + differenceInMilliseconds);
-            return istDate;
-          }
+            let emp_points = 0;
+
+            if(profile_id==2){
+                emp_points = 200 * lifting_qty;
+            }
+            else if(profile_id==3){
+                emp_points = 150 * lifting_qty;
+            }
+            return emp_points;
+        }
 
         if(currentDate.getMonth()>=3){
             start_date = new Date(currentDate.getFullYear()-1, 3, 1, 0, 0, 0);
@@ -1096,29 +1098,36 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
             end_date = new Date(currentDate.getFullYear()+1, 2, 31, 23, 59, 59);
         }
         
-        //Fetching dispatch data with date range
-        let all_dispatches = await DealerLiftingMaster.find({
-            d_status: 0,
-            date:{$gte:new Date(start_date).toISOString(),$lt:new Date(end_date).toISOString()}
-        });
+        // const calendar = await Calender.find({
+        //     d_status:0,
+        //     date:{
+        //      $gte: start_date,
+        //      $lte: end_date
+        //  }
+        //  });
 
-        //Filtering only those dispatches that the  employee is tagged too
-        for(let i=0; i<all_dispatches.length; i++){
-            for(let j=0; j<all_dispatches[i].tagged_emps.length; j++){
-                if(all_dispatches[i].tagged_emps[j] === emp_id){
-                    emp_dispatches.push(all_dispatches[i]);
-                    total_sale += all_dispatches[i].quantity;
-                }
-            }
-        }
+        const result = await DealerLiftingMaster.aggregate([
+            {
+              $match: {
+                d_status: 0,
+                tagged_emps: { $in: [emp_id] },
+                date:{$gte:new Date(start_date),$lt:new Date(end_date)}
 
-        const calendar = await Calender.find({
-            d_status:0,
-            date:{
-             $gte: start_date,
-             $lte: end_date
-         }
-         });
+              },
+            },
+            {
+              $group: {
+                '_id': "$invoice_no",
+                total_quantity: { $sum: "$quantity" },
+                date: { $first: "$date"} 
+              },
+            },
+          ]);
+          
+          console.log(result);
+
+         //To get monthly sale
+         if(slab_type==1){
 
          let months = [
             { "month": 4, "year": 2023 },
@@ -1143,18 +1152,7 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
             return date.toLocaleString('default', { month: 'short', year: 'numeric' });
         }
 
-        function getPoints(profile_id, lifting_qty){
-
-            let emp_points = 0;
-
-            if(profile_id==2){
-                emp_points = 200 * lifting_qty;
-            }
-            else if(profile_id==3){
-                emp_points = 150 * lifting_qty;
-            }
-            return emp_points;
-        }
+        
         
         for(let i=0; i<months.length; i++){ 
 
@@ -1186,9 +1184,7 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
                 'month': formatDate(month_year),
                 'total_sale': total_sale,
                 'earned_points': getPoints(emp_profile, total_sale)
-            });    
-
-            
+            });                
         }
          
 
@@ -1199,6 +1195,12 @@ employeeRouter.get('/v1/api/get-emp-slab', auth, async(req,res) =>{
     
             }
         );
+
+      //To get invoice wise sale  
+    } else if(slab_type==2){
+
+        res.json(result);
+    }
 
     }catch(e){
         res.status(500).json({ error: e.message });

@@ -47,34 +47,35 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
 
         ),
         bottomNavigationBar: CupertinoTabBar(
-          backgroundColor: MyColors.appBarColor,
+          backgroundColor: MyColors.offWhiteColor,
           currentIndex: _page,
           onTap: onPageChange,
           border: Border(
               top: BorderSide(
-                  color: MyColors.appBarColor
+                  color: MyColors.ivoryWhite
               )
           ),
 
           items: [
             BottomNavigationBarItem(
+                label: 'Tier',
                 icon: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Image.asset(
                     AssetsConstants.tier_logo,
-                    color: _page==0 ? MyColors.greenColor : MyColors.boneWhite
+                    color: _page==0 ? MyColors.greenColor : MyColors.appBarColor
                   ),
                 )),
             BottomNavigationBarItem(
+                label: 'Activity',
                 icon: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Image.asset(
                       AssetsConstants.activity,
-                      color: _page==1 ? MyColors.greenColor : MyColors.boneWhite
+                      color: _page==1 ? MyColors.greenColor : MyColors.appBarColor
                   ),
                 )),
           ],
-
         )
     );
   }
