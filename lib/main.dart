@@ -16,6 +16,7 @@ import 'package:retail_app_flutter/providers/dealer_master_provider.dart';
 import 'package:retail_app_flutter/providers/dealer_target_achievement_provider.dart';
 import 'package:retail_app_flutter/providers/distributor_master_provider.dart';
 import 'package:retail_app_flutter/providers/engineer_master_provider.dart';
+import 'package:retail_app_flutter/providers/ssml_loyalty_provider.dart';
 import 'package:retail_app_flutter/providers/user_provider.dart';
 import 'package:retail_app_flutter/providers/visit_questions_provider.dart';
 import 'package:retail_app_flutter/router.dart';
@@ -38,6 +39,7 @@ void main() async{
           ChangeNotifierProvider(create: (context)=> DistributorMasterProvider()),
           ChangeNotifierProvider(create: (context)=> EngineerMasterProvider()),
           ChangeNotifierProvider(create: (context)=> DealerTargetAchievementProvider()),
+          ChangeNotifierProvider(create: (context)=> SSMLLoyaltyProvider()),
         ],
         child: const MyApp(),
       ));

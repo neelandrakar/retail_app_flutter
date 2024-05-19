@@ -1094,6 +1094,16 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             return emp_points;
         }
 
+        async function getDealerName(sapid){
+
+            let dealer = await AccountMaster.find({
+                sapid: sapid,
+                d_status: 0
+            });
+
+            return dealer.length>0 ? dealer[0].account_name : 'NA';
+        }
+
         if(currentDate.getMonth()>=3){
             start_date = new Date(currentDate.getFullYear()-1, 3, 1, 0, 0, 0);
             end_date = new Date(currentDate.getFullYear(), 2, 31, 23, 59, 59);
@@ -1108,47 +1118,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
         //      $gte: start_date,
         //      $lte: end_date
         //  }
-        //  });
-
-        if(emp_profile==2){
-            points_slab = 200;
-        }
-        else if(emp_profile==3){
-            points_slab = 150;
-        } else if(emp_profile==5 || emp_profile==28){
-            points_slab = 100;
-        }
-        console.log(points_slab);
-
-
-        const result = await DealerLiftingMaster.aggregate([
-            {
-              $match: {
-                d_status: 0,
-                tagged_emps: { $in: [emp_id] },
-                date: { $gte: new Date(start_date), $lt: new Date(end_date) }
-              }
-            },
-            {
-              $group: {
-                '_id': "$invoice_no",
-                total_quantity: { $sum: "$quantity" },
-                date: { $first: "$date" },
-              }
-            },
-            {
-              $addFields: {
-                emp_profile_points: {
-                    $let: {
-                        vars: { pointsSlab: points_slab },
-                        in: { $multiply: ["$$pointsSlab", "$total_quantity"] }
-                      }
-                }
-              }
-            }
-          ]);
-          
-          //console.log(result);
+        //  });          
 
          //To get monthly sale
          if(slab_type==1){
@@ -1223,7 +1193,64 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
       //To get invoice wise sale  
     } else if(slab_type==2){
 
-        res.json(result);
+        if(emp_profile==2){
+            points_slab = 200;
+        }
+        else if(emp_profile==3){
+            points_slab = 150;
+        } else if(emp_profile==5 || emp_profile==28){
+            points_slab = 100;
+        }
+        console.log(points_slab);
+
+
+        const result = await DealerLiftingMaster.aggregate([
+            {
+              $match: {
+                d_status: 0,
+                tagged_emps: { $in: [emp_id] },
+                date: { $gte: new Date(start_date), $lt: new Date(end_date) }
+              }
+            },
+            {
+              $group: {
+                '_id': "$invoice_no",
+                'total_quantity': { $sum: "$quantity" },
+                'date': { $first: "$date" },
+                'sapid': {$first : "$sapid"}
+              }
+            },
+            {
+              $addFields: {
+                'earned_points': {
+                    $let: {
+                        vars: { pointsSlab: points_slab },
+                        in: { $multiply: ["$$pointsSlab", "$total_quantity"] }
+                      }
+                },
+                'point_type': 1
+            }
+            }
+          ]);
+
+          for(let i=0; i < result.length; i++){
+            const dealer_name = await getDealerName(result[i]['sapid']);
+
+            result[i].dealer_name = dealer_name;
+          }
+
+          res.status(200).json({ 
+            
+            'total_sale': total_sale,
+            'details': result
+    
+            }
+        );    
+    } else {
+
+        console.log('hi');
+        let sale = await DealerLiftingMaster.find();
+        res.json(sale);
     }
 
     }catch(e){
