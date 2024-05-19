@@ -1076,6 +1076,8 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
         let start_date, end_date;
         let total_sale = 0;
         const currentDate = new Date();
+        let points_slab = 0;
+
 
         function getPoints(profile_id, lifting_qty){
 
@@ -1086,6 +1088,8 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             }
             else if(profile_id==3){
                 emp_points = 150 * lifting_qty;
+            } else if(profile_id==5 || profile_id==28){
+                emp_points = 100 * lifting_qty;
             }
             return emp_points;
         }
@@ -1106,25 +1110,45 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
         //  }
         //  });
 
+        if(emp_profile==2){
+            points_slab = 200;
+        }
+        else if(emp_profile==3){
+            points_slab = 150;
+        } else if(emp_profile==5 || emp_profile==28){
+            points_slab = 100;
+        }
+        console.log(points_slab);
+
+
         const result = await DealerLiftingMaster.aggregate([
             {
               $match: {
                 d_status: 0,
                 tagged_emps: { $in: [emp_id] },
-                date:{$gte:new Date(start_date),$lt:new Date(end_date)}
-
-              },
+                date: { $gte: new Date(start_date), $lt: new Date(end_date) }
+              }
             },
             {
               $group: {
                 '_id': "$invoice_no",
                 total_quantity: { $sum: "$quantity" },
-                date: { $first: "$date"} 
-              },
+                date: { $first: "$date" },
+              }
             },
+            {
+              $addFields: {
+                emp_profile_points: {
+                    $let: {
+                        vars: { pointsSlab: points_slab },
+                        in: { $multiply: ["$$pointsSlab", "$total_quantity"] }
+                      }
+                }
+              }
+            }
           ]);
           
-          console.log(result);
+          //console.log(result);
 
          //To get monthly sale
          if(slab_type==1){
