@@ -17,7 +17,7 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
       child: Row(
         children: [
 
-          Text('data', style: TextStyle(color: Colors.black),)
+          Text('dataX', style: TextStyle(color: Colors.black),)
         ],
       ),
     );

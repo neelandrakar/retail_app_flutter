@@ -8,14 +8,15 @@ class InvoiceWisePointsModel {
   final String dealer_name;
   final int earned_points;
   final int point_type;
-  InvoiceWisePointsModel({
-    required this.invoice_no,
-    required this.total_quantity,
-    required this.date,
-    required this.dealer_name,
-    required this.earned_points,
-    required this.point_type,
-  });
+  final int sapid;
+  InvoiceWisePointsModel(
+      {required this.invoice_no,
+      required this.total_quantity,
+      required this.date,
+      required this.dealer_name,
+      required this.earned_points,
+      required this.point_type,
+      required this.sapid});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -25,18 +26,19 @@ class InvoiceWisePointsModel {
       'dealer_name': dealer_name,
       'earned_points': earned_points,
       'point_type': point_type,
+      'sapid': sapid
     };
   }
 
   factory InvoiceWisePointsModel.fromMap(Map<String, dynamic> map) {
     return InvoiceWisePointsModel(
-      invoice_no: map['_id'] as String,
-      total_quantity: map['total_quantity'] as int,
-      dealer_name: map['dealer_name'] as String,
-      date: DateTime.parse(map['date']),
-      earned_points: map['earned_points'] as int,
-      point_type: map['point_type'] as int,
-    );
+        invoice_no: map['_id'] as String,
+        total_quantity: map['total_quantity'] as int,
+        dealer_name: map['dealer_name'] as String,
+        date: DateTime.parse(map['date']),
+        earned_points: map['earned_points'] as int,
+        point_type: map['point_type'] as int,
+        sapid: map['sapid'] as int);
   }
 
   String toJson() => json.encode(toMap());

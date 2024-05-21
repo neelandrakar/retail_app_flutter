@@ -1201,7 +1201,6 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
         } else if(emp_profile==5 || emp_profile==28){
             points_slab = 100;
         }
-        console.log(points_slab);
 
 
         const result = await DealerLiftingMaster.aggregate([
