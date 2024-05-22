@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -69,11 +70,28 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
                   leading: Icon(Icons.menu_outlined, color: MyColors.actionsButtonColor, size: 20,),
                 ),
               ),
-              body: ListView.builder(
-                  itemCount: loyaltyPointsModel.invoice_wise_points!.length,
-                  itemBuilder: (context, index){
-                    return ActivitySchemeCard();
-                  })
+              body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    // SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.separated(
+                          itemCount: loyaltyPointsModel.invoice_wise_points!.length,
+                          itemBuilder: (context, index){
+                            return ActivitySchemeCard(
+                              point_type: loyaltyPointsModel.invoice_wise_points![index].point_type,
+                              dealer_name: loyaltyPointsModel.invoice_wise_points![index].dealer_name,
+                              invoice_no: loyaltyPointsModel.invoice_wise_points![index].invoice_no,
+                              date: loyaltyPointsModel.invoice_wise_points![index].date,
+                            );
+                          }, separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(height: 0);
+                      },),
+                    ),
+                  ],
+                ),
+              )
 
           );
         }
