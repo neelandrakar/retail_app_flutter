@@ -19,7 +19,7 @@ class ActivitySchemeScreen extends StatefulWidget {
 }
 
 class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
-  String pageName = 'Activity';
+  String pageName = 'Activity Screen';
   SSMLLoyaltyServices ssmlLoyaltyServices = SSMLLoyaltyServices();
   late Future<void> _getActivityData;
 
@@ -61,11 +61,11 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
               ));        
         } else {
           return Scaffold(
-              backgroundColor: MyColors.boneWhite,
+              backgroundColor: MyColors.ashColor,
               appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(56),
                 child: CustomAppBar(
-                  module_name: 'Pending Data',
+                  module_name: pageName,
                   emp_name: getEmployeeName(context),
                   leading: Icon(Icons.menu_outlined, color: MyColors.actionsButtonColor, size: 20,),
                 ),
@@ -84,6 +84,8 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
                               dealer_name: loyaltyPointsModel.invoice_wise_points![index].dealer_name,
                               invoice_no: loyaltyPointsModel.invoice_wise_points![index].invoice_no,
                               date: loyaltyPointsModel.invoice_wise_points![index].date,
+                              string_date: loyaltyPointsModel.invoice_wise_points![index].string_date,
+                              earned_points: loyaltyPointsModel.invoice_wise_points![index].earned_points
                             );
                           }, separatorBuilder: (BuildContext context, int index) {
                             return SizedBox(height: 0);

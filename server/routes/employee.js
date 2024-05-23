@@ -1075,6 +1075,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
         const myDate = new Date();
         let start_date, end_date;
         let total_sale = 0;
+        let total_points = 0;
         const currentDate = new Date();
         let points_slab = 0;
 
@@ -1108,8 +1109,8 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             start_date = new Date(currentDate.getFullYear()-1, 3, 1, 0, 0, 0);
             end_date = new Date(currentDate.getFullYear(), 2, 31, 23, 59, 59);
         } else {
-            start_date = new Date(currentDate.getFullYear(), 3, 1, 0, 0, 0);
-            end_date = new Date(currentDate.getFullYear()+1, 2, 31, 23, 59, 59);
+            start_date = new Date(currentDate.getFullYear()-2, 3, 1, 0, 0, 0);
+            end_date = new Date(currentDate.getFullYear()-1, 2, 31, 23, 59, 59);
         }
         
         // const calendar = await Calender.find({
@@ -1285,6 +1286,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             const string_date = convertTimestamp(result[i]['date']);
 
             total_sale += result[i]['total_quantity'];
+            total_points += result[i]['earned_points'];
             result[i].dealer_name = dealer_name;
             result[i].string_date = string_date;
           }
@@ -1292,6 +1294,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
           res.status(200).json({ 
             
             'total_sale': total_sale,
+            'total_points': total_points,
             'details': result
     
             }
