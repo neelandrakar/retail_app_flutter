@@ -1284,6 +1284,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             const dealer_name = await getDealerName(result[i]['sapid']);
             const string_date = convertTimestamp(result[i]['date']);
 
+            total_sale += result[i]['total_quantity'];
             result[i].dealer_name = dealer_name;
             result[i].string_date = string_date;
           }
