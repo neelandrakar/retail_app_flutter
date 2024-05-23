@@ -1232,10 +1232,60 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             }
           ]);
 
+          function convertTimestamp(timestamp) {
+            // Parse the given timestamp
+            const date = new Date(timestamp);
+          
+            // Current date
+            const currentDate = new Date();
+          
+            // Calculate the difference in days
+            const diffTime = Math.abs(currentDate - date);
+            const daysAgo = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+          
+            // Format the date
+            const day = date.getUTCDate();
+            const month = date.toLocaleString('default', { month: 'long' });
+            const year = date.getUTCFullYear();
+          
+            // Add the correct suffix to the day
+            let suffix;
+            if (day >= 11 && day <= 13) {
+              suffix = 'th';
+            } else {
+              switch (day % 10) {
+                case 1:
+                  suffix = 'st';
+                  break;
+                case 2:
+                  suffix = 'nd';
+                  break;
+                case 3:
+                  suffix = 'rd';
+                  break;
+                default:
+                  suffix = 'th';
+              }
+            }
+          
+            const formattedDate = `${day}${suffix} ${month}, ${year}`;
+          
+            // Output the result
+            if(daysAgo>=2){
+            return `${daysAgo} days ago, ${formattedDate}`;
+            } else if(daysAgo==1){
+                return `Yesterday, ${formattedDate}`;
+            } else {
+                return `Today, ${formattedDate}`;
+            }
+          }
+
           for(let i=0; i < result.length; i++){
             const dealer_name = await getDealerName(result[i]['sapid']);
+            const string_date = convertTimestamp(result[i]['date']);
 
             result[i].dealer_name = dealer_name;
+            result[i].string_date = string_date;
           }
 
           res.status(200).json({ 
