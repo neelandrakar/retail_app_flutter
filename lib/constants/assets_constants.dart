@@ -59,5 +59,9 @@ class AssetsConstants{
   static const String blue_background_img = '$_pngPath/blue_background_img.png';
   static const String bronze_badge = '$_pngPath/bronze_badge.png';
   static const String silver_badge = '$_pngPath/silver_badge.png';
+  static const String gold_badge = '$_pngPath/gold_badge.png';
+  static const String diamond_badge = '$_pngPath/diamond_badge.png';
+  static const String platinum_badge = '$_pngPath/platinum_badge.png';
+  static const String no_data = '$_pngPath/no_data.png';
 
 }

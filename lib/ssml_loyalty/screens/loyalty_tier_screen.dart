@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
+import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/ssml_loyalty/widgets/tier_widget.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/my_colors.dart';
@@ -32,16 +34,49 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage(AssetsConstants.blue_background_img) ,fit: BoxFit.cover,
-          ),
-        ),
-        child: ListView.builder(
-            itemCount: 5,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index){
-              return TierWidget();
-            }
+
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(AssetsConstants.blue_background_img) ,fit: BoxFit.cover,
+                ),
+              ),
+              height: 350,
+              child: ListView.builder(
+                    itemCount: loyaltyPointsModel.loyalty_tiers.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index){
+
+                      String tier_img = AssetsConstants.no_data;
+
+                      if(loyaltyPointsModel.loyalty_tiers[index].tier_id==1){
+                        tier_img = AssetsConstants.bronze_badge;
+                      } else if(loyaltyPointsModel.loyalty_tiers[index].tier_id==2){
+                        tier_img = AssetsConstants.silver_badge;
+                      }
+                      else if(loyaltyPointsModel.loyalty_tiers[index].tier_id==3){
+                        tier_img = AssetsConstants.gold_badge;
+                      }
+                      else if(loyaltyPointsModel.loyalty_tiers[index].tier_id==4){
+                        tier_img = AssetsConstants.diamond_badge;
+                      }
+                      else if(loyaltyPointsModel.loyalty_tiers[index].tier_id==5){
+                        tier_img = AssetsConstants.platinum_badge;
+                      }
+
+
+                      return TierWidget(
+                        tier_name: loyaltyPointsModel.loyalty_tiers[index].tier_name,
+                        tier_id: loyaltyPointsModel.loyalty_tiers[index].tier_id,
+                        min_points: loyaltyPointsModel.loyalty_tiers[index].min_points,
+                        max_points: loyaltyPointsModel.loyalty_tiers[index].max_points,
+                        tier_img: tier_img,
+                      );
+                    }
+                ),
+              ),
+          ],
         ),
       ),
     );
