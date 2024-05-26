@@ -55,7 +55,7 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
       decoration: BoxDecoration(
         color: MyColors.boneWhite,
           borderRadius: BorderRadius.circular(10),
-          border: Border(
+          border: const Border(
           bottom: BorderSide(
             color: MyColors.black12
           )

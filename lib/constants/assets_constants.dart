@@ -56,5 +56,6 @@ class AssetsConstants{
   static const String tier_logo = '$_pngPath/tier_logo.png';
   static const String activity = '$_pngPath/activity.png';
   static const String sale_icon = '$_pngPath/sale_icon.png';
+  static const String blue_background_img = '$_pngPath/blue_background_img.png';
 
 }
