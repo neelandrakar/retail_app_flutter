@@ -1076,6 +1076,10 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
         let start_date, end_date;
         let total_sale = 0;
         let total_points = 0;
+        let total_redeemed = 0;
+        let total_pending = 0;
+        let tier_id = 0;
+        let tier_name = 'NA';
         const currentDate = new Date();
         let points_slab = 0;
 
@@ -1233,6 +1237,28 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             }
           ]);
 
+           function getTierData(totalPoints) {
+            if(totalPoints==0){
+                tier_id = 0;
+                tier_name = 'NA';
+            } else if(totalPoints>0 && totalPoints<1000){
+                tier_id = 1;
+                tier_name = 'Bronze';
+            }  else if(totalPoints>=1000 && totalPoints<5000){
+                tier_id = 2;
+                tier_name = 'Silver';
+            }  else if(totalPoints>=5000 && totalPoints<10000){
+                tier_id = 3;
+                tier_name = 'Gold';
+            }  else if(totalPoints>=10000 && totalPoints<20000){
+                tier_id = 4;
+                tier_name = 'Diamond';
+            }  else if(totalPoints>=20000){
+                tier_id = 5;
+                tier_name = 'Platinum';
+            }
+        }
+
           function convertTimestamp(timestamp) {
             // Parse the given timestamp
             const date = new Date(timestamp);
@@ -1291,10 +1317,16 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             result[i].string_date = string_date;
           }
 
+          total_pending = total_points - total_redeemed;
+          getTierData(1000);
+
           res.status(200).json({ 
             
             'total_sale': total_sale,
             'total_points': total_points,
+            'total_pending': total_pending,
+            'tier_id': tier_id,
+            'tier_name': tier_name,
             'details': result
     
             }
