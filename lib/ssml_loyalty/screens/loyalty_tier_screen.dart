@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
+import 'package:retail_app_flutter/ssml_loyalty/widgets/tier_widget.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/my_colors.dart';
 import '../../constants/utils.dart';
@@ -27,11 +30,19 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
         ),
       ),
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(image: AssetImage(AssetsConstants.blue_background_img) ,fit: BoxFit.cover,
           ),
         ),
-        child: null /* add child content here */,
+        child: ListView.builder(
+            itemCount: 5,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index){
+              return TierWidget();
+            }
+        ),
       ),
     );
   }

@@ -7,7 +7,8 @@ class SSMLLoyaltyProvider extends ChangeNotifier{
 
   LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(
       total_sale: 0,
-      invoice_wise_points: []
+      invoice_wise_points: [],
+      loyalty_tiers: []
   );
 
   // List<DealerMaster> get dealer => dealer_master;

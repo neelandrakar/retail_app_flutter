@@ -5,7 +5,7 @@ import 'package:retail_app_flutter/providers/ssml_loyalty_provider.dart';
 import '../models/loyalty_points_model.dart';
 import '../models/submitted_visit_model.dart';
 
-String uri = 'http://192.168.88.6:3000';
+String uri = 'http://192.168.0.194:3000';
 String appVersion = 'NA';
 double currentLatitude = 0.0;
 double currentLongitude = 0.0;
@@ -68,5 +68,9 @@ bool action_plan_submitted = false;
 List<SubmittedVisitModel> storedVisits = [];
 PendingDataModel allPendingData = PendingDataModel(stored_visits: storedVisits);
 
-LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(total_sale: 0, invoice_wise_points: []);
+LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(
+    total_sale: 0,
+    invoice_wise_points: [],
+    loyalty_tiers: []
+);
 

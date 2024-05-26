@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:retail_app_flutter/models/loyalty_tier.dart';
 import 'package:retail_app_flutter/providers/ssml_loyalty_provider.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/http_error_handeling.dart';
@@ -43,6 +44,8 @@ class SSMLLoyaltyServices{
           onSuccess: () {
 
             ssml_loyalty_provider.getPointsData(res.body, context);
+            // ssml_loyalty_tier_provider.addLoyaltyTier(res.body[]);
+
             print('xxxxxxxx:'  + ssml_loyalty_provider.loyaltyPointsModel.invoice_wise_points!.length.toString());
             print(res.body);
 

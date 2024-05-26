@@ -19,6 +19,7 @@ const AccountConversionInitial = require('../models/account_conversion_initial')
 const AccountTarget = require('../models/account_target');
 const DealerLiftingMaster = require('../models/dealer_lifting_master');
 const Calender = require('../models/calender');
+const LoyaltyTier = require('../models/loyalty_tier');
 // import * as myFunctions from '../common_functions'
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
@@ -1318,7 +1319,9 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
           }
 
           total_pending = total_points - total_redeemed;
-          getTierData(1000);
+          getTierData(total_points);
+
+          let tier_details = await LoyaltyTier.find();
 
           res.status(200).json({ 
             
@@ -1327,6 +1330,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             'total_pending': total_pending,
             'tier_id': tier_id,
             'tier_name': tier_name,
+            'tier_details': tier_details,
             'details': result
     
             }
@@ -1343,6 +1347,37 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
     }
 } );
 
+
+employeeRouter.post('/v1/api/create-new-tier', auth, async(req,res) =>{
+    try{
+
+        const { tier_name, max_points, min_points } = req.body;
+
+        let tier_id = 0;
+
+        let tier_data = await LoyaltyTier.find();
+        tier_id = tier_data.length + 1;
+
+        let new_tier = LoyaltyTier({
+            tier_id: tier_id,
+            tier_name: tier_name,
+            max_points: max_points,
+            min_points: min_points   
+        });
+
+        new_tier = new_tier.save();
+
+
+
+        res.json({
+            msg: `${tier_name} is successfully added!`
+        });
+
+
+    }catch(e){
+        res.status(500).json({ error: e.message });
+    }
+});
 
 
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/constants/my_fonts.dart';
 import 'package:retail_app_flutter/providers/ssml_loyalty_provider.dart';
 
 class ActivitySchemeCard extends StatefulWidget {
@@ -97,6 +98,7 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
                           style: TextStyle(
                               color: MyColors.appBarColor,
                               fontSize: 15,
+                              fontFamily: MyFonts.poppins,
                               fontWeight: FontWeight.bold,
                               overflow: TextOverflow.ellipsis
                           ),
@@ -107,6 +109,7 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
                           style: TextStyle(
                               color: MyColors.fadedAppbarColor,
                               fontSize: 11,
+                              fontFamily: MyFonts.poppins,
                               fontWeight: FontWeight.normal,
                               overflow: TextOverflow.ellipsis
                           ),
@@ -118,6 +121,7 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
                           style: TextStyle(
                               color: MyColors.fadedBlack,
                               fontSize: 10,
+                              fontFamily: MyFonts.poppins,
                               fontWeight: FontWeight.normal,
                               overflow: TextOverflow.ellipsis
                           ),
