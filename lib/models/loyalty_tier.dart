@@ -8,6 +8,8 @@ class LoyaltyTier {
   final int min_points;
   final int max_points;
   final bool d_status;
+  final int is_current;
+  final int till_next_tier;
   LoyaltyTier({
     required this.id,
     required this.tier_name,
@@ -15,6 +17,8 @@ class LoyaltyTier {
     required this.min_points,
     required this.max_points,
     required this.d_status,
+    required this.is_current,
+    required this.till_next_tier,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,6 +29,8 @@ class LoyaltyTier {
       'max_points': max_points,
       'd_status': d_status,
       '_id': id,
+      'is_current': is_current,
+      'till_next_tier': till_next_tier,
     };
   }
 
@@ -34,6 +40,8 @@ class LoyaltyTier {
       tier_id: map['tier_id'] as int,
       min_points: map['min_points'] as int,
       max_points: map['max_points'] as int,
+      is_current: map['is_current'] as int,
+      till_next_tier: map['till_next_tier'] as int,
       d_status: map['d_status'] as bool,
       id: map['_id'] as String,
     );

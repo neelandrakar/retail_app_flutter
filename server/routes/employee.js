@@ -1334,8 +1334,22 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
 
             for(let i=0; i < tier_details.length; i++){
 
-            
-                let till_next_tier = 0;
+                //Setting parent tier_id and tier_name
+
+                if(total_points> tier_details[i].min_points){
+                    tier_details[i].is_current = 1;
+                }
+                if(total_points>= tier_details[i].min_points && total_points<tier_details[i].max_points){
+                    tier_id = tier_details[i].tier_id;
+                    tier_name = tier_details[i].tier_name;
+                    tier_details[i].is_current = 2;
+                    console.log('hii');
+
+                } if(total_points < tier_details[i].min_points){
+
+                    tier_details[i].is_current = 3;
+                }
+
                 if(i != tier_details.length-1){
                     till_next_tier = tier_details[i+1].min_points - total_points; 
                     tier_details[i].till_next_tier  = till_next_tier>0 ? till_next_tier : 0;
@@ -1344,16 +1358,9 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
 
                     tier_details[i].till_next_tier = 0;
     
-                  }
-              
-                if(total_points>= tier_details[i].min_points && total_points<tier_details[i].max_points){
-                  tier_id = tier_details[i].tier_id;
-                  tier_name = tier_details[i].tier_name;
-                //   break; // exit the loop after finding the appropriate tier
                 }
-              
-            }
           }
+        }
 
           res.status(200).json({ 
             
