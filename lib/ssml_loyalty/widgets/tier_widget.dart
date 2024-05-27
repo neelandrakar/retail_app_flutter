@@ -57,29 +57,26 @@ class _TierWidgetState extends State<TierWidget> {
               overflow: TextOverflow.ellipsis
           ),
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.yellow,
-                shape: BoxShape.circle,
-                border: Border.all(color: MyColors.orangeColor, width: 2)
-              ),
-              width: 20,
-              height: 20,
-            ),
-            LinearPercentIndicator(
+        LinearPercentIndicator(
               width: 100,
               lineHeight: 8.0,
-              percent: 0.2,
+              percent: 0.5,
+              alignment: MainAxisAlignment.start,
+              // fillColor: Colors.orange,
+              leading: Container(
+                decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: MyColors.orangeColor, width: 2)
+                ),
+                width: 20,
+                height: 20,
+              ),
+              animation: true,
               padding: EdgeInsets.zero,
               progressColor: Colors.yellow,
             ),
           ],
-        )
-      ],
     );
   }
 }

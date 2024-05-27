@@ -1316,12 +1316,44 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             total_points += result[i]['earned_points'];
             result[i].dealer_name = dealer_name;
             result[i].string_date = string_date;
+            result[i].my_data  = 'Neel';
           }
 
           total_pending = total_points - total_redeemed;
-          getTierData(total_points);
+        //   getTierData(total_points);
 
-          let tier_details = await LoyaltyTier.find();
+        const tier_details = await LoyaltyTier.aggregate([
+            {
+              $match: {
+                d_status: false
+              }
+            }
+          ]);
+
+          if(tier_details.length>0){
+
+            for(let i=0; i < tier_details.length; i++){
+
+            
+                let till_next_tier = 0;
+                if(i != tier_details.length-1){
+                    till_next_tier = tier_details[i+1].min_points - total_points; 
+                    tier_details[i].till_next_tier  = till_next_tier>0 ? till_next_tier : 0;
+
+                } else {
+
+                    tier_details[i].till_next_tier = 0;
+    
+                  }
+              
+                if(total_points>= tier_details[i].min_points && total_points<tier_details[i].max_points){
+                  tier_id = tier_details[i].tier_id;
+                  tier_name = tier_details[i].tier_name;
+                //   break; // exit the loop after finding the appropriate tier
+                }
+              
+            }
+          }
 
           res.status(200).json({ 
             
@@ -1347,7 +1379,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
     }
 } );
 
-
+//Create new tier(loyalty)
 employeeRouter.post('/v1/api/create-new-tier', auth, async(req,res) =>{
     try{
 
