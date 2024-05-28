@@ -6,11 +6,13 @@ import 'package:retail_app_flutter/models/loyalty_tier.dart';
 
 class LoyaltyPointsModel {
   final int total_sale;
+  final int total_points;
   final List<InvoiceWisePointsModel>? invoice_wise_points;
   final List<LoyaltyTier> loyalty_tiers;
 
   LoyaltyPointsModel({
     required this.total_sale,
+    required this.total_points,
     this.invoice_wise_points,
     required this.loyalty_tiers
   });
@@ -18,6 +20,7 @@ class LoyaltyPointsModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'total_sale': total_sale,
+      'total_points': total_points,
       'invoiceWisePoints': invoice_wise_points?.map((x) => x.toMap()).toList(),
       'loyalty_tiers': loyalty_tiers.map((x) => x.toMap()).toList(),
     };
@@ -26,6 +29,7 @@ class LoyaltyPointsModel {
   factory LoyaltyPointsModel.fromMap(Map<String, dynamic> map) {
     return LoyaltyPointsModel(
         total_sale: map['total_sale'] as int,
+        total_points: map['total_points'] as int,
         invoice_wise_points: List<InvoiceWisePointsModel>.from(map['details']
             .map((x) => InvoiceWisePointsModel.fromMap(x))),
         loyalty_tiers: List<LoyaltyTier>.from(map['tier_details']

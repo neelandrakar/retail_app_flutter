@@ -72,6 +72,8 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                         min_points: loyaltyPointsModel.loyalty_tiers[index].min_points,
                         max_points: loyaltyPointsModel.loyalty_tiers[index].max_points,
                         tier_img: tier_img,
+                        is_current: loyaltyPointsModel.loyalty_tiers[index].is_current,
+                        till_next_tier: loyaltyPointsModel.loyalty_tiers[index].till_next_tier,
                       );
                     }
                 ),

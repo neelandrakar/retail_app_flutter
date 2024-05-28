@@ -1343,7 +1343,6 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
                     tier_id = tier_details[i].tier_id;
                     tier_name = tier_details[i].tier_name;
                     tier_details[i].is_current = 2;
-                    console.log('hii');
 
                 } if(total_points < tier_details[i].min_points){
 
