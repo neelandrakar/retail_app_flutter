@@ -11,6 +11,7 @@ class TierWidget extends StatefulWidget {
   final int max_points;
   final int is_current;
   final int till_next_tier;
+  final int total_points;
   const TierWidget({
     super.key,
     required this.tier_name,
@@ -19,7 +20,8 @@ class TierWidget extends StatefulWidget {
     required this.min_points,
     required this.max_points,
     required this.is_current,
-    required this.till_next_tier
+    required this.till_next_tier,
+    required this.total_points
   });
 
   @override
@@ -35,7 +37,8 @@ class _TierWidgetState extends State<TierWidget> {
       filled_up = 1;
     } else if(widget.is_current==2){
 
-      filled_up = (4999/7800);
+      filled_up = ((widget.max_points-widget.min_points)/widget.total_points);
+
     } else if(widget.is_current==3){
       filled_up = 0;
     }

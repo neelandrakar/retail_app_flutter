@@ -84,7 +84,7 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
                     ),
 
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Container(
                     // color: Colors.red,
                     width: 200,
@@ -95,7 +95,7 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
                         Text(
                           widget.invoice_no,
                           maxLines: 1,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: MyColors.appBarColor,
                               fontSize: 15,
                               fontFamily: MyFonts.poppins,
@@ -114,11 +114,11 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
                               overflow: TextOverflow.ellipsis
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
                           widget.string_date,
                           maxLines: 1,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: MyColors.fadedBlack,
                               fontSize: 10,
                               fontFamily: MyFonts.poppins,

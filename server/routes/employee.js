@@ -20,6 +20,7 @@ const AccountTarget = require('../models/account_target');
 const DealerLiftingMaster = require('../models/dealer_lifting_master');
 const Calender = require('../models/calender');
 const LoyaltyTier = require('../models/loyalty_tier');
+const LoyaltyGiftCategory = require('../models/loyalty_gift_category');
 // import * as myFunctions from '../common_functions'
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
@@ -1316,7 +1317,6 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             total_points += result[i]['earned_points'];
             result[i].dealer_name = dealer_name;
             result[i].string_date = string_date;
-            result[i].my_data  = 'Neel';
           }
 
           total_pending = total_points - total_redeemed;
@@ -1417,7 +1417,36 @@ employeeRouter.post('/v1/api/create-new-tier', auth, async(req,res) =>{
     }
 });
 
+//Add gift category
 
+employeeRouter.post('/v1/api/add-loyalty-gift-category', auth, async(req, res) =>{
 
+    try{
+
+        const { category_name, category_img, account_type_id } = req.body;
+
+        let category_id = 0;
+        const category_data = await LoyaltyGiftCategory.find();
+        category_id = category_data.length + 1; //Setting category_id
+
+        let new_category = LoyaltyGiftCategory({
+            category_id: category_id,
+            category_name: category_name,
+            category_img: category_img,
+            account_type_id: account_type_id
+        });
+
+        new_category = await new_category.save();
+
+        res.status(200).json({
+            msg: new_category
+        });
+
+    } catch(e){
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
 
 module.exports = employeeRouter;

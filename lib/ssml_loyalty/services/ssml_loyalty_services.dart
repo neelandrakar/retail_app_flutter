@@ -44,9 +44,8 @@ class SSMLLoyaltyServices{
           onSuccess: () {
 
             ssml_loyalty_provider.getPointsData(res.body, context);
-            // ssml_loyalty_tier_provider.addLoyaltyTier(res.body[]);
 
-            print('xxxxxxxx:'  + ssml_loyalty_provider.loyaltyPointsModel.invoice_wise_points!.length.toString());
+            print('xxxxxxxx: ${ssml_loyalty_provider.loyaltyPointsModel.invoice_wise_points!.length}');
             print(res.body);
 
             onSuccess.call();

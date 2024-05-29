@@ -1,7 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:retail_app_flutter/models/pending_data_model.dart';
-import 'package:retail_app_flutter/providers/ssml_loyalty_provider.dart';
-
 import '../models/loyalty_points_model.dart';
 import '../models/submitted_visit_model.dart';
 
@@ -26,8 +24,6 @@ List<String> demo_distributors = [
 
 Map discussionData= {};
 Map actionPlanData= {};
-
-
 
 List<Map<String, dynamic>> account_type = [
   {
@@ -70,6 +66,7 @@ PendingDataModel allPendingData = PendingDataModel(stored_visits: storedVisits);
 
 LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(
     total_sale: 0,
+    total_points: 0,
     invoice_wise_points: [],
     loyalty_tiers: []
 );
