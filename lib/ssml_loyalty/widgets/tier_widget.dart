@@ -12,6 +12,7 @@ class TierWidget extends StatefulWidget {
   final int is_current;
   final int till_next_tier;
   final int total_points;
+  final int widgetWidth;
   const TierWidget({
     super.key,
     required this.tier_name,
@@ -21,7 +22,8 @@ class TierWidget extends StatefulWidget {
     required this.max_points,
     required this.is_current,
     required this.till_next_tier,
-    required this.total_points
+    required this.total_points,
+    required this.widgetWidth
   });
 
   @override
@@ -47,15 +49,16 @@ class _TierWidgetState extends State<TierWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 120,
+      width: widget.widgetWidth.toDouble(),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Image.asset(
             widget.tier_img,
             width: 100,
             height: 101
           ),
+          SizedBox(height: 20),
           Text(
             widget.tier_name,
             maxLines: 1,
@@ -67,6 +70,7 @@ class _TierWidgetState extends State<TierWidget> {
                 overflow: TextOverflow.ellipsis
             ),
           ),
+          SizedBox(height: 10),
           Text(
             "${widget.min_points.toString()} pts",
             maxLines: 1,
@@ -78,8 +82,9 @@ class _TierWidgetState extends State<TierWidget> {
                 overflow: TextOverflow.ellipsis
             ),
           ),
+          SizedBox(height: 25),
           LinearPercentIndicator(
-                width: 100,
+                width: 120,
                 lineHeight: 8.0,
                 percent: getFillUpData(),
                 alignment: MainAxisAlignment.start,

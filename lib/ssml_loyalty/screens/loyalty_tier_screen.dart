@@ -4,6 +4,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
+import 'package:retail_app_flutter/ssml_loyalty/widgets/points_widget.dart';
 import 'package:retail_app_flutter/ssml_loyalty/widgets/tier_widget.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/my_colors.dart';
@@ -19,7 +20,7 @@ class LoyaltyTierScreen extends StatefulWidget {
 class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
   String pageName = 'Loyalty Tier';
   ScrollController _scrollController = ScrollController();
-  int tierWidgetWidth = 120;
+  int tierWidgetWidth = 140;
   int currTier = 0;
 
   void _scrollToIndex(int index, int itemWidth) {
@@ -38,7 +39,7 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-
+      backgroundColor: MyColors.ashColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(56),
         child: CustomAppBar(
@@ -58,9 +59,9 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                 image: DecorationImage(image: AssetImage(AssetsConstants.blue_background_img) ,fit: BoxFit.cover,
                 ),
               ),
-              height: 350,
+              height: 300,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 30),
                 child: ListView.builder(
                       itemCount: loyaltyPointsModel.loyalty_tiers.length,
                       scrollDirection: Axis.horizontal,
@@ -92,7 +93,7 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                           }
                         }
 
-                        print('Current tier is $currTier');
+                        // print('Current tier is $currTier');
 
                          _scrollToIndex(currTier, tierWidgetWidth);
 
@@ -106,11 +107,28 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                           is_current: loyaltyPointsModel.loyalty_tiers[index].is_current,
                           till_next_tier: loyaltyPointsModel.loyalty_tiers[index].till_next_tier,
                           total_points: loyaltyPointsModel.total_points,
+                          widgetWidth: tierWidgetWidth,
                         );
                       }
                   ),
               ),
               ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  PointsWidget(
+                    box_text: 'Your Points',
+                    total_points: loyaltyPointsModel.total_points.toString()
+                  ),
+                  PointsWidget(
+                    box_text: 'Pending Points',
+                    total_points: loyaltyPointsModel.total_points.toString()
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
