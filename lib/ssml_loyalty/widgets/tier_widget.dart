@@ -46,56 +46,59 @@ class _TierWidgetState extends State<TierWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Image.asset(
-          widget.tier_img,
-          width: 100,
-          height: 101
-        ),
-        Text(
-          widget.tier_name,
-          maxLines: 1,
-          style: TextStyle(
-              color: MyColors.boneWhite,
-              fontSize: 13,
-              fontFamily: MyFonts.poppins,
-              fontWeight: FontWeight.bold,
-              overflow: TextOverflow.ellipsis
+    return Container(
+      width: 120,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Image.asset(
+            widget.tier_img,
+            width: 100,
+            height: 101
           ),
-        ),
-        Text(
-          "${widget.min_points.toString()} pts",
-          maxLines: 1,
-          style: TextStyle(
-              color: MyColors.boneWhite,
-              fontSize: 11,
-              fontFamily: MyFonts.poppins,
-              fontWeight: FontWeight.normal,
-              overflow: TextOverflow.ellipsis
-          ),
-        ),
-        LinearPercentIndicator(
-              width: 100,
-              lineHeight: 8.0,
-              percent: getFillUpData(),
-              alignment: MainAxisAlignment.start,
-              // fillColor: Colors.orange,
-              leading: Container(
-                decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: MyColors.orangeColor, width: 2)
-                ),
-                width: 20,
-                height: 20,
-              ),
-              animation: true,
-              padding: EdgeInsets.zero,
-              progressColor: Colors.yellow,
+          Text(
+            widget.tier_name,
+            maxLines: 1,
+            style: TextStyle(
+                color: MyColors.boneWhite,
+                fontSize: 13,
+                fontFamily: MyFonts.poppins,
+                fontWeight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis
             ),
-          ],
+          ),
+          Text(
+            "${widget.min_points.toString()} pts",
+            maxLines: 1,
+            style: TextStyle(
+                color: MyColors.boneWhite,
+                fontSize: 11,
+                fontFamily: MyFonts.poppins,
+                fontWeight: FontWeight.normal,
+                overflow: TextOverflow.ellipsis
+            ),
+          ),
+          LinearPercentIndicator(
+                width: 100,
+                lineHeight: 8.0,
+                percent: getFillUpData(),
+                alignment: MainAxisAlignment.start,
+                // fillColor: Colors.orange,
+                leading: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: MyColors.orangeColor, width: 2)
+                  ),
+                  width: 20,
+                  height: 20,
+                ),
+                animation: true,
+                padding: EdgeInsets.zero,
+                progressColor: Colors.yellow,
+              ),
+            ],
+      ),
     );
   }
 }
