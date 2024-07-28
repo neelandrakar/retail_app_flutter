@@ -71,4 +71,6 @@ LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(
     invoice_wise_points: [],
     loyalty_tiers: []
 );
+bool isSchemeFullyLoaded = false;
+
 

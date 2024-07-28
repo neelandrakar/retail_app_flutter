@@ -5,6 +5,7 @@ import 'package:retail_app_flutter/constants/my_colors.dart';
 
 import '../../constants/assets_constants.dart';
 import '../../constants/custom_app_bar.dart';
+import '../../constants/global_variables.dart';
 import '../../constants/utils.dart';
 import '../../sidemenu/screens/side_menu.dart';
 import '../widgets/bottom_nav_bar_pages.dart';
@@ -22,13 +23,18 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
   int side_menu_item_no = 3;
   int _page = 0;
   String pageName = 'Loyalty Program';
-  void onPageChange(int index){
 
+  void onPageChange(int index) {
+    if (index == 1 && !isSchemeFullyLoaded) {
+
+      showSnackBar(context, 'Let tier data load first');
+    } else {
     setState(() {
       _page = index;
     });
     print('page is changed to $index');
-  }
+  }}
+
 
   @override
   Widget build(BuildContext context) {

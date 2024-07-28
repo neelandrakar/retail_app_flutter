@@ -25,31 +25,20 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
   bool _fullyLoaded = false;
   late LoyaltyPointsModel loyaltyPointsModel;
 
-  fetchPendingData() async {
-    await ssmlLoyaltyServices.getEmpSlab(
-      context: context,
-      slab_type: 2,
-      onSuccess: () {
-        setState(() {
-          _fullyLoaded = true;
-          if(_fullyLoaded){print('fullyloaded now!!!');}
-          loyaltyPointsModel = Provider.of<SSMLLoyaltyProvider>(context, listen: false).loyaltyPointsModel;
-          print('actiiiiiii: ' + loyaltyPointsModel.invoice_wise_points!.length.toString());
-        });
-      },
-    );
-    print('data is fetched!');
-  }
 
   @override
   void initState() {
     super.initState();
     print('hii');
-    _getActivityData = fetchPendingData();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    loyaltyPointsModel = Provider
+        .of<SSMLLoyaltyProvider>(context, listen: false)
+        .loyaltyPointsModel;
+
     return Scaffold(
       backgroundColor: MyColors.ashColor,
       appBar: PreferredSize(
@@ -64,19 +53,7 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
           ),
         ),
       ),
-      body: FutureBuilder(
-        future: _getActivityData,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (!_fullyLoaded) {
-            print('not fully loaded... $_fullyLoaded');
-            return Center(
-              child: LoadingAnimationWidget.staggeredDotsWave(
-                color: MyColors.appBarColor,
-                size: 30,
-              ),
-            );
-          } else {
-            return Padding(
+      body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
@@ -100,10 +77,7 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
                   ),
                 ],
               ),
-            );
+            ));
           }
-        },
-      ),
-    );
-  }
 }
+
