@@ -22,19 +22,22 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
   String pageName = 'Activity Screen';
   SSMLLoyaltyServices ssmlLoyaltyServices = SSMLLoyaltyServices();
   late Future<void> _getActivityData;
-
+  bool _fullyLoaded = false;
+  late LoyaltyPointsModel loyaltyPointsModel;
 
   fetchPendingData() async {
-
-    ssmlLoyaltyServices.getEmpSlab(
-        context: context,
-        slab_type: 2,
-        onSuccess: () {
-          setState(() {
-            loyaltyPointsModel = Provider.of<SSMLLoyaltyProvider>(context, listen: false).loyaltyPointsModel;
-            print('actiiiiiii: ' + loyaltyPointsModel.invoice_wise_points!.length.toString());
-          });
-    });
+    await ssmlLoyaltyServices.getEmpSlab(
+      context: context,
+      slab_type: 2,
+      onSuccess: () {
+        setState(() {
+          _fullyLoaded = true;
+          if(_fullyLoaded){print('fullyloaded now!!!');}
+          loyaltyPointsModel = Provider.of<SSMLLoyaltyProvider>(context, listen: false).loyaltyPointsModel;
+          print('actiiiiiii: ' + loyaltyPointsModel.invoice_wise_points!.length.toString());
+        });
+      },
+    );
     print('data is fetched!');
   }
 
@@ -47,57 +50,60 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
-    return FutureBuilder(
-      future: _getActivityData, // Simulate a delay
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+    return Scaffold(
+      backgroundColor: MyColors.ashColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(56),
+        child: CustomAppBar(
+          module_name: pageName,
+          emp_name: getEmployeeName(context),
+          leading: Icon(
+            Icons.menu_outlined,
+            color: MyColors.actionsButtonColor,
+            size: 20,
+          ),
+        ),
+      ),
+      body: FutureBuilder(
+        future: _getActivityData,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!_fullyLoaded) {
+            print('not fully loaded... $_fullyLoaded');
+            return Center(
               child: LoadingAnimationWidget.staggeredDotsWave(
-                  color: MyColors.appBarColor,
-                  size: 30
-              ));        
-        } else {
-          return Scaffold(
-              backgroundColor: MyColors.ashColor,
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(56),
-                child: CustomAppBar(
-                  module_name: pageName,
-                  emp_name: getEmployeeName(context),
-                  leading: Icon(Icons.menu_outlined, color: MyColors.actionsButtonColor, size: 20,),
-                ),
+                color: MyColors.appBarColor,
+                size: 30,
               ),
-              body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    // SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.separated(
-                          itemCount: loyaltyPointsModel.invoice_wise_points!.length,
-                          itemBuilder: (context, index){
-                            return ActivitySchemeCard(
-                              point_type: loyaltyPointsModel.invoice_wise_points![index].point_type,
-                              dealer_name: loyaltyPointsModel.invoice_wise_points![index].dealer_name,
-                              invoice_no: loyaltyPointsModel.invoice_wise_points![index].invoice_no,
-                              date: loyaltyPointsModel.invoice_wise_points![index].date,
-                              string_date: loyaltyPointsModel.invoice_wise_points![index].string_date,
-                              earned_points: loyaltyPointsModel.invoice_wise_points![index].earned_points
-                            );
-                          }, separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(height: 0);
-                      },),
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: loyaltyPointsModel.invoice_wise_points!.length,
+                      itemBuilder: (context, index) {
+                        return ActivitySchemeCard(
+                          point_type: loyaltyPointsModel.invoice_wise_points![index].point_type,
+                          dealer_name: loyaltyPointsModel.invoice_wise_points![index].dealer_name,
+                          invoice_no: loyaltyPointsModel.invoice_wise_points![index].invoice_no,
+                          date: loyaltyPointsModel.invoice_wise_points![index].date,
+                          string_date: loyaltyPointsModel.invoice_wise_points![index].string_date,
+                          earned_points: loyaltyPointsModel.invoice_wise_points![index].earned_points,
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 0);
+                      },
                     ),
-                  ],
-                ),
-              )
-
-          );
-        }
-      },
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

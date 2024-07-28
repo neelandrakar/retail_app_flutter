@@ -14,7 +14,7 @@ import '../../providers/user_provider.dart';
 
 class SSMLLoyaltyServices{
 
-  void getEmpSlab({
+  Future<void> getEmpSlab({
     required BuildContext context,
     required int slab_type,
     required VoidCallback onSuccess
