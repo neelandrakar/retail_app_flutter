@@ -33,5 +33,5 @@ const loyaltyTierSchema = mongoose.Schema({
     }
 });
 
-const LoyaltyTier = mongoose.model('LoyaltyTier',loyaltyTierSchema);
+const LoyaltyTier = mongoose.model('LoyaltyTier', loyaltyTierSchema);
 module.exports = LoyaltyTier;

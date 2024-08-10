@@ -21,6 +21,7 @@ const DealerLiftingMaster = require('../models/dealer_lifting_master');
 const Calender = require('../models/calender');
 const LoyaltyTier = require('../models/loyalty_tier');
 const LoyaltyGiftCategory = require('../models/loyalty_gift_category');
+const shortid = require('shortid');
 // import * as myFunctions from '../common_functions'
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
@@ -1168,6 +1169,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
                     ]
                 },
                 });
+                
             const month_no = months[i]['month'];
             const year_no = months[i]['year'];
 
@@ -1362,7 +1364,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
         }
 
           res.status(200).json({ 
-            
+            'error': false,
             'total_sale': total_sale,
             'total_points': total_points,
             'total_pending': total_pending,
@@ -1447,6 +1449,23 @@ employeeRouter.post('/v1/api/add-loyalty-gift-category', auth, async(req, res) =
             error: e.message
         });
     }
+});
+
+employeeRouter.get('/v1/api/shorten-url', async(req,res) => {
+
+    try{
+
+
+        
+        let shortId = 'https://chatgpt.com/';
+        shortId = shortid.generate();
+        //urlDatabase[shortId] = originalUrl;
+        res.json({ shortUrl: `http://localhost:3000/${shortId}` });
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
 });
 
 module.exports = employeeRouter;

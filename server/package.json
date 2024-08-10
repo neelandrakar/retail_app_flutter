@@ -16,7 +16,8 @@
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.4.4",
-    "mongoose": "^8.0.3"
+    "mongoose": "^8.0.3",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
