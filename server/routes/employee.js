@@ -22,7 +22,10 @@ const Calender = require('../models/calender');
 const LoyaltyTier = require('../models/loyalty_tier');
 const LoyaltyGiftCategory = require('../models/loyalty_gift_category');
 const shortid = require('shortid');
+// require('dotenv').config();
 // import * as myFunctions from '../common_functions'
+const cloudinary = require('../utils/coudinary');
+const upload = require('../middleware/multer');
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
@@ -1467,5 +1470,50 @@ employeeRouter.get('/v1/api/shorten-url', async(req,res) => {
       }
 
 });
+
+employeeRouter.post('/v1/api/upload-img_v1', async(req,res) => {
+
+    try{
+
+        cloudinary.uploader.upload(req.file.path, function(err, result){
+            
+            if(err){
+                console.log(err);
+                return res.status(200).json({
+                    success: false,
+                    message: "Error"
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: "Uploaded!",
+                data: result
+            });
+        });
+
+    }catch (e) {
+        res.status(500).json({ error: e.message });
+      }
+
+});
+
+//Upload an image
+employeeRouter.post('/v1/api/upload-img', upload.single('image'), async (req, res) => {
+    try {
+      const result = await cloudinary.uploader.upload(req.file.path);
+      res.status(200).json({
+        success: true,
+        message: "Uploaded!",
+        data: result
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        success: false,
+        message: "Error"
+      });
+    }
+  });
 
 module.exports = employeeRouter;
