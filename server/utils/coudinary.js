@@ -1,9 +1,11 @@
 const cloudinary = require('cloudinary').v2;
+const global_variables = require('../global_variables');
+
 
 cloudinary.config({
-  cloud_name: 'dhfiapa0x',
-  api_key: '176855535218294',
-  api_secret: 'TTYyXF3IrFE8kCVjQe9JdxEKMUI'
+  cloud_name: global_variables.CLOUDINARY_CLOUD_NAME,
+  api_key: global_variables.CLOUDINARY_API_KEY,
+  api_secret: global_variables.CLOUDINARY_API_SECRET
 });
 
 module.exports = cloudinary;
