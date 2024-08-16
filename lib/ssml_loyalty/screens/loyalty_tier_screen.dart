@@ -173,6 +173,14 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Your widgets here...
+                          PointsWidget(
+                              box_text: 'Your Points',
+                              total_points: loyaltyPointsModel.total_points.toString()
+                          ),
+                          PointsWidget(
+                              box_text: 'Pending Points',
+                              total_points: loyaltyPointsModel.total_pending.toString()
+                          ),
                         ],
                       ),
                     )

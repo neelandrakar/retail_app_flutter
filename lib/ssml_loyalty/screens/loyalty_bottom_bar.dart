@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
-
 import '../../constants/assets_constants.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/global_variables.dart';
