@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+
 import '../../constants/assets_constants.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/utils.dart';
 import '../../sidemenu/screens/side_menu.dart';
 import '../widgets/bottom_nav_bar_pages.dart';
+import 'activity_scheme_screen.dart';
+import 'loyalty_tier_screen.dart';
 
 class LoyaltyBottomBar extends StatefulWidget {
   static const String routeName = '/loyalty-bottom-bar';
@@ -23,6 +26,17 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
   int _page = 0;
   String pageName = 'Loyalty Program';
 
+  Widget _getBody(int index) {
+    switch (index) {
+      case 0:
+        return LoyaltyTierScreen();
+      case 1:
+        return ActivitySchemeScreen();
+      default:
+        return Container();
+    }
+  }
+
   void onPageChange(int index) {
     if (index == 1 && !isSchemeFullyLoaded) {
 
@@ -33,6 +47,8 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
     });
     print('page is changed to $index');
   }}
+
+
 
 
   @override
@@ -46,11 +62,8 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
           ),
           width: 281,
         ),
-        body: IndexedStack(
-            index: _page,
-            children: BottomNavBarPages.allWidgets
+        body: _getBody(_page),
 
-        ),
         bottomNavigationBar: CupertinoTabBar(
           backgroundColor: MyColors.offWhiteColor,
           currentIndex: _page,

@@ -35,6 +35,7 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
   @override
   Widget build(BuildContext context) {
 
+    print('xyz');
     loyaltyPointsModel = Provider
         .of<SSMLLoyaltyProvider>(context, listen: false)
         .loyaltyPointsModel;
