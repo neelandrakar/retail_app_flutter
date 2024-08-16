@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
@@ -183,7 +184,31 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                           ),
                         ],
                       ),
-                    )
+                    ),
+                    Expanded(
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 10).copyWith(bottom: 0),
+                            child: Container(
+                              width: double.infinity,
+                              height: 500,
+                              decoration: BoxDecoration(
+                                  color: MyColors.boneWhite
+                              ),
+                              child: ListView.builder(
+                                  itemCount: loyaltyPointsModel.loyalty_tiers.length,
+                                  itemBuilder: (context, index){
+                                    return Container(
+                                        height: 50,
+                                        color: index % 2 == 0 ? MyColors.boneWhite : Colors.black12,
+                                        width: double.infinity,
+                                        child: Text('hello ${index}'));
+                                  }
+                              ),
+                          ),
+                      ),
+                      )
+
                   ],
                 ),
               );

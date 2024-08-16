@@ -53,6 +53,7 @@ class _ActivitySchemeCardState extends State<ActivitySchemeCard> {
   Widget build(BuildContext context) {
     return Container(
       height: 80,
+      padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: MyColors.boneWhite,
           borderRadius: BorderRadius.circular(10),

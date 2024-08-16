@@ -35,7 +35,7 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    print('xyz');
+    // print('xyz');
     loyaltyPointsModel = Provider
         .of<SSMLLoyaltyProvider>(context, listen: false)
         .loyaltyPointsModel;
@@ -55,7 +55,7 @@ class _ActivitySchemeScreenState extends State<ActivitySchemeScreen> {
         ),
       ),
       body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Column(
                 children: [
                   Expanded(
