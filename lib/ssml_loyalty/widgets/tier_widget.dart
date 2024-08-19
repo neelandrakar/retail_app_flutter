@@ -53,11 +53,7 @@ class _TierWidgetState extends State<TierWidget> {
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Image.asset(
-            widget.tier_img,
-            width: 100,
-            height: 101
-          ),
+          Image.network(widget.tier_img, width: 100,height: 100),
           SizedBox(height: 20),
           Text(
             widget.tier_name,

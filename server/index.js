@@ -7,7 +7,8 @@ const attendanceRouter = require('./routes/employee_attendance');
 const employeeRouter = require('./routes/employee');
 const menuAccessRouter = require('./routes/menu_access');
 const accountRouter = require('./routes/account');
-const DB = 'mongodb+srv://neelandra:Neelandra10@cluster0.tuqpog7.mongodb.net/?retryWrites=true&w=majority';
+const global_variables = require('./global_variables');
+const DB = global_variables.MONGODB_URL;
 const PORT = 3000;
 const app = express();
 

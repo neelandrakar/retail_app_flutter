@@ -1366,6 +1366,12 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
           }
         }
 
+        // console.log(process.env.USER);
+
+        // process.on('exit', function(){
+        //     console.log(`process has ended`);
+        // });
+
           res.status(200).json({ 
             'error': false,
             'total_sale': total_sale,
@@ -1412,13 +1418,15 @@ employeeRouter.post('/v1/api/create-new-tier', auth, async(req,res) =>{
 
 
 
-        res.json({
+        res.status(200).json({
             msg: `${tier_name} is successfully added!`
         });
 
 
     }catch(e){
-        res.status(500).json({ error: e.message });
+        res.status(500).json({
+             error: e.message 
+            });
     }
 });
 

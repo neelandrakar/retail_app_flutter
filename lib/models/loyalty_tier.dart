@@ -4,6 +4,7 @@ import 'dart:convert';
 class LoyaltyTier {
   final String id;
   final String tier_name;
+  final String tier_img;
   final int tier_id;
   final int min_points;
   final int max_points;
@@ -13,6 +14,7 @@ class LoyaltyTier {
   LoyaltyTier({
     required this.id,
     required this.tier_name,
+    required this.tier_img,
     required this.tier_id,
     required this.min_points,
     required this.max_points,
@@ -25,6 +27,7 @@ class LoyaltyTier {
     return <String, dynamic>{
       'tier_name': tier_name,
       'tier_id': tier_id,
+      'tier_img':tier_img,
       'min_points': min_points,
       'max_points': max_points,
       'd_status': d_status,
@@ -37,6 +40,7 @@ class LoyaltyTier {
   factory LoyaltyTier.fromMap(Map<String, dynamic> map) {
     return LoyaltyTier(
       tier_name: map['tier_name'] as String,
+      tier_img: map['tier_img'] as String,
       tier_id: map['tier_id'] as int,
       min_points: map['min_points'] as int,
       max_points: map['max_points'] as int,

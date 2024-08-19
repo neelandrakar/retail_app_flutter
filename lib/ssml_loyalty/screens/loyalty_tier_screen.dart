@@ -7,6 +7,7 @@ import 'package:retail_app_flutter/constants/assets_constants.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/ssml_loyalty/widgets/points_widget.dart';
 import 'package:retail_app_flutter/ssml_loyalty/widgets/tier_widget.dart';
+import 'package:retail_app_flutter/ssml_loyalty/widgets/tier_widget_detailed.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/my_colors.dart';
 import '../../constants/utils.dart';
@@ -157,7 +158,7 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                                 tier_id: loyaltyPointsModel.loyalty_tiers[index].tier_id,
                                 min_points: loyaltyPointsModel.loyalty_tiers[index].min_points,
                                 max_points: loyaltyPointsModel.loyalty_tiers[index].max_points,
-                                tier_img: tier_img,
+                                tier_img: loyaltyPointsModel.loyalty_tiers[index].tier_img,
                                 is_current: loyaltyPointsModel.loyalty_tiers[index].is_current,
                                 till_next_tier: loyaltyPointsModel.loyalty_tiers[index].till_next_tier,
                                 total_points: loyaltyPointsModel.total_points,
@@ -188,21 +189,26 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                     Expanded(
                         child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10).copyWith(bottom: 0),
+                                horizontal: 30),
                             child: Container(
                               width: double.infinity,
                               height: 500,
                               decoration: BoxDecoration(
-                                  color: MyColors.boneWhite
+                                  color: MyColors.ashColor
                               ),
                               child: ListView.builder(
                                   itemCount: loyaltyPointsModel.loyalty_tiers.length,
                                   itemBuilder: (context, index){
-                                    return Container(
-                                        height: 50,
-                                        color: index % 2 == 0 ? MyColors.boneWhite : Colors.black12,
-                                        width: double.infinity,
-                                        child: Text('hello ${index}'));
+                                    return TierWidgetDetailed(
+                                        tier_name: loyaltyPointsModel.loyalty_tiers[index].tier_name,
+                                        tier_details: 'Test details of ${loyaltyPointsModel.loyalty_tiers[index].tier_name}',
+                                        tier_img: loyaltyPointsModel.loyalty_tiers[index].tier_img,
+                                        onClick: (){
+                                          print(loyaltyPointsModel.loyalty_tiers[index].tier_name);
+                                        },
+                                        is_first: index==0,
+                                        is_last: index == loyaltyPointsModel.loyalty_tiers.length-1,
+                                    );
                                   }
                               ),
                           ),
