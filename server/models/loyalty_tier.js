@@ -17,6 +17,11 @@ const loyaltyTierSchema = mongoose.Schema({
         required: true
     },
 
+    tier_detail: {
+        type: String,
+        required: true
+    },
+
     min_points: {
         type: Number,
         required: true

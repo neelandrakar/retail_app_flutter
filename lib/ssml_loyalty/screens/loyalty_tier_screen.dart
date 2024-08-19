@@ -194,14 +194,15 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                               width: double.infinity,
                               height: 500,
                               decoration: BoxDecoration(
-                                  color: MyColors.ashColor
+                                  color: MyColors.ashColor,
+                                  borderRadius: BorderRadius.circular(10)
                               ),
                               child: ListView.builder(
                                   itemCount: loyaltyPointsModel.loyalty_tiers.length,
                                   itemBuilder: (context, index){
                                     return TierWidgetDetailed(
                                         tier_name: loyaltyPointsModel.loyalty_tiers[index].tier_name,
-                                        tier_details: 'Test details of ${loyaltyPointsModel.loyalty_tiers[index].tier_name}',
+                                        tier_details: loyaltyPointsModel.loyalty_tiers[index].tier_detail,
                                         tier_img: loyaltyPointsModel.loyalty_tiers[index].tier_img,
                                         onClick: (){
                                           print(loyaltyPointsModel.loyalty_tiers[index].tier_name);

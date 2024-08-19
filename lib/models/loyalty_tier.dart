@@ -5,6 +5,7 @@ class LoyaltyTier {
   final String id;
   final String tier_name;
   final String tier_img;
+  final String tier_detail;
   final int tier_id;
   final int min_points;
   final int max_points;
@@ -15,6 +16,7 @@ class LoyaltyTier {
     required this.id,
     required this.tier_name,
     required this.tier_img,
+    required this.tier_detail,
     required this.tier_id,
     required this.min_points,
     required this.max_points,
@@ -28,6 +30,7 @@ class LoyaltyTier {
       'tier_name': tier_name,
       'tier_id': tier_id,
       'tier_img':tier_img,
+      'tier_detail':tier_detail,
       'min_points': min_points,
       'max_points': max_points,
       'd_status': d_status,
@@ -41,6 +44,7 @@ class LoyaltyTier {
     return LoyaltyTier(
       tier_name: map['tier_name'] as String,
       tier_img: map['tier_img'] as String,
+      tier_detail: map['tier_detail'] as String,
       tier_id: map['tier_id'] as int,
       min_points: map['min_points'] as int,
       max_points: map['max_points'] as int,
