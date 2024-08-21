@@ -26,6 +26,8 @@ const shortid = require('shortid');
 // import * as myFunctions from '../common_functions'
 const cloudinary = require('../utils/coudinary');
 const upload = require('../middleware/multer');
+const GiftCategory = require('../models/gift_category');
+const Merchant = require('../models/merchant');
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
@@ -1400,7 +1402,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
 employeeRouter.post('/v1/api/create-new-tier', auth, async(req,res) =>{
     try{
 
-        const { tier_name, max_points, min_points } = req.body;
+        const { tier_name, max_points, min_points, tier_detail } = req.body;
 
         let tier_id = 0;
 
@@ -1410,6 +1412,7 @@ employeeRouter.post('/v1/api/create-new-tier', auth, async(req,res) =>{
         let new_tier = LoyaltyTier({
             tier_id: tier_id,
             tier_name: tier_name,
+            tier_detail: tier_detail,
             max_points: max_points,
             min_points: min_points   
         });
@@ -1466,8 +1469,6 @@ employeeRouter.get('/v1/api/shorten-url', async(req,res) => {
 
     try{
 
-
-        
         let shortId = 'https://chatgpt.com/';
         shortId = shortid.generate();
         //urlDatabase[shortId] = originalUrl;
@@ -1523,5 +1524,95 @@ employeeRouter.post('/v1/api/upload-img', upload.single('image'), async (req, re
       });
     }
   });
+
+  //Add a gift category
+  employeeRouter.post('/v1/api/add-gift-category', auth, async(req, res) =>{
+    try {
+      
+        const { gift_category_name, gift_category_logo } = req.body;
+
+        const user_id = req.user;
+        let gift_categories = await GiftCategory.find();
+        const gift_category_id = gift_categories.length+1;
+        console.log(gift_categories.length);
+
+        let gift_category = GiftCategory({
+            gift_category_id: gift_category_id,
+            gift_category_name: gift_category_name,
+            gift_category_logo: gift_category_logo,
+            post_user: user_id
+        });
+
+        gift_category = await gift_category.save(); 
+
+
+        res.status(200).json({
+            success: true,
+            message: gift_category  //`Gift category added successfully`
+        });
+
+    } catch (err) {
+        res.status(500).json({
+          success: false,
+          message: err
+        });
+      }
+  });
+
+  //Add a merchant
+  employeeRouter.post('/v1/api/add-merchant', auth, async(req, res) =>{
+    try {
+      
+        const { merchant_name, merchant_type, merchant_logo } = req.body;
+
+        const user_id = req.user;
+        let merchants = await Merchant.find();
+        const merchant_id = merchants.length + 1;
+
+        let merchant = Merchant({
+            merchant_id: merchant_id,
+            merchant_type: merchant_type,
+            merchant_name: merchant_name,
+            merchant_logo: merchant_logo,
+            post_user: user_id
+
+        });
+
+        merchant = await merchant.save(); 
+
+        res.status(200).json({
+            success: true,
+            message: merchant  //`Gift category added successfully`
+        });
+
+    } catch (err) {
+        res.status(500).json({
+          success: false,
+          message: err
+        });
+      }
+  });
+
+    //Show merchants
+    employeeRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
+        try {
+          
+            // const { gift_category_name, gift_category_logo } = req.body;
+    
+            const user_id = req.user;
+            let gift_categories = await GiftCategory.find();
+    
+            res.status(200).json({
+                success: true,
+                message: gift_categories  //`Gift category added successfully`
+            });
+    
+        } catch (err) {
+            res.status(500).json({
+              success: false,
+              message: err
+            });
+          }
+      });
 
 module.exports = employeeRouter;

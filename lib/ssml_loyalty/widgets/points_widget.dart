@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:retail_app_flutter/constants/custom_elevated_button.dart';
 
 import '../../constants/my_colors.dart';
 import '../../constants/my_fonts.dart';
@@ -6,10 +7,12 @@ import '../../constants/my_fonts.dart';
 class PointsWidget extends StatefulWidget {
   final String box_text;
   final String total_points;
+  final bool show_button;
   const PointsWidget({
     super.key,
     required this.box_text,
     required this.total_points,
+    required this.show_button
   });
 
   @override
@@ -63,7 +66,19 @@ class _PointsWidgetState extends State<PointsWidget> {
                 fontWeight: FontWeight.normal,
                 overflow: TextOverflow.ellipsis
             ),
-          )
+          ),
+          if(widget.show_button)
+            Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: CustomElevatedButton(
+                buttonText: 'Redeem',
+                buttonColor: MyColors.redColor,
+                buttonTextColor: MyColors.boneWhite,
+                height: 20,
+                onClick: (){
+                  print('navigate');
+                }),
+          ),
         ],
       ),
     );

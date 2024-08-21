@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
@@ -177,11 +175,13 @@ class _LoyaltyTierScreenState extends State<LoyaltyTierScreen> {
                           // Your widgets here...
                           PointsWidget(
                               box_text: 'Your Points',
-                              total_points: loyaltyPointsModel.total_points.toString()
+                              total_points: loyaltyPointsModel.total_points.toString(),
+                              show_button: false,
                           ),
                           PointsWidget(
                               box_text: 'Pending Points',
-                              total_points: loyaltyPointsModel.total_pending.toString()
+                              total_points: loyaltyPointsModel.total_pending.toString(),
+                              show_button: true,
                           ),
                         ],
                       ),

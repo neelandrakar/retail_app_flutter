@@ -30,7 +30,7 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
     switch (index) {
       case 0:
         return LoyaltyTierScreen();
-      case 1:
+      case 3:
         return ActivitySchemeScreen();
       default:
         return Container();
@@ -38,7 +38,7 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
   }
 
   void onPageChange(int index) {
-    if (index == 1 && !isSchemeFullyLoaded) {
+    if (index == 3 && !isSchemeFullyLoaded) {
 
       showSnackBar(context, 'Let tier data load first');
     } else {
@@ -86,12 +86,30 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
                   ),
                 )),
             BottomNavigationBarItem(
+                label: 'Merchants',
+                icon: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Image.asset(
+                      AssetsConstants.merchant_icon,
+                      color: _page==1 ? MyColors.redColor : MyColors.appBarColor
+                  ),
+                )),
+            BottomNavigationBarItem(
+                label: 'My Vouchers',
+                icon: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Image.asset(
+                      AssetsConstants.my_voucher_icon,
+                      color: _page==2 ? MyColors.redColor : MyColors.appBarColor
+                  ),
+                )),
+            BottomNavigationBarItem(
                 label: 'Activity',
                 icon: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Image.asset(
                       AssetsConstants.activity,
-                      color: _page==1 ? MyColors.redColor : MyColors.appBarColor
+                      color: _page==3 ? MyColors.redColor : MyColors.appBarColor
                   ),
                 )),
           ],

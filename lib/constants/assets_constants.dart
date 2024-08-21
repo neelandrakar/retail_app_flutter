@@ -63,5 +63,7 @@ class AssetsConstants{
   static const String diamond_badge = '$_pngPath/diamond_badge.png';
   static const String platinum_badge = '$_pngPath/platinum_badge.png';
   static const String no_data = '$_pngPath/no_data.png';
+  static const String merchant_icon = '$_pngPath/merchant_icon.png';
+  static const String my_voucher_icon = '$_pngPath/my_voucher_icon.png';
 
 }
