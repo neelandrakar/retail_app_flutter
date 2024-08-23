@@ -28,6 +28,7 @@ const cloudinary = require('../utils/coudinary');
 const upload = require('../middleware/multer');
 const GiftCategory = require('../models/gift_category');
 const Merchant = require('../models/merchant');
+const Coupon = require('../models/coupons');
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
@@ -1593,26 +1594,95 @@ employeeRouter.post('/v1/api/upload-img', upload.single('image'), async (req, re
       }
   });
 
+//Show merchants
+employeeRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
+    try {
+        
+        // const { gift_category_name, gift_category_logo } = req.body;
+
+        const user_id = req.user;
+        let gift_categories = await GiftCategory.find();
+        let gift_category_data = [];
+
+        for(let i=0; i<gift_categories.length; i++){
+
+            const gift_category_id = gift_categories[i].gift_category_id;
+            let merchants = [];
+
+            let all_merchants = await Merchant.find({
+                merchant_type: gift_category_id
+            });
+
+            for(let j=0; j<all_merchants.length; j++){
+                merchants.push({
+                    'merchant_id': all_merchants[j].merchant_id,
+                    'merchant_name': all_merchants[j].merchant_name,
+                    'merchant_logo': all_merchants[j].merchant_logo,
+                    'merchant_type': all_merchants[j].merchant_type,
+                    'd_status': all_merchants[i].d_status,
+                    'coupons': []
+                });
+            }
+
+            gift_category_data.push({
+
+                'gift_category_id': gift_categories[i].gift_category_id,
+                'gift_category_name': gift_categories[i].gift_category_name,
+                'gift_category_logo': gift_categories[i].gift_category_logo,
+                'd_status': gift_categories[i].d_status,
+                'merchants': merchants
+            }); 
+        }
+
+        res.status(200).json({
+            success: true,
+            message: gift_category_data  //`Gift category added successfully`
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err
+        });
+        }
+    });
+
     //Show merchants
-    employeeRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
-        try {
-          
-            // const { gift_category_name, gift_category_logo } = req.body;
-    
-            const user_id = req.user;
-            let gift_categories = await GiftCategory.find();
-    
-            res.status(200).json({
-                success: true,
-                message: gift_categories  //`Gift category added successfully`
+employeeRouter.post('/v1/api/allocate-coupons', auth, async(req, res) =>{
+    try {
+
+        const all_coupons = req.body;
+        const user_id = req.user;
+
+        for(let i=0; i<all_coupons.length; i++){
+
+            let new_coupon = Coupon({
+                'coupon_id': all_coupons[i].coupon_id,
+                'merchant_id': all_coupons[i].merchant_id,
+                'coupon_code': all_coupons[i].coupon_code,
+                'expiry_date': all_coupons[i].expiry_date,
+                'coupon_value': all_coupons[i].coupon_value,
+                'post_user': user_id
             });
-    
-        } catch (err) {
-            res.status(500).json({
-              success: false,
-              message: err
-            });
-          }
-      });
+
+            new_coupon.save();
+        }
+
+
+        
+        
+
+        res.status(200).json({
+            success: true,
+            message: `${all_coupons.length} coupons are allocated`   
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err
+        });
+        }
+    });
 
 module.exports = employeeRouter;

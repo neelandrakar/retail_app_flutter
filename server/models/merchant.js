@@ -25,7 +25,7 @@ const merchantSchema = mongoose.Schema({
 
     d_status: {
         type: Boolean,
-        default: true
+        default: false
     },
 
     post_time: {
