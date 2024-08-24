@@ -17,44 +17,9 @@ const couponSchema = mongoose.Schema({
         required: true
     },
 
-    coupon_code: {
-        type: String,
-        required: true
-    },
-
-    allocated_to: {
-        type: String,
-        default: ""
-    },
-
-    is_allocated: {
-        type: Boolean,
-        default: false
-    },
-
-    allocated_type: {
-        type: Date,
-        default: null
-    },
-
-    is_used: {
-        type: Boolean,
-        default: false
-    },
-
-    used_on: {
-        type: Date,
-        default: null
-    },
-
     d_status: {
         type: Boolean,  
         default: false
-    },
-
-    expiry_date:{
-        type: Date,
-        required: true
     },
 
     post_time: {

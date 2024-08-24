@@ -1601,7 +1601,9 @@ employeeRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
         // const { gift_category_name, gift_category_logo } = req.body;
 
         const user_id = req.user;
-        let gift_categories = await GiftCategory.find();
+        let gift_categories = await GiftCategory.find({
+            d_status: false
+        });
         let gift_category_data = [];
 
         for(let i=0; i<gift_categories.length; i++){
@@ -1610,22 +1612,38 @@ employeeRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
             let merchants = [];
 
             let all_merchants = await Merchant.find({
-                merchant_type: gift_category_id
+                merchant_type: gift_category_id,
+                d_status: false
             });
 
             for(let j=0; j<all_merchants.length; j++){
+
+                let coupons = [];
+
+                let all_coupons = await Coupon.find({
+                    d_status: false,
+                    merchant_id: all_merchants[j].merchant_id
+                });
+
+                for(let k=0; k<all_coupons.length; k++){
+
+                    coupons.push(all_coupons[k]);
+                }
+
                 merchants.push({
+                    '_id': all_merchants[j]._id,
                     'merchant_id': all_merchants[j].merchant_id,
                     'merchant_name': all_merchants[j].merchant_name,
                     'merchant_logo': all_merchants[j].merchant_logo,
                     'merchant_type': all_merchants[j].merchant_type,
                     'd_status': all_merchants[i].d_status,
-                    'coupons': []
+                    'coupons': coupons
                 });
             }
 
             gift_category_data.push({
 
+                '_id': gift_categories[i]._id,
                 'gift_category_id': gift_categories[i].gift_category_id,
                 'gift_category_name': gift_categories[i].gift_category_name,
                 'gift_category_logo': gift_categories[i].gift_category_logo,
@@ -1656,21 +1674,19 @@ employeeRouter.post('/v1/api/allocate-coupons', auth, async(req, res) =>{
 
         for(let i=0; i<all_coupons.length; i++){
 
+            let coupon_schema = await Coupon.find(); 
+
+            const coupon_id = coupon_schema.length + 1;
+
             let new_coupon = Coupon({
-                'coupon_id': all_coupons[i].coupon_id,
+                'coupon_id': coupon_id,
                 'merchant_id': all_coupons[i].merchant_id,
-                'coupon_code': all_coupons[i].coupon_code,
-                'expiry_date': all_coupons[i].expiry_date,
                 'coupon_value': all_coupons[i].coupon_value,
                 'post_user': user_id
             });
 
-            new_coupon.save();
+            await new_coupon.save();
         }
-
-
-        
-        
 
         res.status(200).json({
             success: true,
