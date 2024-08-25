@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/ssml_loyalty/screens/merchants_screen.dart';
 
 import '../../constants/assets_constants.dart';
 import '../../constants/custom_app_bar.dart';
@@ -30,6 +31,8 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
     switch (index) {
       case 0:
         return LoyaltyTierScreen();
+      case 1:
+        return MerchantsScreen();
       case 3:
         return ActivitySchemeScreen();
       default:

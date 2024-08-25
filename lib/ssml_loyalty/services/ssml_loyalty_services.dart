@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:retail_app_flutter/models/gift_category_model.dart';
 import 'package:retail_app_flutter/models/loyalty_points_model.dart';
 import 'package:retail_app_flutter/models/loyalty_tier.dart';
+import 'package:retail_app_flutter/providers/gift_category_provider.dart';
 import 'package:retail_app_flutter/providers/ssml_loyalty_provider.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/http_error_handeling.dart';
@@ -19,7 +21,7 @@ class SSMLLoyaltyServices{
     required BuildContext context,
     required int slab_type,
     required VoidCallback onSuccess
-}) async {
+  }) async {
     try{
 
       final Employee emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
@@ -60,5 +62,57 @@ class SSMLLoyaltyServices{
       print(e.toString());
       showSnackBar(context, e.toString());
     }
+  }
+
+  Future<void> getMerchantsData({
+    required BuildContext context,
+    required VoidCallback onSuccess
+  }) async {
+
+    try{
+
+      final Employee emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
+      var gift_category_provider = Provider.of<GiftCategoryProvider>(context, listen: false);
+
+      http.Response res = await http.post(
+          Uri.parse('$uri/v1/api/show-merchants'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': emp.jwt_token
+          });
+
+      HttpErroHandeling(
+          response: res,
+          context: context,
+          onSuccess: () {
+
+            // print("RES: ${jsonDecode(res.body)['message']}");
+            print("RES: ${jsonDecode(res.body)['message'].length}");
+
+            int gift_category_length = jsonDecode(res.body)['message'].length;
+            var messageArray = jsonDecode(res.body)['message'];
+            gift_category_provider.gift_categories = [];
+
+
+
+            for (var message in messageArray) {
+              gift_category_provider.getGiftCategoryData(GiftCategoryModel.fromJson(jsonEncode(message)), context);
+            }
+
+
+
+
+            onSuccess.call();
+
+          }
+      );
+
+
+
+    }catch(e){
+      print(e.toString());
+      showSnackBar(context, e.toString());
+    }
+
   }
 }

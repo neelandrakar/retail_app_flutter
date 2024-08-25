@@ -73,5 +73,6 @@ LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(
     loyalty_tiers: []
 );
 bool isSchemeFullyLoaded = false;
+bool isGiftCategoriesFullyLoaded = false;
 
 
