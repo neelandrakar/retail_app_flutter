@@ -189,48 +189,65 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
 //Allocation of coupon codes        
 loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
     try {
+        const allCoupons = req.body;
+        const userId = req.user;
+      
+        async function generateUniqueCode() {
+          let code = '';
+          for (let i = 0; i < 16; i++) {
+            const charType = Math.random() < 0.5 ? 'letter' : 'number';
+            if (charType === 'letter') {
+              code += String.fromCharCode(Math.floor(Math.random() * 26) + 65); // Uppercase letter
+            } else {
+              code += Math.floor(Math.random() * 10); // Number
+            }
+          }
+      
+          const existingCode = await CouponCode.findOne({ d_status: false, coupon_code: code });
+          if (existingCode) {
+            return generateUniqueCode(); // Recursively generate a new code if it already exists
+          }
+      
+          return code;
+        }
+      
+        if (allCoupons.length > 0) {
 
-        const all_coupons = req.body;
-        const user_id = req.user;
+          for (let i = 0; i < allCoupons.length; i++) {
 
-        if(all_coupons.length>0){
-
-        for(let i=0; i<all_coupons.length; i++){
-
-            let coupon_code_schema = await CouponCode.find(); 
-
+            const couponCode = await generateUniqueCode();
+            let coupon_code_schema = await CouponCode.find();
             const coupon_code_id = coupon_code_schema.length + 1;
 
-            let new_coupon_code = CouponCode({
-                'coupon_code_id': coupon_code_id,
-                'coupon_code': all_coupons[i].coupon_code,
-                'merchant_id': all_coupons[i].merchant_id,
-                'coupon_value': all_coupons[i].coupon_value,
-                'coupon_id': all_coupons[i].coupon_id,
-                'expiry_date': all_coupons[i].expiry_date,
-                'post_user': user_id
+            const newCouponCode = new CouponCode({
+              coupon_code_id: coupon_code_id,
+              coupon_code: couponCode,
+              merchant_id: allCoupons[i].merchant_id,
+              coupon_value: allCoupons[i].coupon_value,
+              coupon_id: allCoupons[i].coupon_id,
+              expiry_date: allCoupons[i].expiry_date,
+              post_user: userId
             });
-
-            await new_coupon_code.save();
+      
+            await newCouponCode.save();
+          }
+      
+          res.status(200).json({
+            success: true,
+            message: `${allCoupons.length} coupons are allocated`
+          });
+        } else {
+          res.status(200).json({
+            success: true,
+            message: `No coupon found!`
+          });
         }
-
-        res.status(200).json({
-            success: true,
-            message: `${all_coupons.length} coupons are allocated`   
-        });
-    } else {
-        res.status(200).json({
-            success: true,
-            message: `No coupon found!`   
-        });
-    }
-
-    } catch (err) {
+      } catch (err) {
         res.status(500).json({
-            success: false,
-            message: err
+          success: false,
+          message: err
         });
-        }
+      }
     });
 
 module.exports = loyaltyRouter;
