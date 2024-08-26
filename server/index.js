@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const authRouter = require('./routes/auth');
 const attendanceRouter = require('./routes/employee_attendance');
 const employeeRouter = require('./routes/employee');
+const loyaltyRouter = require('./routes/loyalty_programme');
 const menuAccessRouter = require('./routes/menu_access');
 const accountRouter = require('./routes/account');
 const global_variables = require('./global_variables');
@@ -19,6 +20,7 @@ app.use(authRouter);
 app.use(employeeRouter);
 app.use(menuAccessRouter);
 app.use(accountRouter);
+app.use(loyaltyRouter);
 
 
 mongoose.connect(DB)
