@@ -1,7 +1,5 @@
 const express = require('express');
 const loyaltyRouter = express.Router();
-const cloudinary = require('../utils/coudinary');
-const upload = require('../middleware/multer');
 const GiftCategory = require('../models/gift_category');
 const Merchant = require('../models/merchant');
 const Coupon = require('../models/coupons');
@@ -124,7 +122,9 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
         let gift_categories = await GiftCategory.find({
             d_status: false
         });
+        let gift_category_data_with_all = [];
         let gift_category_data = [];
+        let merchants_for_all = [];
 
         for(let i=0; i<gift_categories.length; i++){
 
@@ -159,6 +159,16 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                     'd_status': all_merchants[i].d_status,
                     'coupons': coupons
                 });
+
+                merchants_for_all.push({
+                  '_id': all_merchants[j]._id,
+                  'merchant_id': all_merchants[j].merchant_id,
+                  'merchant_name': all_merchants[j].merchant_name,
+                  'merchant_logo': all_merchants[j].merchant_logo,
+                  'merchant_type': all_merchants[j].merchant_type,
+                  'd_status': all_merchants[i].d_status,
+                  'coupons': coupons
+              });
             }
 
             gift_category_data.push({
@@ -169,12 +179,23 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                 'gift_category_logo': gift_categories[i].gift_category_logo,
                 'd_status': gift_categories[i].d_status,
                 'merchants': merchants
-            }); 
+            });
         }
+
+        gift_category_data_with_all = [{
+          '_id': '_id',
+          'gift_category_id': 1,
+          'gift_category_name': 'All',
+          'gift_category_logo': 'All logo',
+          'd_status': false,
+          'merchants': merchants_for_all
+        }, ...gift_category_data];
+
+
 
         res.status(200).json({
             success: true,
-            message: gift_category_data  //`Gift category added successfully`
+            message: gift_category_data_with_all 
         });
 
     } catch (err) {
@@ -189,8 +210,8 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
 //Allocation of coupon codes        
 loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
     try {
-        const allCoupons = req.body;
         const userId = req.user;
+        let coupon_id = 1;
       
         async function generateUniqueCode() {
           let code = '';
@@ -210,38 +231,50 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
       
           return code;
         }
-      
-        if (allCoupons.length > 0) {
 
-          for (let i = 0; i < allCoupons.length; i++) {
+        while(coupon_id<=80){
+      
+
+          let j = 1; // Initialize j
+          while(j<=10){
 
             const couponCode = await generateUniqueCode();
             let coupon_code_schema = await CouponCode.find();
             const coupon_code_id = coupon_code_schema.length + 1;
+            console.log(`coupon id: ${coupon_id}`);
+
+            const coupon_master = await Coupon.find({
+              coupon_id: coupon_id,
+              d_status: false
+            });
+
+
+            const coupon_value = coupon_master[0].coupon_value;
+            const merchant_id = coupon_master[0].merchant_id;
+            const expiry_date = new Date('2024-12-31');
 
             const newCouponCode = new CouponCode({
               coupon_code_id: coupon_code_id,
               coupon_code: couponCode,
-              merchant_id: allCoupons[i].merchant_id,
-              coupon_value: allCoupons[i].coupon_value,
-              coupon_id: allCoupons[i].coupon_id,
-              expiry_date: allCoupons[i].expiry_date,
+              merchant_id: merchant_id,
+              coupon_value: coupon_value,
+              coupon_id: coupon_id,
+              expiry_date: expiry_date,
               post_user: userId
             });
       
-            await newCouponCode.save();
-          }
+              await newCouponCode.save();
+          j++;
+        }
+        console.log(`coupon_id=${coupon_id} are allocated`);
+        coupon_id++;
+      }
       
           res.status(200).json({
             success: true,
-            message: `${allCoupons.length} coupons are allocated`
+            message: `${10} coupons are allocated`
           });
-        } else {
-          res.status(200).json({
-            success: true,
-            message: `No coupon found!`
-          });
-        }
+        
       } catch (err) {
         res.status(500).json({
           success: false,

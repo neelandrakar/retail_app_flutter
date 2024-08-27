@@ -9,6 +9,7 @@ const loyaltyRouter = require('./routes/loyalty_programme');
 const menuAccessRouter = require('./routes/menu_access');
 const accountRouter = require('./routes/account');
 const global_variables = require('./global_variables');
+const loyaltyController = require('./controller/loyalty_controller');
 const DB = global_variables.MONGODB_URL;
 const PORT = 3000;
 const app = express();
@@ -21,6 +22,7 @@ app.use(employeeRouter);
 app.use(menuAccessRouter);
 app.use(accountRouter);
 app.use(loyaltyRouter);
+app.use(loyaltyController);
 
 
 mongoose.connect(DB)
