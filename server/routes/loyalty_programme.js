@@ -136,6 +136,8 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                 d_status: false
             });
 
+            console.log(1);
+
             for(let j=0; j<all_merchants.length; j++){
 
                 let coupons = [];
@@ -145,30 +147,44 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                     merchant_id: all_merchants[j].merchant_id
                 });
 
+                console.log(`2 ${all_merchants[j].merchant_name}`)
+
+
+                if(all_coupons.length>0){
+
                 for(let k=0; k<all_coupons.length; k++){
 
                     coupons.push(all_coupons[k]);
-                }
+                }}
+
+                console.log(`3 ${all_merchants[j].merchant_name}`)
 
                 merchants.push({
                     '_id': all_merchants[j]._id,
                     'merchant_id': all_merchants[j].merchant_id,
                     'merchant_name': all_merchants[j].merchant_name,
+                    'gift_category_name': gift_categories[i].gift_category_name,
                     'merchant_logo': all_merchants[j].merchant_logo,
                     'merchant_type': all_merchants[j].merchant_type,
-                    'd_status': all_merchants[i].d_status,
+                    'd_status': all_merchants[j].d_status,
                     'coupons': coupons
                 });
+
+                console.log(`4 ${all_merchants[j].merchant_name}`)
+
 
                 merchants_for_all.push({
                   '_id': all_merchants[j]._id,
                   'merchant_id': all_merchants[j].merchant_id,
+                  'gift_category_name': gift_categories[i].gift_category_name,
                   'merchant_name': all_merchants[j].merchant_name,
                   'merchant_logo': all_merchants[j].merchant_logo,
                   'merchant_type': all_merchants[j].merchant_type,
-                  'd_status': all_merchants[i].d_status,
+                  'd_status': all_merchants[j].d_status,
                   'coupons': coupons
               });
+
+              console.log(5);
             }
 
             gift_category_data.push({

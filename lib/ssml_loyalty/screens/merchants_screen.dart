@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/constants/custom_search_field.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
 import 'package:retail_app_flutter/models/gift_category_model.dart';
 import 'package:retail_app_flutter/providers/gift_category_provider.dart';
+import 'package:retail_app_flutter/ssml_loyalty/widgets/merchant_menu_item.dart';
 
 import '../../constants/custom_app_bar.dart';
 import '../../constants/global_variables.dart';
@@ -87,7 +89,7 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
               );
             } else {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -113,8 +115,22 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: techChips(),
                       ),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15 ,
+                        children: List.generate(giftCategoryModel[filter_val].merchants.length, (i) {
+                          return MerchantMenuItem(
+                            img_url: giftCategoryModel[filter_val].merchants[i].merchant_logo,
+                            merchant_name: giftCategoryModel[filter_val].merchants[i].merchant_name,
+                            gift_category_name: filter_val ==0 ? giftCategoryModel[filter_val].merchants[i].gift_category_name : giftCategoryModel[filter_val].gift_category_name,
+                            onClick: (){},
+                          );
+                        })),
                     )
-
                   ],
                 ),
               );
