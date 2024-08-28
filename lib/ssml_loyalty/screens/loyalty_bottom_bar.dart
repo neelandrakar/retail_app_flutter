@@ -74,7 +74,7 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
           onTap: onPageChange,
           border: Border(
               top: BorderSide(
-                  color: MyColors.ivoryWhite
+                  color: MyColors.offWhiteColor
               )
           ),
 

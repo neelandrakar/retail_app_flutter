@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/constants/custom_search_field.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
 import 'package:retail_app_flutter/models/gift_category_model.dart';
+import 'package:retail_app_flutter/models/merchant_model.dart';
 import 'package:retail_app_flutter/providers/gift_category_provider.dart';
 import 'package:retail_app_flutter/ssml_loyalty/widgets/merchant_menu_item.dart';
 
@@ -33,7 +34,9 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
   late Future<void> _getGiftCategoryData;
   TextEditingController _searchController = TextEditingController();
   late List<GiftCategoryModel> giftCategoryModel;
+  List<MerchantModel> searchedMerchants = [];
   int filter_val = 0;
+  bool hasBeenSearched = false;
 
   fetchGiftCategoryData() async {
     await ssmlLoyaltyServices.getMerchantsData(
@@ -107,8 +110,26 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
                         textColor: MyColors.blackColor,
                         onChanged: (String text){
                           print(text);
+
+                          setState(() {
+                            searchedMerchants = []; // Clear the list before adding new items
+
+                            for(int i=0; i<giftCategoryModel[filter_val].merchants.length; i++){
+                              if (giftCategoryModel[filter_val].merchants[i].merchant_name.toLowerCase().contains(text.toLowerCase())) {
+                                print('The list contains the search filter ${text} ');
+                                searchedMerchants.add(giftCategoryModel[filter_val].merchants[i]);
+                              }
+                            }
+
+                            if (searchedMerchants.isEmpty) {
+                              hasBeenSearched = false;
+                            } else {
+                              hasBeenSearched = true;
+                            }
+                          });
                         },
                     ),
+                    const SizedBox(height: 5),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -122,11 +143,20 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 15,
                         mainAxisSpacing: 15 ,
-                        children: List.generate(giftCategoryModel[filter_val].merchants.length, (i) {
+                        children: hasBeenSearched ?
+                        (List.generate(searchedMerchants.length, (i) {
+                          return MerchantMenuItem(
+                            img_url: searchedMerchants[i].merchant_logo,
+                            merchant_name: searchedMerchants[i].merchant_name,
+                            gift_category_name: filter_val == 0 ? searchedMerchants[i].gift_category_name : giftCategoryModel[filter_val].gift_category_name,
+                            onClick: (){},
+                          );
+                        }))
+                            : List.generate(giftCategoryModel[filter_val].merchants.length, (i) {
                           return MerchantMenuItem(
                             img_url: giftCategoryModel[filter_val].merchants[i].merchant_logo,
                             merchant_name: giftCategoryModel[filter_val].merchants[i].merchant_name,
-                            gift_category_name: filter_val ==0 ? giftCategoryModel[filter_val].merchants[i].gift_category_name : giftCategoryModel[filter_val].gift_category_name,
+                            gift_category_name: filter_val == 0 ? giftCategoryModel[filter_val].merchants[i].gift_category_name : giftCategoryModel[filter_val].gift_category_name,
                             onClick: (){},
                           );
                         })),
@@ -164,6 +194,8 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
             setState(() {
               filter_val = (value ? i : null)!;
               print(giftCategoryModel[i].gift_category_name);
+              hasBeenSearched = false;
+              _searchController.text = '';
             });
           },
         ),
