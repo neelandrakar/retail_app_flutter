@@ -23,6 +23,11 @@ const merchantSchema = mongoose.Schema({
         required: true
     },
 
+    merchant_cover_img: {
+        type: String,
+        required: true
+    },
+
     d_status: {
         type: Boolean,
         default: false

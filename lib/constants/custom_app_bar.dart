@@ -10,6 +10,10 @@ class CustomAppBar extends StatelessWidget {
   final List<Widget>? actions;
   final PreferredSizeWidget? bottom;
   final bool? body_behind_appbar;
+  final bool? show_emp_name;
+  final Color? appBarColor;
+  final Color? titleTextColor;
+  final Color? leadingIconColor;
   const CustomAppBar({
     super.key,
     required this.module_name,
@@ -18,18 +22,22 @@ class CustomAppBar extends StatelessWidget {
     this.bottom,
     this.leading,
     this.actions,
-    this.body_behind_appbar = false
+    this.body_behind_appbar = false,
+    this.show_emp_name = true,
+    this.appBarColor = MyColors.appBarColor,
+    this.titleTextColor = MyColors.boneWhite,
+    this.leadingIconColor = MyColors.actionsButtonColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: MyColors.appBarColor,
+      backgroundColor: appBarColor,
       centerTitle: true,
       leading: GestureDetector(
           child: leading,
         onTap: (){
-          Scaffold.of(context).openDrawer();
+          show_emp_name! ? Scaffold.of(context).openDrawer() : Navigator.pop(context);
           print('Open drawer');
         },
       ),
@@ -42,11 +50,12 @@ class CustomAppBar extends StatelessWidget {
           Text(module_name,
             style: TextStyle(
                 fontFamily: 'Poppins',
-                color: MyColors.boneWhite,
+                color: titleTextColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w500
             ),
           ),
+          if(show_emp_name==true)
           Text(emp_name,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(

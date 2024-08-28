@@ -8,6 +8,7 @@ import 'package:retail_app_flutter/constants/my_fonts.dart';
 import 'package:retail_app_flutter/models/gift_category_model.dart';
 import 'package:retail_app_flutter/models/merchant_model.dart';
 import 'package:retail_app_flutter/providers/gift_category_provider.dart';
+import 'package:retail_app_flutter/ssml_loyalty/screens/merchant_detail_screen.dart';
 import 'package:retail_app_flutter/ssml_loyalty/widgets/merchant_menu_item.dart';
 
 import '../../constants/custom_app_bar.dart';
@@ -157,7 +158,20 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
                             img_url: giftCategoryModel[filter_val].merchants[i].merchant_logo,
                             merchant_name: giftCategoryModel[filter_val].merchants[i].merchant_name,
                             gift_category_name: filter_val == 0 ? giftCategoryModel[filter_val].merchants[i].gift_category_name : giftCategoryModel[filter_val].gift_category_name,
-                            onClick: (){},
+                            onClick: (){
+
+                              List<dynamic> args = [ giftCategoryModel[filter_val].merchants[i].merchant_id,
+                                giftCategoryModel[filter_val].merchants[i].merchant_name];
+
+                              Navigator.pushNamed(
+                                  context,
+                                  MerchantDetailScreen.routeName,
+                                  arguments: [
+                                    giftCategoryModel[filter_val].merchants[i].merchant_id,
+                                    giftCategoryModel[filter_val].merchants[i].merchant_name
+                                  ]
+                              );
+                            },
                           );
                         })),
                     )
@@ -195,7 +209,7 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
               filter_val = (value ? i : null)!;
               print(giftCategoryModel[i].gift_category_name);
               hasBeenSearched = false;
-              _searchController.text = '';
+              _searchController.clear();
             });
           },
         ),

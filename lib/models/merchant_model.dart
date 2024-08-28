@@ -8,6 +8,7 @@ class MerchantModel {
   final int merchant_id;
   final String merchant_name;
   final String merchant_logo;
+  final String merchant_cover_img;
   final String gift_category_name;
   final bool d_status;
   final List<CouponModel> coupons;
@@ -16,6 +17,7 @@ class MerchantModel {
     required this.merchant_id,
     required this.merchant_name,
     required this.merchant_logo,
+    required this.merchant_cover_img,
     required this.gift_category_name,
     required this.d_status,
     required this.coupons
@@ -27,6 +29,7 @@ class MerchantModel {
       'merchant_id': merchant_id,
       'merchant_name': merchant_name,
       'merchant_logo': merchant_logo,
+      'merchant_cover_img': merchant_cover_img,
       'gift_category_name': gift_category_name,
       'd_status': d_status,
       'coupons': coupons.map((x) => x.toMap()).toList(),
@@ -39,6 +42,7 @@ class MerchantModel {
       merchant_id: map['merchant_id'] as int,
       merchant_name: map['merchant_name'] as String,
       merchant_logo: map['merchant_logo'] as String,
+        merchant_cover_img: map['merchant_cover_img'] as String,
       gift_category_name: map['gift_category_name'] as String,
       d_status: map['d_status'] as bool,
       coupons: List<CouponModel>.from(

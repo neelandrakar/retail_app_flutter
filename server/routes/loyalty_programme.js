@@ -44,7 +44,7 @@ loyaltyRouter.post('/v1/api/add-gift-category', auth, async(req, res) =>{
   loyaltyRouter.post('/v1/api/add-merchant', auth, async(req, res) =>{
     try {
       
-        const { merchant_name, merchant_type, merchant_logo } = req.body;
+        const { merchant_name, merchant_type, merchant_logo, merchant_cover_img } = req.body;
 
         const user_id = req.user;
         let merchants = await Merchant.find();
@@ -55,6 +55,7 @@ loyaltyRouter.post('/v1/api/add-gift-category', auth, async(req, res) =>{
             merchant_type: merchant_type,
             merchant_name: merchant_name,
             merchant_logo: merchant_logo,
+            merchant_cover_img: merchant_cover_img,
             post_user: user_id
 
         });
@@ -165,6 +166,7 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                     'merchant_name': all_merchants[j].merchant_name,
                     'gift_category_name': gift_categories[i].gift_category_name,
                     'merchant_logo': all_merchants[j].merchant_logo,
+                    'merchant_cover_img': all_merchants[j].merchant_cover_img,
                     'merchant_type': all_merchants[j].merchant_type,
                     'd_status': all_merchants[j].d_status,
                     'coupons': coupons
@@ -179,6 +181,7 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                   'gift_category_name': gift_categories[i].gift_category_name,
                   'merchant_name': all_merchants[j].merchant_name,
                   'merchant_logo': all_merchants[j].merchant_logo,
+                  'merchant_cover_img': all_merchants[j].merchant_cover_img,
                   'merchant_type': all_merchants[j].merchant_type,
                   'd_status': all_merchants[j].d_status,
                   'coupons': coupons
@@ -193,6 +196,7 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                 'gift_category_id': gift_categories[i].gift_category_id,
                 'gift_category_name': gift_categories[i].gift_category_name,
                 'gift_category_logo': gift_categories[i].gift_category_logo,
+                'merchant_cover_img': gift_categories[i].merchant_cover_img,
                 'd_status': gift_categories[i].d_status,
                 'merchants': merchants
             });
@@ -298,5 +302,29 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         });
       }
     });
+
+    //Get merchant details
+    loyaltyRouter.post('/v1/api/get-merchant-details', auth, async(req, res) =>{
+      try {
+  
+          const { merchant_id } = req.body;
+          const user_id = req.user;
+  
+          let merchant = await Merchant.find({
+            merchant_id: merchant_id
+          });
+  
+          res.status(200).json({
+              success: true,
+              message: merchant   
+          });
+  
+      } catch (err) {
+          res.status(500).json({
+              success: false,
+              message: err
+          });
+          }
+      });
 
 module.exports = loyaltyRouter;

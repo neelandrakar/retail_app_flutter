@@ -27,11 +27,11 @@ class MyColors{
   static  Color loginBoxBlueOne = Color(0xff0068a1);
   static  Color loginBoxBlueTwo = Color(0xff2aa9ee);
   static  Color absentBoxText = Color(0xffffcfa3);
-  static  Color boneWhite = Color(0xfff9f6ee);
+  static  const Color boneWhite = Color(0xfff9f6ee);
   static  Color ivoryWhite = Color(0xfffffff0);
   static  Color topNavigationBarSelected = Color(0xfff2b6af);
   static  Color topNavigationBarUnselected = Color(0xfff9dac2);
-  static  Color actionsButtonColor = Color(0xffadd9f9);
+  static  const Color actionsButtonColor = Color(0xffadd9f9);
   static  Color lightBlueColor = Color(0xffecf7ff);
   static  Color lightYellowColor = Color(0xfffff3b4);
   static  Color businessSurveyBackground = Color(0xffdff4f2);
