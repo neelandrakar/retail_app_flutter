@@ -11,6 +11,7 @@ import 'package:retail_app_flutter/constants/camera_screen.dart';
 import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/home/screens/visits_screen.dart';
+import 'package:retail_app_flutter/models/merchant_model.dart';
 import 'package:retail_app_flutter/pending_data/screens/pending_data.dart';
 import 'package:retail_app_flutter/ssml_loyalty/screens/loyalty_bottom_bar.dart';
 import 'package:retail_app_flutter/ssml_loyalty/screens/merchant_detail_screen.dart';
@@ -95,12 +96,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       );
 
     case MerchantDetailScreen.routeName:
-      List<dynamic> args = routeSettings.arguments as List;
+      MerchantModel merchant = routeSettings.arguments as MerchantModel;
       return MaterialPageRoute(
           settings: routeSettings,
           builder: (_) => MerchantDetailScreen(
-            merchant_id: args[0],
-            merchant_name: args[1],
+            merchant: merchant
           )
       );
 

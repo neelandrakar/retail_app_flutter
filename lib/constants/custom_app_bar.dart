@@ -14,6 +14,7 @@ class CustomAppBar extends StatelessWidget {
   final Color? appBarColor;
   final Color? titleTextColor;
   final Color? leadingIconColor;
+  final FontWeight? module_font_weight;
   const CustomAppBar({
     super.key,
     required this.module_name,
@@ -27,6 +28,7 @@ class CustomAppBar extends StatelessWidget {
     this.appBarColor = MyColors.appBarColor,
     this.titleTextColor = MyColors.boneWhite,
     this.leadingIconColor = MyColors.actionsButtonColor,
+    this.module_font_weight = FontWeight.w500
   });
 
   @override
@@ -52,7 +54,7 @@ class CustomAppBar extends StatelessWidget {
                 fontFamily: 'Poppins',
                 color: titleTextColor,
                 fontSize: 16,
-                fontWeight: FontWeight.w500
+                fontWeight: module_font_weight
             ),
           ),
           if(show_emp_name==true)

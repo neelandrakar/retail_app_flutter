@@ -7,10 +7,9 @@ import '../../models/merchant_model.dart';
 import '../services/ssml_loyalty_services.dart';
 
 class MerchantDetailScreen extends StatefulWidget {
-  final int merchant_id;
-  final String merchant_name;
+  final MerchantModel merchant;
   static const String routeName = '/merchant-detail-screen';
-  const MerchantDetailScreen({super.key, required this.merchant_id, required this.merchant_name});
+  const MerchantDetailScreen({super.key, required this.merchant});
 
   @override
   State<MerchantDetailScreen> createState() => _MerchantDetailScreenState();
@@ -47,14 +46,14 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.merchant_id);
     return Scaffold(
         backgroundColor: MyColors.ashColor,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: CustomAppBar(
-            module_name: widget.merchant_name,
+            module_name: widget.merchant.merchant_name,
             emp_name: '',
+            module_font_weight: FontWeight.w600,
             show_emp_name: false,
             appBarColor: MyColors.ashColor,
             titleTextColor: MyColors.appBarColor,
@@ -76,10 +75,14 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: MyColors.redColor
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: NetworkImage(widget.merchant.merchant_cover_img),
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 width: double.infinity,
-                height: 200,
+                height: 150,
               )
             ],
           ),

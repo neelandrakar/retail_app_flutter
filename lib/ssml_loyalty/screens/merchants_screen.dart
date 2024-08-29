@@ -166,10 +166,9 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
                               Navigator.pushNamed(
                                   context,
                                   MerchantDetailScreen.routeName,
-                                  arguments: [
-                                    giftCategoryModel[filter_val].merchants[i].merchant_id,
-                                    giftCategoryModel[filter_val].merchants[i].merchant_name
-                                  ]
+                                  arguments:
+                                    giftCategoryModel[filter_val].merchants[i],
+
                               );
                             },
                           );
