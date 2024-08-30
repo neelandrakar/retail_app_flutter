@@ -28,6 +28,11 @@ const merchantSchema = mongoose.Schema({
         required: true
     },
 
+    about_us: {
+        type: String,
+        required: true
+    },
+
     d_status: {
         type: Boolean,
         default: false

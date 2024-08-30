@@ -15,12 +15,15 @@ class MerchantMenuItem extends StatefulWidget {
 
 class _MerchantMenuItemState extends State<MerchantMenuItem> {
 
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
           decoration: BoxDecoration(
             color: MyColors.boneWhite,
-            shape: BoxShape.rectangle
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(5)
           ),
          child: InkWell(
            onTap: widget.onClick,

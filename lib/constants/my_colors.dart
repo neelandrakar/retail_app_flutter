@@ -39,5 +39,6 @@ class MyColors{
   static  Color pendingDataBlue = Color(0xff3d95d4);
   static  Color pendingDataRefresh = Color(0xff4da3e0);
   static  Color fadedAppbarColor = Color(0xff235477);
+  static  const Color crimsonRed = Color(0xffDC143C);
 
 }
