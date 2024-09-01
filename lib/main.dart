@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:get_ip_address/get_ip_address.dart';
 import 'package:getwidget/components/loader/gf_loader.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -60,7 +61,21 @@ class _MyAppState extends State<MyApp> {
   bool fullyLoaded = false;
 
   Future<void> _requestPermissions() async {
-    // appVersion = await getAppInfo();
+
+    try {
+      /// Initialize Ip Address
+      var ipAddress = IpAddress(type: RequestType.json);
+
+      /// Get the IpAddress based on requestType.
+      dynamic data = await ipAddress.getIpAddress();
+      print(data.toString());
+    } on IpAddressException catch (exception) {
+
+    }
+
+      /// Handle the exception.
+
+      // appVersion = await getAppInfo();
     final PermissionStatus cameraStatus = await Permission.camera.request();
     if (cameraStatus.isGranted) {
       print('Camera permission is granted');
@@ -79,6 +94,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
+
+
       _requestPermissions();
       signInServices.getUserData(context, (){
         print('is fully loaded');
@@ -93,6 +110,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return FutureBuilder(
       future: Future.delayed(Duration(seconds: 1)), // replace this with your async operation
       builder: (context, snapshot) {

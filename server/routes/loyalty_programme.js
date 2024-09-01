@@ -168,6 +168,7 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                     'merchant_logo': all_merchants[j].merchant_logo,
                     'merchant_cover_img': all_merchants[j].merchant_cover_img,
                     'merchant_type': all_merchants[j].merchant_type,
+                    'about_us': all_merchants[j].about_us,
                     'd_status': all_merchants[j].d_status,
                     'coupons': coupons
                 });
@@ -182,6 +183,7 @@ loyaltyRouter.post('/v1/api/show-merchants', auth, async(req, res) =>{
                   'merchant_name': all_merchants[j].merchant_name,
                   'merchant_logo': all_merchants[j].merchant_logo,
                   'merchant_cover_img': all_merchants[j].merchant_cover_img,
+                  'about_us': all_merchants[j].about_us,
                   'merchant_type': all_merchants[j].merchant_type,
                   'd_status': all_merchants[j].d_status,
                   'coupons': coupons

@@ -8,6 +8,7 @@ class MerchantModel {
   final int merchant_id;
   final String merchant_name;
   final String merchant_logo;
+  final String about_us;
   final String merchant_cover_img;
   final String gift_category_name;
   final bool d_status;
@@ -17,6 +18,7 @@ class MerchantModel {
     required this.merchant_id,
     required this.merchant_name,
     required this.merchant_logo,
+    required this.about_us,
     required this.merchant_cover_img,
     required this.gift_category_name,
     required this.d_status,
@@ -29,6 +31,7 @@ class MerchantModel {
       'merchant_id': merchant_id,
       'merchant_name': merchant_name,
       'merchant_logo': merchant_logo,
+      'about_us': about_us,
       'merchant_cover_img': merchant_cover_img,
       'gift_category_name': gift_category_name,
       'd_status': d_status,
@@ -41,6 +44,7 @@ class MerchantModel {
       id: map['_id'] as String,
       merchant_id: map['merchant_id'] as int,
       merchant_name: map['merchant_name'] as String,
+      about_us: map['about_us'] as String ?? "NA",
       merchant_logo: map['merchant_logo'] as String,
         merchant_cover_img: map['merchant_cover_img'] as String,
       gift_category_name: map['gift_category_name'] as String,

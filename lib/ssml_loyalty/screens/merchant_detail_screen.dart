@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:retail_app_flutter/constants/my_fonts.dart';
 
 import '../../constants/custom_app_bar.dart';
 import '../../constants/my_colors.dart';
@@ -119,17 +120,32 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                             Container(
                               width: double.infinity,
                               alignment: Alignment.center,
-                              child: Text('Info'),
+                              child: Text(
+                                  'Info',
+                                style: TextStyle(
+                                  fontFamily: MyFonts.poppins
+                                ),
+                              ),
                             ),
                             Container(
                               width: double.infinity,
                               alignment: Alignment.center,
-                              child: Text('Coupons'),
+                              child: Text(
+                                'Coupons',
+                                style: TextStyle(
+                                    fontFamily: MyFonts.poppins
+                                ),
+                              ),
                             ),
                             Container(
                               width: double.infinity,
                               alignment: Alignment.center,
-                              child: Text('Store'),
+                              child: Text(
+                                'Store',
+                                style: TextStyle(
+                                    fontFamily: MyFonts.poppins
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -145,7 +161,9 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
           body: TabBarView(
             children: [
               Center(
-                child: InfoWidget(),
+                child: InfoWidget(
+                  about_us: widget.merchant.about_us,
+                ),
               ),
               Center(
                 child: Text("It's rainy here"),
