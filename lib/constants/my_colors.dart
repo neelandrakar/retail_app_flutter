@@ -19,7 +19,7 @@ class MyColors{
   static const Color orangeColor = Colors.orange;
   static Color blueGreyColor = Colors.blueGrey;
   static Color deepBlueColor = Colors.blue.shade800;
-  static  Color ashColor = Color(0xffdde2ed);
+  static const Color ashColor = Color(0xffdde2ed);
   static const Color attInitialBox = Color(0xffa1d4f3);
   static  Color graceBoxColor = Color(0xffD7CEF1);
   static  Color purpleColor = Color(0xff5652e5);
@@ -28,7 +28,7 @@ class MyColors{
   static  Color loginBoxBlueTwo = Color(0xff2aa9ee);
   static  Color absentBoxText = Color(0xffffcfa3);
   static  const Color boneWhite = Color(0xfff9f6ee);
-  static  Color ivoryWhite = Color(0xfffffff0);
+  static  const Color ivoryWhite = Color(0xfffffff0);
   static  Color topNavigationBarSelected = Color(0xfff2b6af);
   static  Color topNavigationBarUnselected = Color(0xfff9dac2);
   static  const Color actionsButtonColor = Color(0xffadd9f9);

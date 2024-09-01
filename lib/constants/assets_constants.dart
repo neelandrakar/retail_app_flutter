@@ -65,5 +65,6 @@ class AssetsConstants{
   static const String no_data = '$_pngPath/no_data.png';
   static const String merchant_icon = '$_pngPath/merchant_icon.png';
   static const String my_voucher_icon = '$_pngPath/my_voucher_icon.png';
+  static const String coupon = '$_pngPath/coupon.png';
 
 }
