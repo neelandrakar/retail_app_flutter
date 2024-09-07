@@ -330,4 +330,40 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
           }
       });
 
+
+      loyaltyRouter.post('/v1/api/redeem-a-coupon', auth, async(req, res) =>{
+
+        try{
+
+          const { coupon_id } = req.body;
+          let success_msg = "NA";
+
+
+
+
+          const coupon = await Coupon.findById(coupon_id);
+          const coupon_value = coupon.coupon_value;
+          const merchant_id = coupon.merchant_id;
+          const merchant = await Merchant.find({
+            merchant_id: merchant_id
+          });
+
+          const merchant_name = merchant[0].merchant_name;
+
+          success_msg = `You've successfully redeemed a ${merchant_name}'s coupon worth ₹${coupon_value}!!!`
+
+          res.status(200).json({
+            success: true,
+            message: success_msg
+          });
+
+        }catch(err){
+          res.status(500).json({
+            success: false,
+            message: err
+          });
+        }
+      });
+
+
 module.exports = loyaltyRouter;
