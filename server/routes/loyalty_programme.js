@@ -44,7 +44,7 @@ loyaltyRouter.post('/v1/api/add-gift-category', auth, async(req, res) =>{
   loyaltyRouter.post('/v1/api/add-merchant', auth, async(req, res) =>{
     try {
       
-        const { merchant_name, merchant_type, merchant_logo, merchant_cover_img } = req.body;
+        const { merchant_name, merchant_type, merchant_logo, merchant_cover_img, about_us } = req.body;
 
         const user_id = req.user;
         let merchants = await Merchant.find();
@@ -55,6 +55,7 @@ loyaltyRouter.post('/v1/api/add-gift-category', auth, async(req, res) =>{
             merchant_type: merchant_type,
             merchant_name: merchant_name,
             merchant_logo: merchant_logo,
+            about_us: about_us,
             merchant_cover_img: merchant_cover_img,
             post_user: user_id
 

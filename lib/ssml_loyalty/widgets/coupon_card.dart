@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
+import 'package:retail_app_flutter/constants/custom_button.dart';
+import 'package:retail_app_flutter/constants/custom_button_two.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
 import 'package:retail_app_flutter/models/coupon_model.dart';
@@ -101,24 +103,8 @@ class _CouponCardState extends State<CouponCard> {
                             fontFamily: MyFonts.poppins
                           ),
                         ),
-                        Container(
-                          height: 30,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: MyColors.appBarColor,
-                            borderRadius: BorderRadius.circular(10)
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Redeem Code',
-                            style: TextStyle(
-                                color: MyColors.boneWhite,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: MyFonts.poppins
-                            ),
-                          ),
-                        )
+                        CustomButton(onClick: (){}, buttonText: 'Redeem Code', borderRadius: 10)
+
                       ],
                     )
                   ],
