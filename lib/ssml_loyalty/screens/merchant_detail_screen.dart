@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
+import 'package:retail_app_flutter/ssml_loyalty/screens/gift_redemption_screen.dart';
+import 'package:retail_app_flutter/ssml_loyalty/widgets/app_bar_point_balance.dart';
 import 'package:retail_app_flutter/ssml_loyalty/widgets/coupon_card.dart';
 
 import '../../constants/custom_app_bar.dart';
@@ -70,6 +72,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
               titleTextColor: MyColors.appBarColor,
               leadingIconColor: MyColors.appBarColor,
               actions: const [
+                 AppBarPointBalance(),
                  Padding(
                   padding:  EdgeInsets.only(right: 5),
                   child: Icon(Icons.more_vert_outlined, color: MyColors.appBarColor,

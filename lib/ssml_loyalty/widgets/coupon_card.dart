@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/constants/assets_constants.dart';
 import 'package:retail_app_flutter/constants/custom_button.dart';
 import 'package:retail_app_flutter/constants/custom_button_two.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
+import 'package:retail_app_flutter/constants/utils.dart';
 import 'package:retail_app_flutter/models/coupon_model.dart';
+import 'package:retail_app_flutter/ssml_loyalty/screens/gift_redemption_screen.dart';
+
+import '../../providers/ssml_loyalty_provider.dart';
 
 class CouponCard extends StatefulWidget {
   final bool is_first;
@@ -25,9 +30,26 @@ class CouponCard extends StatefulWidget {
 class _CouponCardState extends State<CouponCard> {
 
   Color bg_color = MyColors.ashColor;
+  String button_text = 'Not eligible';
+  Color button_color = MyColors.topNavigationBarSelected;
+  Color button_text_color = MyColors.appBarColor;
+
+
+  void navigateToGiftRedemptionPage(){
+    Navigator.pushNamed(context, GIftRedemptionScreen.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {
+
+
+    if(getTotalPoints(context)>=widget.coupon.coupon_value){
+      button_text  = 'Redeem Code';
+      button_color = MyColors.appBarColor;
+      button_text_color = MyColors.boneWhite;
+
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       margin: EdgeInsets.only(bottom: widget.is_last ? 15 : 0),
@@ -103,7 +125,25 @@ class _CouponCardState extends State<CouponCard> {
                             fontFamily: MyFonts.poppins
                           ),
                         ),
-                        CustomButton(onClick: (){}, buttonText: 'Redeem Code', borderRadius: 10)
+                        CustomButton(
+
+                            height: 35,
+                            width: 155,
+                            textColor: button_text_color,
+                            buttonColor: button_color,
+                            onClick: (){
+
+                              if(getTotalPoints(context)>=widget.coupon.coupon_value){
+
+                                navigateToGiftRedemptionPage();
+
+
+                              }
+                            },
+                            buttonText: button_text,
+                            buttonTextSize: 15,
+                            borderRadius: 10
+                        )
 
                       ],
                     )

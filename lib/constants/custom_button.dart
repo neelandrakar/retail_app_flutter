@@ -45,7 +45,7 @@ class _CustomButtonState extends State<CustomButton> {
 
             )
           ),
-          minimumSize: Size(widget.width, widget.height),
+          fixedSize: Size(widget.width, widget.height),
           backgroundColor: widget.buttonColor == null ? MyColors.whiteColor : widget.buttonColor,
       ),
       child: Row(

@@ -13,6 +13,7 @@ import 'package:retail_app_flutter/home/screens/home_screen.dart';
 import 'package:retail_app_flutter/home/screens/visits_screen.dart';
 import 'package:retail_app_flutter/models/merchant_model.dart';
 import 'package:retail_app_flutter/pending_data/screens/pending_data.dart';
+import 'package:retail_app_flutter/ssml_loyalty/screens/gift_redemption_screen.dart';
 import 'package:retail_app_flutter/ssml_loyalty/screens/loyalty_bottom_bar.dart';
 import 'package:retail_app_flutter/ssml_loyalty/screens/merchant_detail_screen.dart';
 import 'package:retail_app_flutter/visit_plan/screens/confirm_location_screen.dart';
@@ -93,6 +94,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       return MaterialPageRoute(
           settings: routeSettings,
           builder: (_) => AccountMap()
+      );
+
+    case GIftRedemptionScreen.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings,
+          builder: (_) => GIftRedemptionScreen()
       );
 
     case MerchantDetailScreen.routeName:

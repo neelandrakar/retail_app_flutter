@@ -331,39 +331,63 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
       });
 
 
-      loyaltyRouter.post('/v1/api/redeem-a-coupon', auth, async(req, res) =>{
+    loyaltyRouter.post('/v1/api/redeem-a-coupon', auth, async(req, res) =>{
 
-        try{
+      try{
+        console.log('neel');
 
-          const { coupon_id } = req.body;
-          let success_msg = "NA";
+        const { coupon_id } = req.body;
+        let success_msg = "NA";
+        let allocated_coupon;
+        const emp_id = req.user;
+        const post_time = Date.now();
 
 
 
 
-          const coupon = await Coupon.findById(coupon_id);
-          const coupon_value = coupon.coupon_value;
-          const merchant_id = coupon.merchant_id;
-          const merchant = await Merchant.find({
-            merchant_id: merchant_id
-          });
+        const coupon = await Coupon.findById(coupon_id);
+        const coupon_value = coupon.coupon_value;
+        const merchant_id = coupon.merchant_id;
+        const merchant = await Merchant.find({
+          merchant_id: merchant_id
+        });
 
-          const merchant_name = merchant[0].merchant_name;
+        let all_coupon_codes = await CouponCode.find({
+          coupon_id: coupon.coupon_id,
+          allocated_to: ""
+        });
 
-          success_msg = `You've successfully redeemed a ${merchant_name}'s coupon worth ₹${coupon_value}!!!`
+        for(let i=0; i<all_coupon_codes.length; i++){
 
-          res.status(200).json({
-            success: true,
-            message: success_msg
-          });
+          if(all_coupon_codes[i].allocated_to==""){
 
-        }catch(err){
-          res.status(500).json({
-            success: false,
-            message: err
-          });
+            allocated_coupon = all_coupon_codes[i];
+            allocated_coupon.allocated_to = emp_id;
+            allocated_coupon.allocation_date = post_time;
+            await allocated_coupon.save();
+            break;
+
+          }
         }
-      });
+
+        // console.log('all_coupon_codes');
+
+        const merchant_name = merchant[0].merchant_name;
+
+        success_msg = `You've successfully redeemed a ${merchant_name}'s coupon worth ₹${coupon_value}!!!`
+
+        res.status(200).json({
+          success: true,
+          message: allocated_coupon
+        });
+
+      }catch(err){
+        res.status(500).json({
+          success: false,
+          message: err
+        });
+      }
+    });
 
 
 module.exports = loyaltyRouter;

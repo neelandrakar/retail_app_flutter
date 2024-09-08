@@ -16,6 +16,7 @@ import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/saved_location_sp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/employee.dart';
+import '../providers/ssml_loyalty_provider.dart';
 import '../providers/user_provider.dart';
 import 'assets_constants.dart';
 
@@ -223,6 +224,16 @@ String getEmployeeName(BuildContext context){
       Provider.of<EmployeeProvider>(context, listen: false).employee;
 
   return emp.emp_name;
+}
+
+int getTotalPoints(BuildContext context){
+
+  int total_points = 0;
+  final SSMLLoyaltyProvider ssmlLoyaltyProvider = Provider.of<SSMLLoyaltyProvider>(context, listen: false);
+
+  total_points = ssmlLoyaltyProvider.loyaltyPointsModel.total_pending;
+
+  return total_points;
 }
 
 saveVisitLocation(String key, value) async {
