@@ -8,6 +8,7 @@ import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
 import 'package:retail_app_flutter/constants/utils.dart';
 import 'package:retail_app_flutter/models/coupon_model.dart';
+import 'package:retail_app_flutter/models/merchant_model.dart';
 import 'package:retail_app_flutter/ssml_loyalty/screens/gift_redemption_screen.dart';
 
 import '../../providers/ssml_loyalty_provider.dart';
@@ -16,11 +17,13 @@ class CouponCard extends StatefulWidget {
   final bool is_first;
   final bool is_last;
   final CouponModel coupon;
+  final MerchantModel merchant;
   const CouponCard({
     super.key,
     this.is_first = false,
     this.is_last = false,
-    required this.coupon
+    required this.coupon,
+    required this.merchant
   });
 
   @override
@@ -36,7 +39,11 @@ class _CouponCardState extends State<CouponCard> {
 
 
   void navigateToGiftRedemptionPage(){
-    Navigator.pushNamed(context, GIftRedemptionScreen.routeName);
+    Navigator.pushNamed(
+        context,
+        GIftRedemptionScreen.routeName,
+        arguments: widget.merchant
+    );
   }
 
   @override

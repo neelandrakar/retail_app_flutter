@@ -97,9 +97,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       );
 
     case GIftRedemptionScreen.routeName:
+      MerchantModel merchant = routeSettings.arguments as MerchantModel;
       return MaterialPageRoute(
           settings: routeSettings,
-          builder: (_) => GIftRedemptionScreen()
+          builder: (_) => GIftRedemptionScreen(
+            merchant: merchant,
+          )
       );
 
     case MerchantDetailScreen.routeName:

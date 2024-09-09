@@ -5,6 +5,7 @@ import 'package:retail_app_flutter/ssml_loyalty/widgets/app_bar_point_balance.da
 import 'package:retail_app_flutter/ssml_loyalty/widgets/coupon_card.dart';
 
 import '../../constants/custom_app_bar.dart';
+import '../../constants/global_variables.dart';
 import '../../constants/my_colors.dart';
 import '../../constants/utils.dart';
 import '../../models/merchant_model.dart';
@@ -27,7 +28,6 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
   late MerchantModel merchant;
   Color bg_color = MyColors.boneWhite;
   Color fg_color = MyColors.ivoryWhite;
-  double horizonal_padding = 15;
 
   fetchGiftCategoryData() async {
     await ssmlLoyaltyServices.getMerchantsData(
@@ -181,6 +181,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
                             is_last: index == widget.merchant.coupons.length-1 ? true : false,
                             is_first: index == 0 ? true : false,
                             coupon: widget.merchant.coupons[index],
+                            merchant: widget.merchant,
                           );
                         },
                         itemCount: widget.merchant.coupons.length

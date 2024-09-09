@@ -77,6 +77,7 @@ LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(
 );
 bool isSchemeFullyLoaded = false;
 bool isGiftCategoriesFullyLoaded = false;
+double horizonal_padding = 15;
 
 
 
