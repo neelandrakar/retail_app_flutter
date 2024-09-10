@@ -1128,7 +1128,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
         
         // const calendar = await Calender.find({
         //     d_status:0,
-        //     date:{
+        //     date:{ 
         //      $gte: start_date,
         //      $lte: end_date
         //  }
