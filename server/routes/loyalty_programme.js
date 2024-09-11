@@ -334,7 +334,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
     loyaltyRouter.post('/v1/api/redeem-a-coupon', auth, async(req, res) =>{
 
       try{
-        console.log('neel');
+        //console.log('neel');
 
         const { coupon_id } = req.body;
         let success_msg = "NA";
@@ -364,7 +364,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
             allocated_coupon = all_coupon_codes[i];
             allocated_coupon.allocated_to = emp_id;
             allocated_coupon.allocation_date = post_time;
-            await allocated_coupon.save();
+            //await allocated_coupon.save();
             break;
 
           }
@@ -378,7 +378,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
 
         res.status(200).json({
           success: true,
-          message: allocated_coupon
+          message: success_msg
         });
 
       }catch(err){
