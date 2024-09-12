@@ -66,7 +66,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
               width: double.infinity,
               height: 150,
             ),
-            Text('data')
+            Text("Get a ${widget.merchant.merchant_name}'s coupon worth 500")
           ],
         )
       ),
