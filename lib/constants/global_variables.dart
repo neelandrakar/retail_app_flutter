@@ -6,7 +6,7 @@ import '../models/loyalty_points_model.dart';
 import '../models/submitted_visit_model.dart';
 import '../providers/ssml_loyalty_provider.dart';
 
-String uri = 'http://192.168.39.6:3000';
+String uri = 'http://192.168.149.6:3000';
 String _uri = 'http://152.6.179.9:3000';
 String appVersion = 'NA';
 double currentLatitude = 0.0;

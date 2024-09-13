@@ -52,6 +52,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
         padding: EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: horizonal_padding),
             Container(
@@ -66,7 +67,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
               width: double.infinity,
               height: 150,
             ),
-            Text("Get a ${widget.merchant.merchant_name}'s coupon worth 500")
+            Text("Get a ${widget.merchant.merchant_name}'s coupon worth 500!")
           ],
         )
       ),

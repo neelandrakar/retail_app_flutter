@@ -334,7 +334,6 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
     loyaltyRouter.post('/v1/api/redeem-a-coupon', auth, async(req, res) =>{
 
       try{
-        //console.log('neel');
 
         const { coupon_id } = req.body;
         let success_msg = "NA";
