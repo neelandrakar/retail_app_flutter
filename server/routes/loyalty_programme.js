@@ -363,7 +363,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
             allocated_coupon = all_coupon_codes[i];
             allocated_coupon.allocated_to = emp_id;
             allocated_coupon.allocation_date = post_time;
-            //await allocated_coupon.save();
+            await allocated_coupon.save();
             break;
 
           }
@@ -378,6 +378,36 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         res.status(200).json({
           success: true,
           message: success_msg
+        });
+
+      }catch(err){
+        res.status(500).json({
+          success: false,
+          message: err
+        });
+      }
+    });
+
+    loyaltyRouter.post('/v1/api/get-redeemed-vouchers', auth, async(req, res) =>{
+
+      try{
+
+        const emp_id = req.user;
+
+        console.log(emp_id);
+        
+
+        let redeemed_vouchers = await CouponCode.find({
+          allocated_to: emp_id
+        });
+
+
+
+
+
+        res.status(200).json({
+          success: true,
+          message: redeemed_vouchers
         });
 
       }catch(err){
