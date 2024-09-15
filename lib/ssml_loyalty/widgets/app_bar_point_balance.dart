@@ -33,7 +33,7 @@ class _AppBarPointBalanceState extends State<AppBarPointBalance> {
           Image.asset(AssetsConstants.point_balance_token, height: 15,width: 15),
           SizedBox(width: 4),
           Text(
-            getTotalPoints(context).toString(),
+            getTotalPoints(context).toInt().toString(),
             style: TextStyle(
               color: MyColors.boneWhite,
               fontFamily: MyFonts.poppins,

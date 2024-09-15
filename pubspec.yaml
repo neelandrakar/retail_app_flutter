@@ -57,7 +57,7 @@ dependencies:
   package_info_plus: ^5.0.1
   syncfusion_flutter_datagrid: ^24.2.8
   flutter_svg: ^2.0.10+1
-  percent_indicator: ^4.0.1
+  percent_indicator: ^4.2.3
   get_ip_address: ^0.0.6
 
 

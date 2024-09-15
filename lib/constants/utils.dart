@@ -226,12 +226,12 @@ String getEmployeeName(BuildContext context){
   return emp.emp_name;
 }
 
-int getTotalPoints(BuildContext context){
+double getTotalPoints(BuildContext context){
 
-  int total_points = 0;
+  double total_points = 0;
   final SSMLLoyaltyProvider ssmlLoyaltyProvider = Provider.of<SSMLLoyaltyProvider>(context, listen: false);
 
-  total_points = ssmlLoyaltyProvider.loyaltyPointsModel.total_pending;
+  total_points = ssmlLoyaltyProvider.loyaltyPointsModel.total_pending.toDouble();
 
   return total_points;
 }

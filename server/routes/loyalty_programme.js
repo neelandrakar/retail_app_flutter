@@ -393,6 +393,8 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
       try{
 
         const emp_id = req.user;
+        const currentDate = new Date();
+        // console.log(currentDate);
 
         let redeemed_vouchers = await CouponCode.find({
           allocated_to: emp_id,
@@ -430,18 +432,23 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         for(let i=0; i<redeemed_vouchers.length; i++){
 
           let merchant_name = "NA";
+          let is_expired = false;
 
           let merchant = await Merchant.find({
             merchant_id: redeemed_vouchers[i].merchant_id
           });
 
+          is_expired = redeemed_vouchers[i].expiry_date>currentDate ? false : true; 
+
           merchant_name = merchant[0].merchant_name;
 
           final_res.push({
+            "header_text": "Click to get coupon!!!",
             "merchant_name": merchant_name,
             "coupon_value": redeemed_vouchers[i].coupon_value,
             "expiry_date": formatISODate(redeemed_vouchers[i].expiry_date, 0),
-            "redeemed_on": formatISODate(redeemed_vouchers[i].allocation_date, 1)
+            "redeemed_on": formatISODate(redeemed_vouchers[i].allocation_date, 1),
+            "is_expired": is_expired
           });
 
         }

@@ -42,7 +42,7 @@ class _CouponCardState extends State<CouponCard> {
     Navigator.pushNamed(
         context,
         GIftRedemptionScreen.routeName,
-        arguments: widget.merchant
+        arguments: [widget.merchant, widget.coupon]
     );
   }
 

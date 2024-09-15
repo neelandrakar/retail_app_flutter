@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:retail_app_flutter/constants/my_fonts.dart';
+import 'package:retail_app_flutter/constants/utils.dart';
 import 'package:retail_app_flutter/models/merchant_model.dart';
 
 import '../../constants/custom_app_bar.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/my_colors.dart';
+import '../../models/coupon_model.dart';
 import '../widgets/app_bar_point_balance.dart';
 
 class GIftRedemptionScreen extends StatefulWidget {
   final MerchantModel merchant;
+  final CouponModel coupon;
   static const String routeName = '/gift-redemption-screen';
-  const GIftRedemptionScreen({super.key, required this.merchant});
+  const GIftRedemptionScreen({
+    super.key,
+    required this.merchant,
+    required this.coupon
+  });
 
   @override
   State<GIftRedemptionScreen> createState() => _GIftRedemptionScreenState();
@@ -19,11 +28,21 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
 
   Color bg_color = MyColors.boneWhite;
   Color fg_color = MyColors.ivoryWhite;
+  double percentage = 0;
+  double total_points = 0;
+  double coupon_value = 0;
 
 
 
   @override
   Widget build(BuildContext context) {
+
+    total_points = getTotalPoints(context);
+    coupon_value = widget.coupon.coupon_value.toDouble();
+    double percent_val = total_points/coupon_value;
+    percentage = percent_val>= 1 ? 1 : percent_val;
+
+
     return Scaffold(
       backgroundColor: bg_color,
       appBar: PreferredSize(
@@ -49,7 +68,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5),
+        padding: EdgeInsets.symmetric(horizontal: horizonal_padding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +86,68 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
               width: double.infinity,
               height: 150,
             ),
-            Text("Get a ${widget.merchant.merchant_name}'s coupon worth 500!")
+            const SizedBox(height: 20),
+            Text(
+                "Get a ${widget.merchant.merchant_name}' coupon worth ₹${widget.coupon.coupon_value}",
+                maxLines: 2,
+                style: const TextStyle(
+                    fontFamily: MyFonts.poppins,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: MyColors.appBarColor
+                  ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "Offer will end on December 31st, 2024",
+              maxLines: 2,
+              style: TextStyle(
+                  fontFamily: MyFonts.poppins,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: MyColors.fadedBlack
+              ),
+            ),
+            const SizedBox(height: 15),
+            LinearPercentIndicator(
+              animation: true,
+              padding: EdgeInsets.zero,
+              lineHeight: 3,
+              animationDuration: 2500,
+              percent: percentage,
+              progressColor: MyColors.redColor,
+            ),
+            const SizedBox(height: 10),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "${total_points.toInt()}",
+                    style: TextStyle(
+                      fontFamily: MyFonts.poppins,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.red, // Set the color to red
+                    ),
+                  ),
+                  TextSpan(
+                    text: " / ${coupon_value.toInt()}",
+                    style: TextStyle(
+                      fontFamily: MyFonts.poppins,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      color: MyColors.fadedBlack, // Keep the original color
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 15),
+            Divider(
+              height: 1,
+              color: MyColors.fadedBlack,
+              thickness: 0.2  ,
+            )
           ],
         )
       ),

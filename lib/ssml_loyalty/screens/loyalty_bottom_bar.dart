@@ -69,7 +69,7 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
 
         bottomNavigationBar: CupertinoTabBar(
           backgroundColor: MyColors.offWhiteColor,
-          activeColor: Colors.red,
+          activeColor: MyColors.redColor,
           currentIndex: _page,
           onTap: onPageChange,
           border: Border(
