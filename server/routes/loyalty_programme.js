@@ -394,21 +394,55 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
 
         const emp_id = req.user;
 
-        console.log(emp_id);
-
-
         let redeemed_vouchers = await CouponCode.find({
           allocated_to: emp_id,
           d_status: false
         });
+        
+        let final_res = [];
 
+        function formatISODate(timestamp) {
+          const date = new Date(timestamp);
+          const year = date.getFullYear();
+          const month = date.toLocaleString('default', { month: 'short' });
+          const day = date.getDate();
+        
+          function getOrdinal(day) {
+            if (day > 10 && day < 20) return 'th';
+            switch (day % 10) {
+              case 1: return 'st';
+              case 2: return 'nd';
+              case 3: return 'rd';
+              default: return 'th';
+            }
+          }
+        
+          return `${month} ${day}${getOrdinal(day)}, ${year}`;
+        } 
 
+        for(let i=0; i<redeemed_vouchers.length; i++){
 
+          let merchant_name = "NA";
 
+          let merchant = await Merchant.find({
+            merchant_id: redeemed_vouchers[i].merchant_id
+          });
+
+          merchant_name = merchant[0].merchant_name;
+
+          final_res.push({
+            "merchant_name": merchant_name,
+            "coupon_value": redeemed_vouchers[i].coupon_value,
+            "expiry_date": formatISODate(redeemed_vouchers[i].expiry_date),
+            "redeemed_on": formatISODate(redeemed_vouchers[i].allocation_date)
+          });
+
+        
+        }
 
         res.status(200).json({
           success: true,
-          message: redeemed_vouchers
+          message: final_res
         });
 
       }catch(err){
