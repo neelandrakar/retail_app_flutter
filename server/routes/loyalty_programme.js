@@ -395,10 +395,11 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         const emp_id = req.user;
 
         console.log(emp_id);
-        
+
 
         let redeemed_vouchers = await CouponCode.find({
-          allocated_to: emp_id
+          allocated_to: emp_id,
+          d_status: false
         });
 
 
