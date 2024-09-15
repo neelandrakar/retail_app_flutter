@@ -401,11 +401,15 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         
         let final_res = [];
 
-        function formatISODate(timestamp) {
+        function formatISODate(timestamp, key) {
           const date = new Date(timestamp);
           const year = date.getFullYear();
           const month = date.toLocaleString('default', { month: 'short' });
           const day = date.getDate();
+          let hours = date.getHours();
+          const minutes = date.getMinutes();
+          const ampm = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12 || 12; // Convert to 12-hour format
         
           function getOrdinal(day) {
             if (day > 10 && day < 20) return 'th';
@@ -417,8 +421,11 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
             }
           }
         
-          return `${month} ${day}${getOrdinal(day)}, ${year}`;
-        } 
+          return key ==1 ? `${month} ${day}${getOrdinal(day)}, ${year} • ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`
+          : `${month} ${day}${getOrdinal(day)}, ${year}`;
+
+        }
+         
 
         for(let i=0; i<redeemed_vouchers.length; i++){
 
@@ -433,11 +440,10 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
           final_res.push({
             "merchant_name": merchant_name,
             "coupon_value": redeemed_vouchers[i].coupon_value,
-            "expiry_date": formatISODate(redeemed_vouchers[i].expiry_date),
-            "redeemed_on": formatISODate(redeemed_vouchers[i].allocation_date)
+            "expiry_date": formatISODate(redeemed_vouchers[i].expiry_date, 0),
+            "redeemed_on": formatISODate(redeemed_vouchers[i].allocation_date, 1)
           });
 
-        
         }
 
         res.status(200).json({
