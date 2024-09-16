@@ -408,52 +408,71 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
           total_points += result[i]['earned_points'];
         }
 
+        let redeemed_by_emp = await CouponCode.find({
+          allocated_to: emp_id
+        });
+
+        if(redeemed_by_emp.length>0){
+          for(let i=0; i<redeemed_by_emp.length; i++){
+
+              total_redeemed += redeemed_by_emp[i].coupon_value;
+          }
+        }
+
         //Fetching current points
         total_pending = total_points - total_redeemed;
 
         const coupon = await Coupon.findById(coupon_id);
         const coupon_value = coupon.coupon_value;
-        console.log(coupon_value);
+        console.log(total_pending);
 
-        if(total_pending<coupon_value){
-          console.log("Proceed");
-        } else {
-          console.log("Block");
-        }
+        if(total_pending>=coupon_value){
 
-        const merchant_id = coupon.merchant_id;
-        const merchant = await Merchant.find({
-          merchant_id: merchant_id
-        });
+          const merchant_id = coupon.merchant_id;
+          const merchant = await Merchant.find({
+            merchant_id: merchant_id
+          });
 
-        let all_coupon_codes = await CouponCode.find({
-          coupon_id: coupon.coupon_id,
-          allocated_to: ""
-        });
+          let all_coupon_codes = await CouponCode.find({
+            coupon_id: coupon.coupon_id,
+            allocated_to: ""
+          });
 
-        for(let i=0; i<all_coupon_codes.length; i++){
+          for(let i=0; i<all_coupon_codes.length; i++){
 
-          if(all_coupon_codes[i].allocated_to==""){
+            if(all_coupon_codes[i].allocated_to==""){
 
-            allocated_coupon = all_coupon_codes[i];
-            allocated_coupon.allocated_to = emp_id;
-            allocated_coupon.allocation_date = post_time;
-            // await allocated_coupon.save();
-            break;
+              allocated_coupon = all_coupon_codes[i];
+              allocated_coupon.allocated_to = emp_id;
+              allocated_coupon.allocation_date = post_time;
+              await allocated_coupon.save();
+              break;
 
+            }
           }
+
+          // console.log('all_coupon_codes');
+
+          const merchant_name = merchant[0].merchant_name;
+
+          success_msg = `You've successfully redeemed a ${merchant_name}'s coupon worth ₹${coupon_value}!!!`
+
+          res.status(200).json({
+            success: true,
+            message: success_msg
+          });
+
+        } else {
+
+          success_msg = "You don't have enough points to redeem this gift!"
+
+          res.status(200).json({
+            success: true,
+            message: success_msg
+          });
         }
 
-        // console.log('all_coupon_codes');
-
-        const merchant_name = merchant[0].merchant_name;
-
-        success_msg = `You've successfully redeemed a ${merchant_name}'s coupon worth ₹${coupon_value}!!!`
-
-        res.status(200).json({
-          success: true,
-          message: success_msg
-        });
+        
 
       }catch(err){
         res.status(500).json({
@@ -518,6 +537,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
           merchant_name = merchant[0].merchant_name;
 
           final_res.push({
+            "coupon_code_id": redeemed_vouchers[i].coupon_code_id,
             "header_text": "Click to get coupon!!!",
             "merchant_name": merchant_name,
             "coupon_value": redeemed_vouchers[i].coupon_value,

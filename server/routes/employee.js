@@ -29,6 +29,7 @@ const upload = require('../middleware/multer');
 const GiftCategory = require('../models/gift_category');
 const Merchant = require('../models/merchant');
 const Coupon = require('../models/coupons');
+const CouponCode = require('../models/coupon_code');
 
 employeeRouter.post('/v1/api/create-menu', auth, async(req,res) => {
 
@@ -1246,6 +1247,19 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             }
             }
           ]);
+
+          let all_coupon_codes = await CouponCode.find({
+            allocated_to: emp_id
+          });
+
+          if(all_coupon_codes.length>0){
+            for(let i=0; i<all_coupon_codes.length; i++){
+
+                total_redeemed += all_coupon_codes[i].coupon_value;
+            }
+          }
+
+        //   console.log(all_coupon_codes);
 
            function getTierData(totalPoints) {
             if(totalPoints==0){
