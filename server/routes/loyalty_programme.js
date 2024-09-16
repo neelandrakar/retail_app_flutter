@@ -5,6 +5,8 @@ const Merchant = require('../models/merchant');
 const Coupon = require('../models/coupons');
 const auth = require('../middleware/auth');
 const CouponCode = require('../models/coupon_code');
+const Employee = require('../models/employee');
+const DealerLiftingMaster = require('../models/dealer_lifting_master');
 
 //Add a gift category
 loyaltyRouter.post('/v1/api/add-gift-category', auth, async(req, res) =>{
@@ -342,12 +344,67 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         let allocated_coupon;
         const emp_id = req.user;
         const post_time = Date.now();
+        const currentDate = new Date();
+
+        const emp = await Employee.findById(emp_id);
+        const emp_profile = emp.profile_id;
+        let points_slab = 0;
+
+        if(emp_profile==2){
+          points_slab = 200;
+        }
+        else if(emp_profile==3){
+            points_slab = 150;
+        } else if(emp_profile==5 || emp_profile==28){
+            points_slab = 100;
+        }
+
+        //Fetching start date and end date
+        if(currentDate.getMonth()>=3){
+          start_date = new Date(currentDate.getFullYear()-1, 3, 1, 0, 0, 0);
+          end_date = new Date(currentDate.getFullYear(), 2, 31, 23, 59, 59);
+        } else {
+            start_date = new Date(currentDate.getFullYear()-2, 3, 1, 0, 0, 0);
+            end_date = new Date(currentDate.getFullYear()-1, 2, 31, 23, 59, 59);
+        }
+
+        //Fetching lifting details
+        const result = await DealerLiftingMaster.aggregate([
+          {
+            $match: {
+              d_status: 0,
+              tagged_emps: { $in: [emp_id] },
+              date: { $gte: new Date(start_date), $lt: new Date(end_date) }
+            }
+          },
+          {
+            $group: {
+              '_id': "$invoice_no",
+              'total_quantity': { $sum: "$quantity" },
+              'date': { $first: "$date" },
+              'sapid': {$first : "$sapid"}
+            }
+          },
+          {
+            $addFields: {
+              'earned_points': {
+                  $let: {
+                      vars: { pointsSlab: points_slab },
+                      in: { $multiply: ["$$pointsSlab", "$total_quantity"] }
+                    }
+              },
+              'point_type': 1
+          }
+          }
+        ]);
+
 
 
 
 
         const coupon = await Coupon.findById(coupon_id);
         const coupon_value = coupon.coupon_value;
+        console.log(coupon_value);
         const merchant_id = coupon.merchant_id;
         const merchant = await Merchant.find({
           merchant_id: merchant_id
@@ -365,7 +422,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
             allocated_coupon = all_coupon_codes[i];
             allocated_coupon.allocated_to = emp_id;
             allocated_coupon.allocation_date = post_time;
-            await allocated_coupon.save();
+            // await allocated_coupon.save();
             break;
 
           }

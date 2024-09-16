@@ -32,6 +32,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
   double percentage = 0;
   double total_points = 0;
   double coupon_value = 0;
+  String header_text = "NA";
 
 
 
@@ -42,6 +43,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
     coupon_value = widget.coupon.coupon_value.toDouble();
     double percent_val = total_points/coupon_value;
     percentage = percent_val>= 1 ? 1 : percent_val;
+    header_text = widget.merchant.merchant_name.endsWith("s") ? "Get a ${widget.merchant.merchant_name}' coupon worth ₹${widget.coupon.coupon_value}" : "Get a ${widget.merchant.merchant_name}'s coupon worth ₹${widget.coupon.coupon_value}";
 
 
     return Scaffold(
@@ -92,7 +94,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                    "Get a ${widget.merchant.merchant_name}' coupon worth ₹${widget.coupon.coupon_value}",
+                    header_text,
                     maxLines: 2,
                     style: const TextStyle(
                         fontFamily: MyFonts.poppins,
@@ -119,7 +121,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
                   lineHeight: 3,
                   animationDuration: 2500,
                   percent: percentage,
-                  progressColor: MyColors.redColor,
+                  progressColor: MyColors.loyaltyRed,
                 ),
                 const SizedBox(height: 10),
                 RichText(
@@ -131,7 +133,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
                           fontFamily: MyFonts.poppins,
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
-                          color: Colors.red, // Set the color to red
+                          color: MyColors.loyaltyRed, // Set the color to red
                         ),
                       ),
                       TextSpan(
@@ -179,7 +181,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
               ]
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0).copyWith(bottom: 15),
               child: CustomButton(
                     height: 50,
                     width: double.infinity,
