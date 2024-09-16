@@ -345,7 +345,11 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         const emp_id = req.user;
         const post_time = Date.now();
         const currentDate = new Date();
-
+        let start_date, end_date;
+        let total_sale = 0;
+        let total_points = 0;
+        let total_redeemed = 0;
+        let total_pending = 0;
         const emp = await Employee.findById(emp_id);
         const emp_profile = emp.profile_id;
         let points_slab = 0;
@@ -398,13 +402,25 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
           }
         ]);
 
+        for(let i=0; i < result.length; i++){
 
+          total_sale += result[i]['total_quantity'];
+          total_points += result[i]['earned_points'];
+        }
 
-
+        //Fetching current points
+        total_pending = total_points - total_redeemed;
 
         const coupon = await Coupon.findById(coupon_id);
         const coupon_value = coupon.coupon_value;
         console.log(coupon_value);
+
+        if(total_pending<coupon_value){
+          console.log("Proceed");
+        } else {
+          console.log("Block");
+        }
+
         const merchant_id = coupon.merchant_id;
         const merchant = await Merchant.find({
           merchant_id: merchant_id
