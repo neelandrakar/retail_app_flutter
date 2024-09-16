@@ -12,6 +12,7 @@ class CustomButton extends StatefulWidget {
   final bool? suffixIcon;
   final double borderRadius;
   final double buttonTextSize;
+  final FontWeight fontWeight;
 
   const CustomButton({
     Key? key,
@@ -24,6 +25,7 @@ class CustomButton extends StatefulWidget {
     this.textColor,
     this.suffixIcon = false,
     this.buttonTextSize = 18,
+    this.fontWeight = FontWeight.normal,
     required this.borderRadius,  // Default width value
   }) : super(key: key);
 
@@ -54,6 +56,7 @@ class _CustomButtonState extends State<CustomButton> {
           Text(widget.buttonText,
           style: TextStyle(
             fontSize: widget.buttonTextSize,
+            fontWeight: widget.fontWeight,
 
             color: widget.textColor == null ? MyColors.mainYellowColor : widget.textColor
           ),

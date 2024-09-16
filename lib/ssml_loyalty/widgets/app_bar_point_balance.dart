@@ -39,7 +39,7 @@ class _AppBarPointBalanceState extends State<AppBarPointBalance> {
               fontFamily: MyFonts.poppins,
               fontSize: 14
             ),
-          )
+          ),
         ],
       ),
     );
