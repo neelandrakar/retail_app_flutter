@@ -33,6 +33,11 @@ const merchantSchema = mongoose.Schema({
         required: true
     },
 
+    rewards_screen_text: {
+        type: String,
+        required: true
+    },
+
     stores: [{
         type: String,
         default: []
