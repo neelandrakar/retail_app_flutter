@@ -2,11 +2,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:retail_app_flutter/constants/custom_button.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+
+import '../../constants/my_fonts.dart';
 
 
 class SuccessfulRedeemDialogue extends StatefulWidget {
-  const SuccessfulRedeemDialogue({super.key});
+  final String header_text;
+  final String msg;
+  const SuccessfulRedeemDialogue({
+    super.key,
+    required this.header_text,
+    required this.msg
+  });
 
   @override
   State<SuccessfulRedeemDialogue> createState() => _SuccessfulRedeemDialogueState();
@@ -37,49 +46,47 @@ class _SuccessfulRedeemDialogueState extends State<SuccessfulRedeemDialogue> {
           ),
           SizedBox(height: 20),
           Text(
-            'Yaay! Your E-Voucher is Ready!',
+            widget.header_text,
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: MyFonts.poppins,
             ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 10),
           Text(
-            'Time to treat yourself! Flash this E-Voucher at the store and redeem your reward.',
-            style: TextStyle(fontSize: 14),
+            widget.msg,
+            style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                fontFamily: MyFonts.poppins
+            ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 20),
-          ElevatedButton(
-            child: Text('View E-Voucher'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: MyColors.loyaltyRed,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              minimumSize: Size(double.infinity, 50),
-            ),
-            onPressed: () {
-              // Add logic to view E-Voucher
-              Navigator.of(context).pop();
-            },
+          CustomButton(
+              onClick: (){},
+              buttonText: "View E-Voucher",
+              borderRadius: 50,
+              buttonTextSize: 14,
+              fontWeight: FontWeight.w600,
+              buttonColor: MyColors.loyaltyRed,
+              textColor: MyColors.boneWhite,
+              height: 50,
+              width: double.infinity,
           ),
           SizedBox(height: 10),
-          TextButton(
-            child: Text('Go to Home'),
-            style: TextButton.styleFrom(
-              foregroundColor: MyColors.loyaltyRed,
-              backgroundColor: MyColors.loyaltyRed.withOpacity(0.2),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              minimumSize: Size(double.infinity, 50),
-            ),
-            onPressed: () {
-              // Add logic to go to home
-              Navigator.of(context).pop();
-            },
+          CustomButton(
+            onClick: (){},
+            buttonText: "Go to Home",
+            borderRadius: 50,
+            buttonTextSize: 14,
+            fontWeight: FontWeight.w600,
+            buttonColor: MyColors.loyaltyRedLowOpacity.withOpacity(0.6),
+            textColor: MyColors.boneWhite,
+            height: 50,
+            width: double.infinity,
           ),
         ],
       ),

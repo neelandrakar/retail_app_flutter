@@ -78,6 +78,8 @@ LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(
 bool isSchemeFullyLoaded = false;
 bool isGiftCategoriesFullyLoaded = false;
 double horizonal_padding = 15;
+String gift_redemption_header_text = "NA";
+String gift_redemption_msg = "NA";
 
 
 

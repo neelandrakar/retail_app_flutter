@@ -40,6 +40,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
   double coupon_value = 0;
   String header_text = "NA";
   SSMLLoyaltyServices ssmlLoyaltyServices = SSMLLoyaltyServices();
+  Map<String, dynamic> resData = {};
   bool _isLoading = false;
   late ConfettiController _controllerCenter;
   late ConfettiController _controllerCenterRight;
@@ -108,7 +109,9 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
     setState(() {
       _isLoading = true; // Set the loader state to true when the button is clicked
     });
-    await ssmlLoyaltyServices.redeemACoupon(
+
+
+        await ssmlLoyaltyServices.redeemACoupon(
         context: context,
         coupon_id: widget.coupon.id,
         onSuccess: (){
@@ -118,33 +121,39 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
             if (mounted) {
               showDialog(
                   context: context,
+                  barrierDismissible: false,
                   builder: (BuildContext con){
                     return
-                        Stack(
-                        children: [
-                              Center(
-                                child: ConfettiWidget(
-                                confettiController: _controllerCenter,
-                                blastDirectionality: BlastDirectionality.explosive,
-                                shouldLoop: false,
-                                colors: const [
-                                  Colors.green,
-                                  Colors.blue,
-                                  Colors.pink,
-                                  Colors.orange,
-                                  Colors.purple
-                                ],
-                                createParticlePath: drawStar,
+                        WillPopScope(
+                          onWillPop: () async => false, // <-- Prevents dialog dismiss on press of back button.
+                          child: Stack(
+                          children: [
+                                Center(
+                                  child: ConfettiWidget(
+                                  confettiController: _controllerCenter,
+                                  blastDirectionality: BlastDirectionality.explosive,
+                                  shouldLoop: false,
+                                  colors: const [
+                                    Colors.green,
+                                    Colors.blue,
+                                    Colors.pink,
+                                    Colors.orange,
+                                    Colors.purple
+                                  ],
+                                  createParticlePath: drawStar,
+                                  ),
                                 ),
-                              ),
-                              SuccessfulRedeemDialogue()
-                        ],
-                    );
+                                SuccessfulRedeemDialogue(
+                                  header_text: gift_redemption_header_text,
+                                  msg: gift_redemption_msg
+                                )
+                          ],
+                                              ),
+                        );
                   });
               _controllerCenter.play();
             }
           });
-          print("Coupon is redeemed!!!");
         });
   }
 

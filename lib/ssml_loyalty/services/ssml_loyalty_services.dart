@@ -93,15 +93,9 @@ class SSMLLoyaltyServices{
             var messageArray = jsonDecode(res.body)['message'];
             gift_category_provider.gift_categories = [];
 
-
-
             for (var message in messageArray) {
               gift_category_provider.getGiftCategoryData(GiftCategoryModel.fromJson(jsonEncode(message)), context);
             }
-
-
-
-
             onSuccess.call();
 
           }
@@ -121,11 +115,10 @@ class SSMLLoyaltyServices{
     required VoidCallback onSuccess,
     required String coupon_id,
   }) async {
-
-    try{
-
+    try {
       final Employee emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
       var gift_category_provider = Provider.of<GiftCategoryProvider>(context, listen: false);
+      Map<String, dynamic> resData = {};
 
       Map data = {
         'coupon_id': coupon_id,
@@ -134,30 +127,36 @@ class SSMLLoyaltyServices{
       String jsonBody = jsonEncode(data);
 
       http.Response res = await http.post(
-          Uri.parse('$uri/v1/api/redeem-a-coupon'),
-          body: jsonBody,
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': emp.jwt_token
-          });
+        Uri.parse('$uri/v1/api/redeem-a-coupon'),
+        body: jsonBody,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': emp.jwt_token
+        },
+      );
 
       HttpErroHandeling(
-          response: res,
-          context: context,
-          onSuccess: () {
-            print(res.body);
+        response: res,
+        context: context,
+        onSuccess: () {
+          resData = jsonDecode(res.body);
+          String ss = resData["message"][0]["header_text"];
+          print(ss);
 
-            onSuccess.call();
-
+          if(resData["status"]==1){
+            gift_redemption_header_text = resData["message"][0]["header_text"];
+            gift_redemption_msg = resData["message"][1]["msg"];
+          } else if(resData["status"]==2){
+            gift_redemption_header_text = resData["message"][0]["header_text"];
           }
+          onSuccess.call();
+        },
       );
 
 
-
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       showSnackBar(context, e.toString());
     }
-
   }
 }

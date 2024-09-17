@@ -41,5 +41,6 @@ class MyColors{
   static  Color fadedAppbarColor = Color(0xff235477);
   static  const Color crimsonRed = Color(0xffDC143C);
   static  const Color loyaltyRed = Color(0xFFFF5A5F);
+  static  const Color loyaltyRedLowOpacity = Color(0xFFDEA1A1);
 
 }
