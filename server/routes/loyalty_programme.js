@@ -340,7 +340,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
       try{
 
         const { coupon_id } = req.body;
-        let success_msg = "NA";
+        let success_msg = [];
         let allocated_coupon;
         const emp_id = req.user;
         const post_time = Date.now();
@@ -353,6 +353,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         const emp = await Employee.findById(emp_id);
         const emp_profile = emp.profile_id;
         let points_slab = 0;
+        let code = "NA";
 
         if(emp_profile==2){
           points_slab = 200;
@@ -445,6 +446,8 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
               allocated_coupon = all_coupon_codes[i];
               allocated_coupon.allocated_to = emp_id;
               allocated_coupon.allocation_date = post_time;
+
+              code = allocated_coupon.coupon_code;
               //await allocated_coupon.save();
               break;
 
@@ -455,19 +458,27 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
 
           const merchant_name = merchant[0].merchant_name;
 
-          success_msg = `You've successfully redeemed a ${merchant_name}'s coupon worth ₹${coupon_value}!!!`
+          success_msg = [
+            { header_text: `Yaay! Your ${merchant_name} E-Voucher is Ready!`},
+            { msg: `Time to treat yourself! Use this code and redeem your reward.`},
+            { code: `${code}` }
+          ];
 
           res.status(200).json({
             success: true,
+            status: 1,
             message: success_msg
           });
 
         } else {
 
-          success_msg = "You don't have enough points to redeem this gift!"
+          success_msg =  [
+            {header_text: `You don't have enough points to redeem this gift!`}
+          ];
 
           res.status(200).json({
             success: true,
+            status: 2,
             message: success_msg
           });
         }

@@ -1,4 +1,6 @@
+import 'dart:math';
 import 'dart:ui';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -38,8 +40,62 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
   double coupon_value = 0;
   String header_text = "NA";
   SSMLLoyaltyServices ssmlLoyaltyServices = SSMLLoyaltyServices();
+  bool _isLoading = false;
+  late ConfettiController _controllerCenter;
+  late ConfettiController _controllerCenterRight;
+  late ConfettiController _controllerCenterLeft;
+  late ConfettiController _controllerTopCenter;
+  late ConfettiController _controllerBottomCenter;
 
-  bool _isLoading = false; // Add a boolean variable to track the loader state
+  @override
+  void initState() {
+    super.initState();
+    _controllerCenter =
+        ConfettiController(duration: const Duration(seconds: 5));
+    _controllerCenterRight =
+        ConfettiController(duration: const Duration(seconds: 5));
+    _controllerCenterLeft =
+        ConfettiController(duration: const Duration(seconds: 5));
+    _controllerTopCenter =
+        ConfettiController(duration: const Duration(seconds: 5));
+    _controllerBottomCenter =
+        ConfettiController(duration: const Duration(seconds: 5));
+  }
+
+  @override
+  void dispose() {
+    _controllerCenter.dispose();
+    _controllerCenterRight.dispose();
+    _controllerCenterLeft.dispose();
+    _controllerTopCenter.dispose();
+    _controllerBottomCenter.dispose();
+    super.dispose();
+  }
+
+  /// A custom Path to paint stars.
+  Path drawStar(Size size) {
+    // Method to convert degree to radians
+    double degToRad(double deg) => deg * (pi / 180.0);
+
+    const numberOfPoints = 5;
+    final halfWidth = size.width / 2;
+    final externalRadius = halfWidth;
+    final internalRadius = halfWidth / 2.5;
+    final degreesPerStep = degToRad(360 / numberOfPoints);
+    final halfDegreesPerStep = degreesPerStep / 2;
+    final path = Path();
+    final fullAngle = degToRad(360);
+    path.moveTo(size.width, halfWidth);
+
+    for (double step = 0; step < fullAngle; step += degreesPerStep) {
+      path.lineTo(halfWidth + externalRadius * cos(step),
+          halfWidth + externalRadius * sin(step));
+      path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+          halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+    }
+    path.close();
+    return path;
+  }
 
   redeemCoupon() async {
     showDialog(
@@ -48,24 +104,48 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
           return LoaderDialogue(
             loader_text: 'Redeeming Points...',
           );
-        });    setState(() {
+        });
+    setState(() {
       _isLoading = true; // Set the loader state to true when the button is clicked
     });
-    /*await ssmlLoyaltyServices.redeemACoupon(
+    await ssmlLoyaltyServices.redeemACoupon(
         context: context,
         coupon_id: widget.coupon.id,
         onSuccess: (){
           setState(() {
             _isLoading = false; // Set the loader state to false when onSuccess is called
             Navigator.pop(context);
-            showDialog(
-                context: context,
-                builder: (BuildContext con){
-                  return SuccessfulRedeemDialogue();
-                });
+            if (mounted) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext con){
+                    return
+                        Stack(
+                        children: [
+                              Center(
+                                child: ConfettiWidget(
+                                confettiController: _controllerCenter,
+                                blastDirectionality: BlastDirectionality.explosive,
+                                shouldLoop: false,
+                                colors: const [
+                                  Colors.green,
+                                  Colors.blue,
+                                  Colors.pink,
+                                  Colors.orange,
+                                  Colors.purple
+                                ],
+                                createParticlePath: drawStar,
+                                ),
+                              ),
+                              SuccessfulRedeemDialogue()
+                        ],
+                    );
+                  });
+              _controllerCenter.play();
+            }
           });
           print("Coupon is redeemed!!!");
-        });*/
+        });
   }
 
   @override
