@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:retail_app_flutter/constants/custom_button.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/home/screens/home_screen.dart';
 
 import '../../constants/my_fonts.dart';
 
@@ -78,7 +79,10 @@ class _SuccessfulRedeemDialogueState extends State<SuccessfulRedeemDialogue> {
           ),
           SizedBox(height: 10),
           CustomButton(
-            onClick: (){},
+            onClick: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, HomeScreen.routeName);
+            },
             buttonText: "Go to Home",
             borderRadius: 50,
             buttonTextSize: 14,

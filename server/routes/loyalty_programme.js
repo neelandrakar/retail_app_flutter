@@ -448,7 +448,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
               allocated_coupon.allocation_date = post_time;
 
               code = allocated_coupon.coupon_code;
-              //await allocated_coupon.save();
+              await allocated_coupon.save();
               break;
 
             }

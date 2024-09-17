@@ -21,4 +21,10 @@ class SSMLLoyaltyProvider extends ChangeNotifier{
     showSnackBar(context, 'Points are fetched');
     notifyListeners();
   }
+
+  void pointDeductionAfterGiftRedemption(int redeemed_point){
+    loyaltyPointsModel.total_points -= redeemed_point;
+    loyaltyPointsModel.total_pending -= redeemed_point;
+    notifyListeners();
+  }
 }

@@ -4,6 +4,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/accounts/widgets/account_creation_list_dialogue.dart';
 import 'package:retail_app_flutter/constants/loader_dialogue.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
@@ -14,6 +15,7 @@ import '../../constants/custom_button.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/my_colors.dart';
 import '../../models/coupon_model.dart';
+import '../../providers/ssml_loyalty_provider.dart';
 import '../services/ssml_loyalty_services.dart';
 import '../widgets/app_bar_point_balance.dart';
 import '../widgets/successful_redeem_dialogue.dart';
@@ -40,7 +42,6 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
   double coupon_value = 0;
   String header_text = "NA";
   SSMLLoyaltyServices ssmlLoyaltyServices = SSMLLoyaltyServices();
-  Map<String, dynamic> resData = {};
   bool _isLoading = false;
   late ConfettiController _controllerCenter;
   late ConfettiController _controllerCenterRight;
@@ -99,6 +100,9 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
   }
 
   redeemCoupon() async {
+
+    final SSMLLoyaltyProvider ssmlLoyaltyProvider = Provider.of<SSMLLoyaltyProvider>(context, listen: false);
+
     showDialog(
         context: context,
         builder: (BuildContext con){
@@ -118,6 +122,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
           setState(() {
             _isLoading = false; // Set the loader state to false when onSuccess is called
             Navigator.pop(context);
+            ssmlLoyaltyProvider.pointDeductionAfterGiftRedemption(widget.coupon.coupon_value);
             if (mounted) {
               showDialog(
                   context: context,
@@ -152,6 +157,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
                         );
                   });
               _controllerCenter.play();
+              print("Current point: ${ssmlLoyaltyProvider.loyaltyPointsModel.total_pending}");
             }
           });
         });
@@ -181,7 +187,7 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
               appBarColor: bg_color,
               titleTextColor: MyColors.appBarColor,
               leadingIconColor: MyColors.appBarColor,
-              actions: const [
+              actions: [
                 AppBarPointBalance(),
                 Padding(
                   padding:  EdgeInsets.only(right: 5),

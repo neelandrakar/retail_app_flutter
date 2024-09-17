@@ -6,8 +6,8 @@ import 'package:retail_app_flutter/models/loyalty_tier.dart';
 
 class LoyaltyPointsModel {
   final int total_sale;
-  final int total_points;
-  final int total_pending;
+  late int total_points;
+  late int total_pending;
   final List<InvoiceWisePointsModel>? invoice_wise_points;
   final List<LoyaltyTier> loyalty_tiers;
 
