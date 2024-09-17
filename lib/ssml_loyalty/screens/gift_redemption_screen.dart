@@ -9,6 +9,7 @@ import '../../constants/custom_button.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/my_colors.dart';
 import '../../models/coupon_model.dart';
+import '../services/ssml_loyalty_services.dart';
 import '../widgets/app_bar_point_balance.dart';
 
 class GIftRedemptionScreen extends StatefulWidget {
@@ -33,6 +34,17 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
   double total_points = 0;
   double coupon_value = 0;
   String header_text = "NA";
+  SSMLLoyaltyServices ssmlLoyaltyServices = SSMLLoyaltyServices();
+
+  redeemCoupon() async {
+    await ssmlLoyaltyServices.redeemACoupon(
+        context: context,
+        coupon_id: widget.coupon.id,
+        onSuccess: (){
+      print("Coupon is redeemed!!!");
+    });
+
+  }
 
 
 
@@ -187,7 +199,10 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
                     width: double.infinity,
                     textColor: MyColors.boneWhite,
                     buttonColor: MyColors.loyaltyRed,
-                    onClick: (){},
+                    onClick: (){
+                      print(widget.coupon.id);
+                      redeemCoupon();
+                    },
                     buttonText: 'Redeem',
                     buttonTextSize: 16,
                     borderRadius: 20,

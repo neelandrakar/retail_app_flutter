@@ -115,4 +115,49 @@ class SSMLLoyaltyServices{
     }
 
   }
+
+  Future<void> redeemACoupon({
+    required BuildContext context,
+    required VoidCallback onSuccess,
+    required String coupon_id,
+  }) async {
+
+    try{
+
+      final Employee emp = Provider.of<EmployeeProvider>(context, listen: false).employee;
+      var gift_category_provider = Provider.of<GiftCategoryProvider>(context, listen: false);
+
+      Map data = {
+        'coupon_id': coupon_id,
+      };
+
+      String jsonBody = jsonEncode(data);
+
+      http.Response res = await http.post(
+          Uri.parse('$uri/v1/api/redeem-a-coupon'),
+          body: jsonBody,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': emp.jwt_token
+          });
+
+      HttpErroHandeling(
+          response: res,
+          context: context,
+          onSuccess: () {
+            print(res.body);
+
+            onSuccess.call();
+
+          }
+      );
+
+
+
+    }catch(e){
+      print(e.toString());
+      showSnackBar(context, e.toString());
+    }
+
+  }
 }
