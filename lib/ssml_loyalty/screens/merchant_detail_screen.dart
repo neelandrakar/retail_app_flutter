@@ -71,7 +71,7 @@ class _MerchantDetailScreenState extends State<MerchantDetailScreen> {
               appBarColor: bg_color,
               titleTextColor: MyColors.appBarColor,
               leadingIconColor: MyColors.appBarColor,
-              actions: const [
+              actions: [
                  AppBarPointBalance(),
                  Padding(
                   padding:  EdgeInsets.only(right: 5),

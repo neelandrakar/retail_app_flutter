@@ -67,7 +67,9 @@ class _SuccessfulRedeemDialogueState extends State<SuccessfulRedeemDialogue> {
           ),
           SizedBox(height: 20),
           CustomButton(
-              onClick: (){},
+              onClick: (){
+                Navigator.pop(context);
+              },
               buttonText: "View E-Voucher",
               borderRadius: 50,
               buttonTextSize: 14,

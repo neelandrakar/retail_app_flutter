@@ -36,7 +36,7 @@ void showSnackBar(BuildContext context,String text){
           content:
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
                 fontFamily: 'Poppins',
               color: MyColors.boneWhite
             ),

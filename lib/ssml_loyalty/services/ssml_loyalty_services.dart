@@ -140,8 +140,8 @@ class SSMLLoyaltyServices{
         context: context,
         onSuccess: () {
           resData = jsonDecode(res.body);
-          String ss = resData["message"][0]["header_text"];
-          print(ss);
+
+          gift_redemption_status = resData["status"];
 
           if(resData["status"]==1){
             gift_redemption_header_text = resData["message"][0]["header_text"];
