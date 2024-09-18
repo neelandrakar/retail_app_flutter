@@ -71,6 +71,11 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
     _controllerCenterLeft.dispose();
     _controllerTopCenter.dispose();
     _controllerBottomCenter.dispose();
+    gift_redemption_status = 0;
+    gift_redemption_api_points_needed=0;
+    gift_redemption_api_my_points = 0;
+    gift_redemption_msg = "NA";
+    gift_redemption_header_text = "NA";
     super.dispose();
   }
 
@@ -156,7 +161,9 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
                                               ),
                         );
                   });
-              _controllerCenter.play();
+              if(gift_redemption_status==1) {
+                _controllerCenter.play();
+              }
               print("Current point: ${ssmlLoyaltyProvider.loyaltyPointsModel.total_pending}");
             }
           });
@@ -312,14 +319,14 @@ class _GIftRedemptionScreenState extends State<GIftRedemptionScreen> {
                             Padding(
                               padding: const EdgeInsets.all(8.0).copyWith(bottom: 15),
                               child: AbsorbPointer(
-                                absorbing: _isLoading, // Set absorbing to true when _isLoading is true
+                                absorbing: gift_redemption_status!=0, // Set absorbing to true when _isLoading is true
                                 child: CustomButton(
                                   height: 50,
                                   width: double.infinity,
                                   textColor: MyColors.boneWhite,
                                   buttonColor: MyColors.loyaltyRed,
                                   onClick: ()async{
-            
+
                                       await redeemCoupon();
             
                                   },

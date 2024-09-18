@@ -77,11 +77,13 @@ LoyaltyPointsModel loyaltyPointsModel = LoyaltyPointsModel(
 );
 bool isSchemeFullyLoaded = false;
 bool isGiftCategoriesFullyLoaded = false;
+bool isMyVoucherListFullyLoaded = false;
 double horizonal_padding = 15;
 String gift_redemption_header_text = "NA";
 String gift_redemption_msg = "NA";
 int gift_redemption_status = 0;
-
+int gift_redemption_api_my_points = 0;
+int gift_redemption_api_points_needed = 0;
 
 
 

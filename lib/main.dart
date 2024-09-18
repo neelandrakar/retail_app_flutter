@@ -18,6 +18,7 @@ import 'package:retail_app_flutter/providers/dealer_target_achievement_provider.
 import 'package:retail_app_flutter/providers/distributor_master_provider.dart';
 import 'package:retail_app_flutter/providers/engineer_master_provider.dart';
 import 'package:retail_app_flutter/providers/gift_category_provider.dart';
+import 'package:retail_app_flutter/providers/my_vouchers_provider.dart';
 import 'package:retail_app_flutter/providers/ssml_loyalty_provider.dart';
 import 'package:retail_app_flutter/providers/user_provider.dart';
 import 'package:retail_app_flutter/providers/visit_questions_provider.dart';
@@ -43,6 +44,7 @@ void main() async{
           ChangeNotifierProvider(create: (context)=> DealerTargetAchievementProvider()),
           ChangeNotifierProvider(create: (context)=> SSMLLoyaltyProvider()),
           ChangeNotifierProvider(create: (context)=> GiftCategoryProvider()),
+          ChangeNotifierProvider(create: (context)=> MyVouchersProvider()),
         ],
         child: const MyApp(),
       ));

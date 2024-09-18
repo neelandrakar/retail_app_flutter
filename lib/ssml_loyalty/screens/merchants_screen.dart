@@ -34,7 +34,7 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
   SSMLLoyaltyServices ssmlLoyaltyServices = SSMLLoyaltyServices();
   late Future<void> _getGiftCategoryData;
   TextEditingController _searchController = TextEditingController();
-  late List<GiftCategoryModel> giftCategoryModel;
+  late List<GiftCategoryModel> giftCategoryModel = [];
   List<MerchantModel> searchedMerchants = [];
   int filter_val = 0;
   bool hasBeenSearched = false;
@@ -93,7 +93,7 @@ class _MerchantsScreenState extends State<MerchantsScreen> {
               );
             } else {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: horizonal_padding, vertical: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

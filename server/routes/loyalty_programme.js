@@ -473,7 +473,9 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         } else {
 
           success_msg =  [
-            {header_text: `You don't have enough points to redeem this gift!`}
+            {header_text: `Insufficient Points`},
+            { msg: `You don't have enough points to redeem this reward.`},
+            { points: [total_pending, coupon_value] }
           ];
 
           res.status(200).json({
@@ -529,7 +531,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
           }
         
           return key ==1 ? `${month} ${day}${getOrdinal(day)}, ${year} • ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`
-          : `${month} ${day}${getOrdinal(day)}, ${year}`;
+          : `${month} ${day}${getOrdinal(day)}, ${year} • `;
 
         }
          
@@ -537,6 +539,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         for(let i=0; i<redeemed_vouchers.length; i++){
 
           let merchant_name = "NA";
+          let merchant_img = "NA";
           let is_expired = false;
 
           let merchant = await Merchant.find({
@@ -546,11 +549,15 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
           is_expired = redeemed_vouchers[i].expiry_date>currentDate ? false : true; 
 
           merchant_name = merchant[0].merchant_name;
+          merchant_img = merchant[0].merchant_logo;
 
           final_res.push({
+            "id": redeemed_vouchers[i]._id,
             "coupon_code_id": redeemed_vouchers[i].coupon_code_id,
+            "code": redeemed_vouchers[i].coupon_code,
             "header_text": "Click to get coupon!!!",
             "merchant_name": merchant_name,
+            "merchant_img": merchant_img,
             "coupon_value": redeemed_vouchers[i].coupon_value,
             "expiry_date": formatISODate(redeemed_vouchers[i].expiry_date, 0),
             "redeemed_on": formatISODate(redeemed_vouchers[i].allocation_date, 1),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:retail_app_flutter/constants/custom_button.dart';
+import 'package:retail_app_flutter/constants/global_variables.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/home/screens/home_screen.dart';
 
@@ -40,7 +41,7 @@ class _SuccessfulRedeemDialogueState extends State<SuccessfulRedeemDialogue> {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.check,
+              gift_redemption_status == 1 ? Icons.check : Icons.error_outline,
               color: Colors.white,
               size: 40,
             ),
@@ -65,13 +66,45 @@ class _SuccessfulRedeemDialogueState extends State<SuccessfulRedeemDialogue> {
             ),
             textAlign: TextAlign.center,
           ),
+          if(gift_redemption_status==2)
+          SizedBox(height: 20),
+          if(gift_redemption_status==2)
+          Container(
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: Text(
+              'Your Points: $gift_redemption_api_my_points',
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: MyFonts.poppins,
+                overflow: TextOverflow.ellipsis
+              ),
+            ),
+          ),
+          if(gift_redemption_status==2)
+            Container(
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: Text(
+              'Required Points: $gift_redemption_api_points_needed',
+              maxLines: 1,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: MyFonts.poppins,
+                  overflow: TextOverflow.ellipsis
+              ),
+            ),
+          ),
           SizedBox(height: 20),
           CustomButton(
               onClick: (){
                 Navigator.pop(context);
               },
-              buttonText: "View E-Voucher",
-              borderRadius: 50,
+              buttonText: gift_redemption_status==1 ? "View Voucher List" : "Try again",
+              borderRadius: 50, 
               buttonTextSize: 14,
               fontWeight: FontWeight.w600,
               buttonColor: MyColors.loyaltyRed,
