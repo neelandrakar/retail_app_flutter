@@ -531,7 +531,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
           }
         
           return key ==1 ? `${month} ${day}${getOrdinal(day)}, ${year} • ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`
-          : `${month} ${day}${getOrdinal(day)}, ${year} • `;
+          : `${month} ${day}${getOrdinal(day)}, ${year}`;
 
         }
          

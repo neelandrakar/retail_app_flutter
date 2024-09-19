@@ -1249,7 +1249,8 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
           ]);
 
           let all_coupon_codes = await CouponCode.find({
-            allocated_to: emp_id
+            allocated_to: emp_id,
+            //allocation_date: { $gte: new Date(start_date), $lt: new Date(end_date) }
           });
 
           if(all_coupon_codes.length>0){

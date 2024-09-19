@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
 import 'package:retail_app_flutter/constants/my_fonts.dart';
 
+import 'coupon_code_bottom_sheet.dart';
+
 class SingleVoucherCard extends StatefulWidget {
   final String id;
   final String merchant_img;
@@ -34,7 +36,7 @@ class _SingleVoucherCardState extends State<SingleVoucherCard> {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity,
-        height: 100,
+        height: 90,
         decoration: BoxDecoration(
           color: MyColors.boneWhite,
           borderRadius: BorderRadius.circular(10)
@@ -42,12 +44,13 @@ class _SingleVoucherCardState extends State<SingleVoucherCard> {
         child: Padding(
           padding: EdgeInsets.all(12.0),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // QR Code Image
               Image.network(
                 widget.merchant_img, // Replace with your actual image asset
-                width: 60,
-                height: 60,
+                width: 50,
+                height: 50,
                 fit: BoxFit.cover,
               ),
               SizedBox(width: 16),
@@ -55,42 +58,79 @@ class _SingleVoucherCardState extends State<SingleVoucherCard> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Coupon worth ₹${widget.coupon_value}',
-                      style: TextStyle(
+                      maxLines: 1,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        fontFamily: MyFonts.poppins
+                        fontFamily: MyFonts.poppins,
+                        overflow: TextOverflow.ellipsis
                       ),
                     ),
                     SizedBox(height: 4),
-                    RichText(text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: widget.expiry_date,
-                          style: TextStyle( fontSize: 12, color: Colors.grey[600], ),),
-                        TextSpan(
-                          text: widget.merchant_name,
-                          style: TextStyle( fontSize: 12, color: MyColors.loyaltyRed, ),)
-                      ]
-                    )
+                    RichText(
+                        maxLines: 1,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "${widget.expiry_date} • ",
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontFamily: MyFonts.poppins,
+                                color: MyColors.fadedBlack,
+                              )),
+                            TextSpan(
+                              text: widget.merchant_name,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: MyColors.loyaltyRed,
+                                  fontFamily: MyFonts.poppins,
+                                  overflow: TextOverflow.ellipsis
+                              )
+                            )
+                          ]
+                        )
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
                       widget.redeemed_on,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        overflow: TextOverflow.ellipsis,
+                        fontFamily: MyFonts.poppins,
+                        color: MyColors.fadedBlack,
                       ),
                     ),
                   ],
                 ),
               ),
               // Chevron Icon
-              Icon(
-                Icons.chevron_right,
-                color: Colors.grey[400],
+              IconButton(
+                onPressed: (){
+                  print(widget.id);
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CouponCodeBottomSheet(
+                        merchant_img: widget.merchant_img,
+                        id: widget.id,
+                        coupon_value: widget.coupon_value,
+                        code: widget.code,
+                        expiry_date: widget.expiry_date,
+                        merchant_name: widget.merchant_name,
+                        redeemed_on: widget.redeemed_on,
+                        header_text: widget.header_text,
+                        is_expired: widget.is_expired,
+                      );
+                    },
+                  );
+                },
+                color: MyColors.appBarColor,
+                icon: const Icon(Icons.chevron_right),
               ),
             ],
           ),
