@@ -1237,7 +1237,7 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
             },
             {
               $addFields: {
-                'earned_points': {
+                'earned_points': {  
                     $let: {
                         vars: { pointsSlab: points_slab },
                         in: { $multiply: ["$$pointsSlab", "$total_quantity"] }

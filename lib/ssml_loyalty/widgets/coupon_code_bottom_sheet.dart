@@ -25,7 +25,7 @@ class _CouponCodeBottomSheetState extends State<CouponCodeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizonal_padding, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: horizonal_padding).copyWith(top: 10, bottom: 15),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -73,7 +73,7 @@ class _CouponCodeBottomSheetState extends State<CouponCodeBottomSheet> {
           SizedBox(height: 20),
           Container(
             width: 200,
-            padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 10),
             decoration: BoxDecoration(
               color: Colors.orange.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10)
@@ -87,9 +87,9 @@ class _CouponCodeBottomSheetState extends State<CouponCodeBottomSheet> {
                     maxLines: 1,
                     text: TextSpan(
                         children: [
-                          TextSpan(
+                          const TextSpan(
                               text: "Expires: ",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontFamily: MyFonts.poppins,
                                 color: MyColors.orangeColor,
@@ -120,16 +120,18 @@ class _CouponCodeBottomSheetState extends State<CouponCodeBottomSheet> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Coupon Code', style: TextStyle(color: Colors.grey)),
-                SizedBox(width: 10),
-                Text('OFF50NEW', style: TextStyle(fontWeight: FontWeight.bold)),
+
+                Text(
+                    widget.code,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontFamily: MyFonts.poppins,
+                        fontSize: 15
+                    )),
                 SizedBox(width: 10),
                 GestureDetector(
                   onTap: () {
-                    Clipboard.setData(ClipboardData(text: 'OFF50NEW'));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Coupon code copied to clipboard')),
-                    );
+                    Clipboard.setData(ClipboardData(text: widget.code));
                   },
                   child: Icon(Icons.copy, size: 20, color: Colors.green),
                 ),
