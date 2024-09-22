@@ -37,7 +37,7 @@ class _CouponCodeBottomSheetState extends State<CouponCodeBottomSheet> {
                   borderRadius: BorderRadius.circular(5)
               ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Image.network(
             widget.merchant_img, // Replace with your actual image asset
             width: 60,

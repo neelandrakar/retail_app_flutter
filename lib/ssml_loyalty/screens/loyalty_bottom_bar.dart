@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:retail_app_flutter/constants/my_colors.dart';
+import 'package:retail_app_flutter/models/loyalty_points_model.dart';
 import 'package:retail_app_flutter/ssml_loyalty/screens/merchants_screen.dart';
 import 'package:retail_app_flutter/ssml_loyalty/screens/voucher_list_screen.dart';
 
@@ -9,6 +11,7 @@ import '../../constants/assets_constants.dart';
 import '../../constants/custom_app_bar.dart';
 import '../../constants/global_variables.dart';
 import '../../constants/utils.dart';
+import '../../providers/ssml_loyalty_provider.dart';
 import '../../sidemenu/screens/side_menu.dart';
 import '../widgets/bottom_nav_bar_pages.dart';
 import 'activity_scheme_screen.dart';
@@ -44,9 +47,13 @@ class _LoyaltyBottomBarState extends State<LoyaltyBottomBar> {
   }
 
   void onPageChange(int index) {
-    if (index == 3 && !isSchemeFullyLoaded) {
 
-      showSnackBar(context, 'Let tier data load first');
+    // loyaltyPointsModel = Provider.of<SSMLLoyaltyProvider>(context, listen: false).loyaltyPointsModel;
+
+    if (index == 3 && loyaltyPointsModel.loyalty_tiers.isEmpty) {
+
+
+      showSnackBar(context, 'Let tier data load first}');
     } else {
     setState(() {
       _page = index;
