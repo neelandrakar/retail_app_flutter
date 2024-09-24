@@ -7,7 +7,7 @@ const ACCOUNT_ID = 2062177; // Replace with your actual account ID
 const transport = Nodemailer.createTransport(
   MailtrapTransport({
     token: TOKEN,
-    // accountId: ACCOUNT_ID, 
+    accountId: ACCOUNT_ID, 
     testInboxId: 1727037494,
   })
 );

@@ -425,7 +425,7 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
 
         const coupon = await Coupon.findById(coupon_id);
         const coupon_value = coupon.coupon_value;
-        console.log(total_pending);
+        // console.log(total_pending);
 
         if(total_pending>=coupon_value){
 
