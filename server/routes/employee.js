@@ -1209,12 +1209,18 @@ employeeRouter.post('/v1/api/get-emp-slab', auth, async(req,res) =>{
       //To get invoice wise sale  
     } else if(slab_type==2){
 
+        //For RSM
         if(emp_profile==2){
             points_slab = 200;
         }
+
+        //For ASM
         else if(emp_profile==3){
             points_slab = 150;
-        } else if(emp_profile==5 || emp_profile==28){
+        }
+        
+        //For SO & ME
+        else if(emp_profile==5 || emp_profile==28){
             points_slab = 100;
         }
 
