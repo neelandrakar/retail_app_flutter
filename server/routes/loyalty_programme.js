@@ -355,12 +355,16 @@ loyaltyRouter.post('/v1/api/allocate-coupon-codes', auth, async(req, res) =>{
         let points_slab = 0;
         let code = "NA";
 
+        //For RSM
         if(emp_profile==2){
           points_slab = 200;
         }
+        //For ASM
         else if(emp_profile==3){
             points_slab = 150;
-        } else if(emp_profile==5 || emp_profile==28){
+        } 
+        //For SO & ME
+        else if(emp_profile==5 || emp_profile==28){
             points_slab = 100;
         }
 
